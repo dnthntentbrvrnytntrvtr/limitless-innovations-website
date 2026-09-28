@@ -2810,7 +2810,12 @@ const SITE = {
       items.forEach((li, i) => { li.classList.toggle('on', i === n - 1); btns[i].setAttribute('aria-pressed', String(i === n - 1)); });
       copy.innerHTML = `<p>${esc(steps[n - 1][1])}</p>`;
       const b = btns[n - 1], list = b.closest('.cx-stages');
-      if (list.scrollWidth > list.clientWidth) b.scrollIntoView({ block: 'nearest', inline: 'start', behavior: reduce ? 'auto' : 'smooth' });
+      // Slide the stage strip (phones) so the active button is at its left edge. Only the strip
+      // moves: scrollIntoView would also scroll the whole page down to the strip on load.
+      if (list.scrollWidth > list.clientWidth) {
+        const left = b.getBoundingClientRect().left - list.getBoundingClientRect().left + list.scrollLeft;
+        list.scrollTo({ left: Math.max(0, left - 8), behavior: reduce ? 'auto' : 'smooth' });
+      }
     }
     function stopAuto() { clearTimeout(auto); auto = 0; root.classList.remove('auto'); }
     function playAll(from) {
