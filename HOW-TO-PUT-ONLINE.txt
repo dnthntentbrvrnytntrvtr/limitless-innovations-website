@@ -1,0 +1,32 @@
+LIMITLESS INNOVATIONS WEBSITE - HOW TO PUT IT ONLINE
+
+This folder is the whole website. It needs no server, database or code changes.
+
+QUICKEST (about 10 minutes, free):
+1. Create a free Cloudflare account at dash.cloudflare.com and turn on two-step login.
+2. Go to Workers & Pages > Create application > Get started > Drag and drop your files.
+3. Name the project (e.g. limitless-innovations), drag in THIS FOLDER (the one containing index.html)
+   and select Deploy site.
+4. Cloudflare gives you a free web address ending in .pages.dev. The site is live and uses https.
+
+YOUR OWN ADDRESS (e.g. limitlessinnovations.co.uk):
+5. Buy the domain from a registrar, then connect it:
+   Workers & Pages > your project > Custom domains > Set up a custom domain.
+   Cloudflare shows exactly which settings to change at your registrar.
+
+TO UPDATE THE SITE LATER:
+- Edit the files, then upload the folder again as a new deployment. Old versions are kept and can be restored.
+
+BEFORE GOING LIVE, FILL IN (search index.html for these):
+- [company number] and [Registered office address]  (legally required on UK company websites)
+- [product] placeholders in the materials lists, if you want exact products shown
+
+THE CHAT BUBBLE ("Warden"):
+- Works straight away with instant answers. To switch on real AI answers, follow
+  chat-assistant/CHAT-ASSISTANT-SETUP.txt (about 15 minutes, needs an Anthropic account).
+
+THE SHOP:
+- The trade basket sends an order enquiry by email. See SHOP-SETUP-NOTES.txt for what a
+  full online shop with payment would need.
+
+The file _headers adds security settings. Leave it in the folder.

@@ -1,0 +1,94 @@
+LIMITLESS INNOVATIONS WEBSITE - SWITCHING ON THE AI ASSISTANT ("WARDEN")
+
+The chat bubble at the bottom right of the website already works: it answers
+common questions (services, certificates, products, ordering, projects, how
+to get a quote) by itself, instantly, from the website's own content.
+
+To make it answer everything else with real AI, you connect it to Claude
+(Anthropic's AI) through a small "Worker" that runs on Cloudflare. The Worker
+keeps your AI key private; the website never contains the key.
+
+Cost: roughly half a penny per AI answer. Quick questions are answered for
+free without the AI. Set a monthly spend limit (step 3) so it can never run
+away.
+
+Takes about 15 minutes. You need: this folder, a Cloudflare account (the same
+one the website is on) and an Anthropic account.
+
+------------------------------------------------------------------------
+PART A - ANTHROPIC (the AI)
+------------------------------------------------------------------------
+1. Go to https://console.anthropic.com and create an account (or sign in).
+2. Billing: add a small amount of credit (5 or 10 pounds is plenty to start).
+3. Set a monthly spend limit in the billing settings (for example 10 pounds).
+4. API keys: create a key, name it "Website chat", and COPY IT. It is only
+   shown once. Keep it private: never put it in the website files, never
+   email it, never paste it anywhere public.
+
+------------------------------------------------------------------------
+PART B - CLOUDFLARE (the Worker)
+------------------------------------------------------------------------
+5. Sign in at https://dash.cloudflare.com. Go to Workers & Pages > Create >
+   Create Worker. Name it "limitless-chat" and press Deploy.
+6. Press "Edit code". Delete everything in the editor, open the file
+   worker.js from this folder in Notepad, copy ALL of it, paste it into the
+   editor, and press Deploy.
+7. Go to the Worker's Settings > Variables and Secrets. Add:
+   - Secret   ANTHROPIC_API_KEY   = the key from step 4
+   - Text     ALLOWED_ORIGINS     = the address of your website, without a
+     trailing slash. Several addresses are separated by commas, for example:
+     https://limitless-innovations.pages.dev,https://www.limitlessinnovations.co.uk
+   Save (and deploy again if it asks).
+8. Copy the Worker's address. It looks like
+   https://limitless-chat.YOURNAME.workers.dev
+   Open it in your browser: it should show a small line of text saying
+   "ready: true". If it says "ready: false", a variable from step 7 is missing.
+
+------------------------------------------------------------------------
+PART C - THE WEBSITE
+------------------------------------------------------------------------
+9. Open index.html in Notepad. Find the line
+       chat: { endpoint: "", name: "Warden" },
+   and put the Worker address between the quotes:
+       chat: { endpoint: "https://limitless-chat.YOURNAME.workers.dev", name: "Warden" },
+10. Open the file _headers. On the Content-Security-Policy line, change
+       connect-src 'self';
+    to
+       connect-src 'self' https://limitless-chat.YOURNAME.workers.dev;
+    (your real Worker address). Without this the browser blocks the chat
+    from talking to the Worker.
+11. Upload the whole website folder again (HOW-TO-PUT-ONLINE.txt).
+
+------------------------------------------------------------------------
+TESTING
+------------------------------------------------------------------------
+12. Open the website, press the bubble, and ask something the website
+    doesn't cover, for example "what is compartmentation?". The answer should
+    stream in word by word and be labelled "AI answer". Quick questions like
+    "are you FIRAS certified" are labelled "Instant answer" and cost nothing.
+
+------------------------------------------------------------------------
+SWITCHING THE AI OFF
+------------------------------------------------------------------------
+Delete the ANTHROPIC_API_KEY secret in the Worker's settings (or delete the
+Worker). The bubble carries on with instant answers only.
+
+------------------------------------------------------------------------
+KEEPING IT UP TO DATE
+------------------------------------------------------------------------
+The Worker contains a summary of the website ("knowledge"). If the website's
+content changes a lot (new products, projects, certificates), the file
+build-knowledge.js rebuilds that summary from index.html. It needs Node.js
+(free, nodejs.org): open a command prompt in this folder and run
+    node build-knowledge.js ..\index.html worker.js
+then paste the new worker.js into the Worker (step 6) again. Or ask whoever
+looks after the website to do it.
+
+------------------------------------------------------------------------
+ABUSE PROTECTION
+------------------------------------------------------------------------
+The Worker already limits each visitor to a few questions a minute and
+refuses requests from other websites. Cloudflare can add a stronger limit:
+Worker > Settings > Bindings > Add > Rate limiting, name it CHAT_LIMITER
+(the Worker picks it up automatically). The Anthropic spend limit (step 3)
+is the final safety net.

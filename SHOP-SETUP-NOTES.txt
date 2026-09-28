@@ -1,0 +1,54 @@
+LIMITLESS INNOVATIONS WEBSITE — SHOP AND PROJECT SETUP NOTES
+
+PURPOSE
+This is a one-page website prototype for fire-protection services and trade materials. The intended experience is to browse services, installation examples and products in one place, check product details without opening a separate page, collect quantities in a basket and continue to an order step.
+
+FILES
+- index.html: the complete website page and current interactions.
+- images/products: product photographs used in the materials catalogue.
+- images: other website image assets.
+- _headers: hosting security headers. Keep this file when deploying to a compatible static host.
+- HOW-TO-PUT-ONLINE.txt: deployment outline and the limits of the current static version.
+- Limitless-Innovations-website-preview.html: a standalone preview file supplied alongside the website folder in the redesign package.
+
+CURRENT SHOP BEHAVIOUR
+- Visitors can browse the product catalogue and filter by manufacturer.
+- They can add products and quantities to the trade basket.
+- The basket is saved in that browser on that device. It is not yet shared between browsers or devices.
+- The basket form gathers business and contact information and opens an email draft addressed to the configured site email.
+- This is an order enquiry only. The site does not currently take payment, verify live availability, calculate VAT or delivery, create a confirmed order, or send an automatic receipt.
+- An email draft depends on the visitor having a working email application configured. It is not a reliable substitute for a production order service.
+
+BEFORE PUBLISHING THE CURRENT INFORMATION SITE
+1. Replace the registered-office and company-number placeholders in index.html with verified company information.
+2. Confirm the public contact email, phone number, address and all social links.
+3. Review every service statement, case study, product description, rating, application and technical document link.
+4. Confirm that the product photographs are approved for this commercial use and keep any required credits.
+5. Add current privacy, cookie, terms, delivery and returns information appropriate to the business.
+6. Open the site on a phone and desktop. Check navigation, product filters, basket quantities, empty-basket messages and the email enquiry handoff.
+7. Do not describe the email enquiry as a completed purchase.
+
+TO SELL PRODUCTS DIRECTLY TO OTHER COMPANIES
+A static website upload alone does not create a functioning online shop. Before taking orders or payments, decide and configure:
+
+- Product catalogue: product codes, approved names, brands, pack sizes, variants, images, technical documents and confirmed prices.
+- Trade rules: customer eligibility, any account pricing or minimum quantities, purchase-order references and accepted payment methods.
+- Fulfilment: stock or lead times, delivery zones, shipping rates, delivery addresses and order tracking or status messages.
+- Tax and sales terms: applicable VAT/tax rules, invoices, returns, privacy information and sales terms. Confirm these for the company’s actual markets.
+- Order system: a commerce service or backend that securely records orders, handles stock and sends confirmations.
+- Payment: use a reputable payment provider for card payments. Do not collect or store card details in this static page.
+- Support: decide who receives new orders and handles payment, delivery and product questions.
+
+The recommended customer flow remains on this page for catalogue search, product detail and basket review. A secure hosted payment step may open separately when the customer pays. For reliable orders, replace the email-draft handoff with the chosen commerce service and test the complete flow before launch.
+
+ONE-PAGE PERFORMANCE NOTES
+- Keep product detail in an in-page panel or expandable section rather than requiring a new page for every item.
+- Use small responsive product thumbnails, load images below the first screen only as they approach view, and reserve their display dimensions to prevent layout shifts.
+- Keep the first view light and make the basket shortcut easy to reach.
+- A one-page design does not need to load every full-size photo and optional feature immediately.
+
+DEPLOYMENT
+The current information and enquiry prototype can be hosted as static files. Follow HOW-TO-PUT-ONLINE.txt and upload the folder containing index.html and its supporting assets. This only publishes the current prototype; it does not switch on direct payment or order management. Complete the direct-sales setup above before advertising a paid online checkout.
+
+SITE CONTACT SETTING
+The current order-enquiry email is configured in index.html in the SITE settings. Change it there if the sales inbox changes, then verify both the footer contact link and the basket enquiry on a device with an email application configured.
