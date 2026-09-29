@@ -62,7 +62,7 @@ section('about').forEach(line);
 
 h('How to get a quote (#contact)');
 section('contact').filter(l => !/^(Copy email|Email us)$/.test(l)).forEach(line);
-line('Quotes: send drawings, photos or a site address by email to ' + SITE.email + '; the team arranges a survey and replies with a quote.');
+line('Quotes: the quickest route is the "Message us" form on the website (name, email, phone and what needs protecting; it goes straight to the team), reachable from the Get a quote button, the strip after Projects, the assistant bubble and the Contact section, linked as [message form](#message). Drawings, photos or a site address can also go by email to ' + SITE.email + '; the team arranges a survey and replies with a quote.');
 
 h('Certifications (#certification)');
 section('certification').filter(l => !/^(Hover|Tap|Ask for our)/.test(l)).forEach(line);

@@ -3871,14 +3871,14 @@ const SITE = {
     contact(kind) {
       if (kind === 'phone') return PHONE
         ? `You can call us on **${PHONE}**, or email ${MAIL}.`
-        : `We don't list a phone number on the website. Email is the quickest way to reach the team: ${MAIL}. Include your number if you'd prefer a call.\n\n${link('Contact section', '#contact')}`;
+        : `We don't list a phone number on the website. The quickest way to reach the team is the ${link('message form', '#message')} (it goes straight to us), or email ${MAIL}. Include your number if you'd prefer a call.`;
       if (kind === 'address') return ADDRESS
         ? `Our registered office is ${ADDRESS}. We work on site across London. The best way to reach us is ${MAIL}.`
         : `We work on site across London. For anything that needs our office address, email ${MAIL}.`;
-      return `Email the team at ${MAIL}${PHONE ? ` or call **${PHONE}**` : ''}. Send drawings, photos or a site address and we'll arrange a survey and come back with a quote.\n\n${link('Contact section', '#contact')}`;
+      return `Use the ${link('message form', '#message')}: your name, email, phone and what needs protecting, and it lands straight with the team. Or email ${MAIL}${PHONE ? ` or call **${PHONE}**` : ''}. Send drawings, photos or a site address and we'll arrange a survey and come back with a quote.`;
     },
 
-    quote: () => `To get a quote, email ${MAIL} with drawings, photos or a site address. We'll arrange a survey and come back with a quote.\n\n${link('Contact section', '#contact')}`,
+    quote: () => `To get a quote, use the ${link('message form', '#message')} and tell us the site address, the kind of building and the work you need; drawings or photos can follow by email to ${MAIL}. We'll arrange a survey and come back with a quote.`,
 
     process: () => `Every job follows three steps:\n${COPY.steps.map(([t, p], i) => `${i + 1}. **${t}**: ${p}`).join('\n')}\n\n${link('More about how we work', '#about')}`,
 
@@ -4290,6 +4290,7 @@ const SITE = {
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
   function safeHref(u) {
     u = String(u || '').trim();
+    if (u === '#message') return u;   // opens the message form (see the click handler on the log)
     if (/^#[A-Za-z][\w-]*$/.test(u)) return document.getElementById(u.slice(1)) ? u : null;
     if (/^mailto:[^\s@<>"]+@[^\s@<>"]+$/i.test(u)) return u;
     if (/^tel:\+?[\d\s()-]{5,}$/i.test(u)) return u;
@@ -4648,7 +4649,9 @@ const SITE = {
   $('.lcw-clear').addEventListener('click', () => { if (busy) return; msgs = []; save(); renderAll(); input.focus({ preventScroll: true }); });
   log.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
-    if (a && goTo(a.getAttribute('href'))) e.preventDefault();
+    if (!a) return;
+    if (a.getAttribute('href') === '#message' && window.LimitlessMsg) { e.preventDefault(); close(false); window.LimitlessMsg.open(); return; }
+    if (goTo(a.getAttribute('href'))) e.preventDefault();
   });
   form.addEventListener('submit', e => { e.preventDefault(); send(input.value); });
   input.addEventListener('keydown', e => {
