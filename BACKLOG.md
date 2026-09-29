@@ -22,4 +22,12 @@ Owner-side = things only the owner can do (accounts, keys, decisions).
 - [ ] When VAT registered: show prices ex VAT + VAT, update invoices and Stripe.
 
 ## Separate project (not this site)
-- Firestopping site-audit app (iOS/Android), benchmarked against Site Audit Pro, Bolster Systems and BORIS. Research notes: see chat 29 Sep 2026. Start in its own repo and session.
+### Firestopping site-audit app — decisions (29 Sep 2026)
+- Version 1: **web app first** (installable to phone home screen, offline, camera); native iOS/Android later from the same code.
+- Users: **own team first**; selling to other firms later.
+- Must-haves: pins on PDF drawings with camera **and gallery** photos (several per pin, reorderable) and seal details per pin; **offline** with sync; branded **PDF handover reports** (O&M / Golden Thread); **QR labels** that open the seal's record.
+- Competitor screenshots: owner will put them in `Firestopping\New folder\App research` on his PC.
+- Benchmarks: Site Audit Pro (cheap, no drawing pins, gallery/photo-order complaints), Bolster Systems (pins + QR, but per-drawing credits that go read-only after a year, admin-only edits), BORIS (Live Drawing pins, £3k setup per Capterra, slow/crashes). Also Onetrace, FireArrest, PlanRadar, Fieldwire, Snagmaster.
+- Our edge: no per-drawing or time-based hosting charges; gallery + camera photos; role-based pin editing for workers, not only admins; same features on phone and PC; speed; ties to our own QR labels.
+- Hosting plan: Cloudflare (Workers + D1 for records, R2 for photos/drawings; free tier ≈10 GB photos). App stores later: Apple ~£80/yr, Google ~£20 once.
+- Start in its **own GitHub repo and a new session**.
