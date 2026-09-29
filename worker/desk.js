@@ -52,7 +52,7 @@ const STYLE = `
   @media (max-width: 640px) { .wrap { padding: 14px; } .card { padding: 14px; } .top { padding: 10px 14px; } .top .sub { display: none; } }
 `;
 
-const MARK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="3" width="28" height="34" rx="1.5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M6 14.3h28M6 25.7h28M20 3v34" stroke="currentColor" stroke-width="2.2"/><rect x="21.2" y="15.5" width="11.6" height="9" fill="#b9623f"/></svg>`;
+const MARK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4L3 27l17 9z" fill="#cfc6b6"/><path d="M20 4l17 23-17 9z" fill="#7b848e"/></svg>`;
 
 export const LOGIN_HTML = `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
