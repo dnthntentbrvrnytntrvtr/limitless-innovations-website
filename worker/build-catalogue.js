@@ -22,7 +22,8 @@ const products = SITE.products.map(p => ({
   name: p.name,
   image: p.image || '',
   size: p.size || (Array.isArray(p.specs) && p.specs[0] ? p.specs[0].join(': ') : ''),
-  link: p.link || ''
+  link: p.link || '',
+  ...(Array.isArray(p.kit) ? { kit: p.kit } : {})   // a kit's parts: [[product id, quantity], ...]
 }));
 
 // The big building photos (SITE.arch), shown one per visit behind the private-preview login.

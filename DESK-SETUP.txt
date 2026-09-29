@@ -28,6 +28,25 @@ WHAT IT DOES
   customers never see it. Filter by range or search by name, brand or group.
   The links live in worker/suppliers.js; the product list is generated from
   the website's shop data, so new products appear automatically.
+- Job invoices (Orders tab > "New job invoice"): an invoice for installation
+  or other site work: customer, site, lines of work (quantities can be
+  decimals, e.g. 2.5 days), notes. It gets a reference like the shop orders
+  and uses the same Print invoice and Send Stripe invoice buttons. You can
+  edit it until it's sent through Stripe or paid.
+- Special order: tick it on any shop order line that's made to order, cut to
+  size or not normally stocked. The invoice then says it can't be returned
+  unless faulty (trade terms 9.2).
+- Paid orders are kept as sales records (6 years): they can be Closed but
+  not deleted. "Clear" only removes unpaid closed and cancelled orders.
+- Visitors tab: how many people opened the website each day, from which
+  countries, on which devices and from which sites (Google, etc.). Counted by
+  the website itself with no cookies and no IP addresses, so no cookie
+  banner is needed. Your own visits and search engine robots don't count.
+  While the site is private the numbers stay at zero.
+- Housekeeping runs every hour by itself, as the privacy notice promises:
+  IP addresses are removed from messages and orders after 30 days, messages
+  after 12 months, enquiries that were never invoiced or paid after
+  12 months, visit totals after 25 months.
 - Optionally, every new message and order also emails you.
 
 ------------------------------------------------------------------------
@@ -133,6 +152,27 @@ While Stripe is not connected, the "Print invoice" button gives you a PDF
 to email, and you set the order to Paid yourself when the money arrives.
 
 ------------------------------------------------------------------------
+STEP 4 - EMAIL IF A WEBSITE UPDATE FAILS (5 minutes, after step 2)
+------------------------------------------------------------------------
+Each change to the website is published automatically from GitHub. If a
+change can't be published, the live site simply stays on the previous
+version, which is easy to miss. This step makes Cloudflare tell the
+website, which then emails you and shows a warning on the desk until the
+next good update. Free (Cloudflare Queues free allowance: 10,000 operations
+a day; each update uses about 3).
+
+1. Open https://dash.cloudflare.com/?to=/:account/workers/queues
+   (the Queues page; or type "Queues" in the dashboard search) > Create queue.
+   Name:  limitless-builds   > Create.
+2. Open limitless-builds > Subscriptions > Subscribe to events.
+   Name: website builds.  Source: Workers Builds.
+   Worker: limitless-innovations-website.
+   Events: build.failed and build.succeeded.  > Subscribe.
+3. Tell Claude "the builds queue is made". Claude then connects the website
+   to the queue (it's one setting in wrangler.jsonc that can only be added
+   once the queue exists, otherwise the next update would itself fail).
+
+------------------------------------------------------------------------
 PROTECTION ALREADY BUILT IN
 ------------------------------------------------------------------------
 - The form and the basket only accept submissions that come from
@@ -158,3 +198,6 @@ IF SOMETHING LOOKS WRONG
   then offers the visitor a normal email link instead, so nothing is lost.
 - Desk says "not switched on": DESK_PASSWORD is missing (step 1).
 - No alert emails: check RESEND_API_KEY and, in Resend, the Logs page.
+- Desk warns "The last website update failed": Cloudflare > Workers & Pages >
+  limitless-innovations-website > Deployments shows the build log. Send it
+  to Claude. The live site is unaffected meanwhile.

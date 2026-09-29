@@ -7,10 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Limitless Innovations Ltd installs and repairs firestopping, fire-rated walls, cavity barriers and intumescent coatings across London. Third-party certified passive fire protection.">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Limitless Innovations Ltd", "alternateName": "Limitless Innovations", "url": "https://limitlessinnovations.co.uk/", "image": "https://limitlessinnovations.co.uk/images/hero.jpg", "logo": "https://limitlessinnovations.co.uk/favicon.svg", "email": "info@limitlessinnovations.co.uk", "description": "Third-party certified passive fire protection contractor: firestopping, fire-rated walls, cavity barriers and intumescent coatings to structural steel, installed and repaired across London.", "areaServed": [{"@type": "City", "name": "London"}, {"@type": "AdministrativeArea", "name": "Greater London"}, {"@type": "AdministrativeArea", "name": "South East England"}], "knowsAbout": ["Firestopping", "Passive fire protection", "Fire-rated walls", "Cavity barriers", "Intumescent coatings", "Fire stopping surveys", "Penetration seals"], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Passive fire protection services", "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Firestopping installation and repair"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Fire-rated walls and partitions"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Cavity barriers"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Intumescent coatings to structural steel"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Passive fire protection surveys"}}]}, "identifier": {"@type": "PropertyValue", "name": "Companies House number", "value": "14380770"}, "foundingDate": "2022-09-27"}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Fonts are served from this site (no Google Fonts): Archivo 500-700 for headings, Inter 400-600 for text. */
+  @font-face { font-family: "Archivo"; src: url("fonts/archivo.woff2") format("woff2"); font-weight: 500 700; font-style: normal; font-display: swap; }
+  @font-face { font-family: "Inter"; src: url("fonts/inter.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
   :root {
     color-scheme: dark;
     --ground: #0b0d10;
@@ -703,6 +705,9 @@
   .cart-empty { padding: 16px; border: 1px dashed var(--line-strong); color: var(--muted); font-size: 14px; text-align: center; }
   .cart-line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
   .cart-line strong { display: block; font-size: 14px; }
+  .terms-ok { display: flex !important; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.45; color: var(--ink-2); cursor: pointer; }
+  .terms-ok input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: var(--accent); }
+  .terms-ok a { color: var(--ink); }
   .cart-line small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
   .cart-line input { width: 58px; min-height: 36px; padding: 5px; border: 1px solid var(--line-strong); color: var(--ink); background: var(--panel); text-align: center; font: inherit; }
   .cart-remove { border: 0; color: var(--muted); background: transparent; font-size: 12px; text-decoration: underline; cursor: pointer; }
@@ -940,6 +945,7 @@
   /* Everything on one line with the company name, same white as the name */
   .foot .wrap { align-items: center; color: var(--ink); }
   .foot .brand { display: inline-flex; align-items: center; }
+  .foot .legal { display: inline-flex; gap: 16px; } .foot .legal a { color: inherit; text-decoration: underline; text-decoration-color: rgba(238,241,244,.35); text-underline-offset: 3px; } .foot .legal a:hover { text-decoration-color: currentColor; }
   @media (min-width: 700px) { .foot .wrap { padding-right: 96px; } }   /* clear of the round chat button */
   .foot .wrap { padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)); }
 
@@ -1227,7 +1233,7 @@
   </symbol>
 </svg>
 <div class="backdrop" aria-hidden="true">
-  <img class="bd-img" id="bdImg" src="images/station/station-1920.webp" srcset="images/station/station-1280.webp 1280w, images/station/station-1920.webp 1920w, images/station/station-2560.webp 2560w, images/station/station-3840.webp 3840w" sizes="(max-width: 700px) and (min-resolution: 2.5dppx) 853px, (max-width: 700px) 975px, (min-aspect-ratio: 16/9) 130vw, 145vw" alt="" decoding="async" fetchpriority="high">
+  <img class="bd-img" id="bdImg" src="images/station/station-1920.webp" srcset="images/station/station-1280.webp 1280w, images/station/station-1920.webp 1920w, images/station/station-2560.webp 2560w, images/station/station-3840.webp 3840w" sizes="(max-width: 700px) and (min-resolution: 2.5dppx) 853px, (max-width: 700px) and (min-resolution: 1.5dppx) 1279px, (max-width: 700px) 975px, (min-aspect-ratio: 16/9) 130vw, 145vw" alt="" decoding="async" fetchpriority="high">
   <canvas id="scene"></canvas>
   <div class="bd-shade"></div>
 </div>
@@ -1313,11 +1319,11 @@
   <div class="hero-certs" aria-label="Third-party certification">
     <span class="lab">Third-party certified</span>
     <div class="chips">
-      <img src="images/logos/firas.png" alt="FIRAS" loading="eager">
-      <img src="images/logos/lpcb.png" alt="LPCB" loading="eager">
-      <img src="images/logos/qmark.png" alt="BM TRADA Q-Mark" loading="eager">
-      <img src="images/logos/ifc.png" alt="IFC Certification" loading="eager">
-      <img src="images/logos/asfp.png" alt="ASFP member" loading="eager">
+      <img src="images/logos/hero/firas.webp" alt="FIRAS" loading="eager">
+      <img src="images/logos/hero/lpcb.webp" alt="LPCB" loading="eager">
+      <img src="images/logos/hero/qmark.webp" alt="BM TRADA Q-Mark" loading="eager">
+      <img src="images/logos/hero/ifc.webp" alt="IFC Certification" loading="eager">
+      <img src="images/logos/hero/asfp.webp" alt="ASFP member" loading="eager">
     </div>
   </div>
 </header>
@@ -1480,6 +1486,7 @@
         <label>VAT number<input name="vat" autocomplete="off"></label>
         <label>Delivery postcode<input name="postcode" autocomplete="postal-code"></label>
         <label class="wide">Product sizes, delivery needs or other notes<textarea name="notes" placeholder="For example: pipe collar sizes, quantities by delivery location, or required date"></textarea></label>
+        <label class="wide terms-ok"><input type="checkbox" name="terms" value="2026-09-29" required> I agree to the <a href="/terms" target="_blank" rel="noopener">trade terms of sale</a>. See our <a href="/privacy" target="_blank" rel="noopener">privacy notice</a>.</label>
         <button class="btn wide" type="submit">Send order enquiry</button>
         <p class="cart-status wide" id="tradeCartStatus" aria-live="polite"></p>
       </form>
@@ -1563,7 +1570,7 @@
 <footer class="foot">
   <div class="wrap">
     <span class="group"><span class="brand"><svg class="brand-mark" aria-hidden="true"><use href="#li-mark"/></svg><span class="brand-name">Limitless Innovations Ltd</span></span><span id="footReg"></span></span>
-    <span class="group"><span id="footAddress"></span><span id="footEmail"></span></span>
+    <span class="group"><span id="footAddress"></span><span id="footEmail"></span><span class="legal"><a href="/privacy">Privacy</a><a href="/terms">Terms of sale</a></span></span>
   </div>
 </footer>
 
@@ -1621,7 +1628,7 @@ const SITE = {
   email: "info@limitlessinnovations.co.uk",
   api: "",   // where the message form and basket send to: "" means this same website (see worker/index.js)
   /* prices:begin (generated by worker/build-prices.js from worker/suppliers.js: do not edit by hand) */
-  pricing: { markup: 20, updated: "29 Sep 2026", sell: {"fb750-intubatt":33.03,"fs702-intumastic":3.9,"fs709-sealant":12.31,"fp302-intustrap":331.99,"fp170-intucollar":26.05,"fr230-intucompound":37.7,"fi025-intuflex":127.12,"sc902-steel-coating":505.14,"sc802-steel-coating":126.65,"stopseal-batt":38.22,"pyrocoustic-sealant":3.38,"pyropro-hpe-sealant":10.83,"silverseal-compound":48.97,"pipebloc-pcp-collar":23.9,"pipebloc-pwp-wrap":7.6,"tool-gun-310":20.39,"tool-gun-600":27.59,"tool-gun-battery":275.99,"tool-finishing":16.74,"tool-batt-saw":19.1,"tool-knife":15.54,"tool-hole-saw":67.19,"tool-paddle":13.19,"tool-tub":11.99,"tool-trowel":9.58,"tool-backer-rod":9.9,"tool-torch":39.59,"tool-tape":17.99,"ppe-ffp3":50.48,"ppe-half-mask":50.22,"ppe-nitrile":15.94,"ppe-cut-gloves":11.03,"ppe-glasses":9.73,"ppe-earplugs":40.76,"ppe-hard-hat":15.9,"ppe-hi-vis":4.79,"ppe-trousers":107.94,"ppe-knee-pads":24.56,"ppe-boots":73.44,"ppe-coverall":13.49,"tool-combi-drill":143.98,"tool-sds-drill":163.2,"tool-multi-tool":86.4,"tool-mixer":287.94,"tool-laser-measure":113.99,"tool-spirit-level":19.57,"tool-screwdriver-set":35.99,"tool-hacksaw":35.58,"tool-bag":56.76,"tool-work-light":45.58,"ppe-cut-gloves-dewalt":11.8,"ppe-p3-filters":18.68,"ppe-hi-vis-jacket":30.53,"ppe-safety-boots":89.99,"ppe-knee-pads-strap":11.4,"tool-work-platform":62.64}, from: {"fb750-intubatt":true,"fp170-intucollar":true,"sc802-steel-coating":true,"pipebloc-pcp-collar":true,"pipebloc-pwp-wrap":true,"tool-gun-battery":true} },
+  pricing: { markup: 20, updated: "29 Sep 2026", sell: {"fb750-intubatt":33.03,"fs702-intumastic":3.9,"fs709-sealant":12.31,"fp302-intustrap":331.99,"fp170-intucollar":26.05,"fr230-intucompound":37.7,"fi025-intuflex":127.12,"sc902-steel-coating":505.14,"sc802-steel-coating":126.65,"stopseal-batt":38.22,"pyrocoustic-sealant":3.38,"pyropro-hpe-sealant":10.83,"silverseal-compound":48.97,"pipebloc-pcp-collar":23.9,"pipebloc-pwp-wrap":7.6,"tool-gun-310":20.39,"tool-gun-600":27.59,"tool-gun-battery":275.99,"tool-finishing":16.74,"tool-batt-saw":19.1,"tool-knife":15.54,"tool-hole-saw":67.19,"tool-paddle":13.19,"tool-tub":11.99,"tool-trowel":9.58,"tool-backer-rod":9.9,"tool-wet-film":99.36,"tool-dft-gauge":1036.8,"tool-torch":39.59,"tool-tape":17.99,"ppe-ffp3":50.48,"ppe-half-mask":50.22,"ppe-nitrile":15.94,"ppe-cut-gloves":11.03,"ppe-glasses":9.73,"ppe-earplugs":40.76,"ppe-hard-hat":15.9,"ppe-hi-vis":4.79,"ppe-trousers":107.94,"ppe-knee-pads":24.56,"ppe-boots":73.44,"ppe-coverall":13.49,"tool-combi-drill":143.98,"tool-sds-drill":163.2,"tool-multi-tool":86.4,"tool-mixer":287.94,"tool-laser-measure":113.99,"tool-spirit-level":19.57,"tool-screwdriver-set":35.99,"tool-hacksaw":35.58,"tool-bag":56.76,"tool-work-light":45.58,"ppe-cut-gloves-dewalt":11.8,"ppe-p3-filters":18.68,"ppe-hi-vis-jacket":30.53,"ppe-safety-boots":89.99,"ppe-knee-pads-strap":11.4,"tool-work-platform":62.64,"kit-sealant":68.61,"kit-batt":114.14,"kit-mixing":101.18,"kit-ppe":82.21}, from: {"fb750-intubatt":true,"fp170-intucollar":true,"sc802-steel-coating":true,"pipebloc-pcp-collar":true,"pipebloc-pwp-wrap":true,"tool-gun-battery":true} },
   /* prices:end */
   // UK company websites must show the registered name, number, where registered and registered office.
   address: "Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE",
@@ -2126,12 +2133,12 @@ const SITE = {
     { id: "tool-backer-rod", category: "tools", group: "Mixing and application", brand: "Everbuild", name: "Closed-cell backer rod, 10 mm × 10 m", image: "images/products/tool-backer-rod.jpg",
       what: "Foam rod that sets the depth of a sealant joint so the sealant works as tested.",
       specs: [["Size", "10 mm diameter, other sizes to order"], ["Length", "10 m pack"], ["Use", "Linear joints before intumescent or acoustic sealant"]] },
-    { id: "tool-wet-film", category: "tools", group: "Marking and inspection", brand: "Various", name: "Stainless wet film comb", image: "images/products/tool-wet-film.jpg",
-      what: "Stainless comb for checking wet film thickness as intumescent paint goes on.",
-      specs: [["Range", "25 to 2000 microns"], ["Use", "Every coat of intumescent paint"], ["Why", "The reading goes straight into the record"]] },
-    { id: "tool-dft-gauge", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Dry film thickness gauge", image: "images/products/tool-dft-gauge.svg",
-      what: "Digital gauge that measures cured coating thickness on steel, for the handover record.",
-      specs: [["Reads", "Ferrous and non-ferrous, 0 to 1500 µm"], ["Use", "Signing off intumescent coating thickness"], ["Why", "Stores readings by member"]] },
+    { id: "tool-wet-film", category: "tools", group: "Marking and inspection", brand: "TQC Sheen", name: "Stainless wet film comb, 25 to 2000 µm", image: "images/products/tool-wet-film.jpg",
+      what: "Pressed into freshly applied intumescent paint to confirm each coat is going on at the specified wet thickness before it dries.",
+      specs: [["Range", "25 to 2000 µm in 36 steps"], ["Material", "Hexagonal stainless steel comb, reusable"], ["Standards", "ISO 2808, ASTM D4414"]] },
+    { id: "tool-dft-gauge", category: "tools", group: "Marking and inspection", brand: "DeFelsko", name: "PosiTector 6000 FT1 dry film thickness gauge, 0 to 6 mm", image: "images/products/tool-dft-gauge.jpg",
+      what: "Measures the dried thickness of intumescent paint on structural steel, so each member can be signed off against the fire-protection schedule.",
+      specs: [["Range", "0 to 6 mm on steel"], ["Accuracy", "±(0.01 mm + 1%) to 2.5 mm, ±(0.01 mm + 3%) above"], ["Build", "Built-in thick-film probe, 2-year warranty"]] },
     { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Limitless Innovations", name: "Firestop identification labels, 100 × 60 mm", image: "images/products/tool-labels.jpg",
       what: "Our own write-on labels for fire, acoustic, or fire and acoustic seals: installer, date, system, rating and seal number, with a QR code to our contact page.",
       specs: [["Pack", "Roll of 100"], ["Use", "Every penetration seal, so the inspection can find it"], ["Why", "Survives dust and damp"]] },
@@ -2176,6 +2183,20 @@ const SITE = {
     { id: "tool-work-platform", category: "tools", group: "Kit and access", brand: "Youngman", name: "Odd Job aluminium work platform", image: "images/products/tool-work-platform.jpg",
       what: "Stable low platform for reaching head-height penetrations and soffits without a ladder.",
       specs: [["Material", "Aluminium"], ["Platform height", "50 cm"], ["Width", "70 cm"]] },
+
+    /* ---- Kits: bundles of the tools and PPE above. The price is the sum of the parts (worker/build-prices.js). ---- */
+    { id: "kit-sealant", category: "tools", group: "Kits", brand: "Limitless Innovations", name: "Sealant kit", image: "images/products/kit-sealant.jpg", size: "Kit of 4",
+      kit: [["tool-gun-310", 1], ["tool-finishing", 1], ["tool-knife", 1], ["ppe-nitrile", 1]],
+      what: "Everything to run and tool a neat sealant joint, in one order: gun, profiling spatulas, knife and gloves.",
+      specs: [["In the kit", "No Nonsense premium sealant gun, Cramer Fugi finishing kit, Stanley FatMax knife, nitrile gloves (box of 100)"], ["Sealant", "Not included: choose it under Materials"]] },
+    { id: "kit-batt", category: "tools", group: "Kits", brand: "Limitless Innovations", name: "Batt cutting kit", image: "images/products/kit-batt.jpg", size: "Kit of 5",
+      kit: [["tool-batt-saw", 1], ["tool-knife", 1], ["tool-tape", 1], ["ppe-cut-gloves", 1], ["ppe-ffp3", 1]],
+      what: "Measure, cut and fit coated batt cleanly, with cut-resistant gloves and FFP3 masks for the stone wool dust.",
+      specs: [["In the kit", "Bahco 550 mm insulation saw, Stanley FatMax knife, Stanley FatMax 8 m tape, MCR cut-resistant gloves, JSP FFP3 masks (pack of 10)"], ["Batt", "Not included: choose it under Materials"]] },
+    { id: "kit-mixing", category: "tools", group: "Kits", brand: "Limitless Innovations", name: "Compound mixing kit", image: "images/products/kit-mixing.jpg", size: "Kit of 5",
+      kit: [["tool-paddle", 1], ["tool-tub", 1], ["tool-trowel", 1], ["ppe-ffp3", 1], ["ppe-nitrile", 1]],
+      what: "Mix and place fire compound: paddle, flexible tub and margin trowel, with FFP3 masks and nitrile gloves.",
+      specs: [["In the kit", "Erbauer 120 mm M14 mixing paddle, Red Gorilla 26 L flexible tub, Marshalltown margin trowel, JSP FFP3 masks (pack of 10), nitrile gloves (box of 100)"], ["Needs", "A paddle mixer or SDS drill with an M14 adaptor"]] },
 
     /* ---- Workwear and PPE ---- */
     { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "JSP", name: "SpringFit FFP3 respirators, pack of 10", image: "images/products/ppe-ffp3.jpg",
@@ -2230,7 +2251,13 @@ const SITE = {
       specs: [["Safety rating", "S3 WR SRA"], ["Protection", "Steel toe cap and midsole"], ["Upper", "Waterproof leather, Hydroguard lining"]] },
     { id: "ppe-knee-pads-strap", category: "workwear", group: "Clothing", brand: "Portwest", name: "KP40 Ultimate gel knee pads, strap-on", image: "images/products/ppe-knee-pads-strap.jpg",
       what: "Strap-on gel knee pads for low-level sealing at slabs and skirtings, for trousers without knee pockets.",
-      specs: [["Standard", "EN 14404 Type 1 Level 1"], ["Padding", "Silicone gel"], ["Fastening", "Hook and loop straps"]] }
+      specs: [["Standard", "EN 14404 Type 1 Level 1"], ["Padding", "Silicone gel"], ["Fastening", "Hook and loop straps"]] },
+
+    /* ---- Kit: PPE bundle, priced as the sum of its parts ---- */
+    { id: "kit-ppe", category: "workwear", group: "Kits", brand: "Limitless Innovations", name: "Site PPE kit", image: "images/products/kit-ppe.jpg", size: "Kit of 5",
+      kit: [["ppe-hard-hat", 1], ["ppe-hi-vis", 1], ["ppe-glasses", 1], ["ppe-earplugs", 1], ["ppe-cut-gloves", 1]],
+      what: "The basics for a site induction in one order: helmet, hi-vis vest, safety glasses, earplugs and cut-resistant gloves.",
+      specs: [["In the kit", "JSP EVO3 vented helmet, class 2 hi-vis vest, Bollé Contour glasses, Howard Leight foam earplugs (200 pairs), MCR cut-resistant gloves"], ["Sizes", "Confirmed with your order"]] }
   ],
 
   // Steel coating photographs, one per stage (images/coat/). Swap these for your own site photos whenever you have them.
@@ -2320,7 +2347,8 @@ const SITE = {
       // Phones and tablets are capped at the 2560 px file: their screens are dense but small, and the
       // 3840 px file would cost data and memory for detail nobody can see.
       const coarse = matchMedia('(pointer: coarse)').matches;
-      img.sizes = Math.round(coarse ? Math.min(m.dw, 2560 / dens) : m.dw) + 'px';
+      // Rounded down: rounding up could ask for 2561 device pixels and pull the 3840 px file instead.
+      img.sizes = Math.floor(coarse ? Math.min(m.dw, 2559 / dens) : m.dw) + 'px';
       img.style.transform = `translate3d(${m.ox}px, ${m.oy}px, 0)`;
       draw(performance.now() / 1000);
     }
@@ -2590,7 +2618,6 @@ const SITE = {
     const leader = k => `<svg class="leader" data-slot="${k}" aria-hidden="true">${k === 0 ? `<defs>${arrow(uid + '-ad', '--accent')}${arrow(uid + '-ai', '--warn')}${arrow(uid + '-as', '--ink-2')}</defs>` : ''}<line x1="0" y1="0" x2="0" y2="0"/><circle r="3" cx="0" cy="0"/></svg>`;
     root.innerHTML = `
       <div class="stage">
-        <img class="st-bg" alt="" aria-hidden="true">
         <div class="st-box"><div class="st-imgs"></div><span class="wipe" aria-hidden="true"></span><svg class="dims" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg><div class="dim-labels"></div><div class="pins"></div><div class="lens" hidden></div></div>
         ${leader(0)}${leader(1)}
         <div class="bubble" data-slot="0" role="region" aria-live="polite" aria-hidden="true"></div>
@@ -2599,7 +2626,7 @@ const SITE = {
         ${opts.onNav ? `<button type="button" class="st-nav prev" aria-label="Previous photo">${ICON_PREV}</button><button type="button" class="st-nav next" aria-label="Next photo">${ICON_NEXT}</button>` : ''}
       </div>
       <div class="sheet"></div>`;
-    const stage = $('.stage', root), boxEl = $('.st-box', stage), bg = $('.st-bg', stage), pinsEl = $('.pins', stage), wipe = $('.wipe', stage);
+    const stage = $('.stage', root), boxEl = $('.st-box', stage), pinsEl = $('.pins', stage), wipe = $('.wipe', stage);
     const lens = $('.lens', stage), toggle = $('.toggle', stage), zoomBtn = $('.zoom-btn', stage), sheet = $('.sheet', root);
     const tools = $('.st-tools', stage), navPrev = $('.st-nav.prev', stage), navNext = $('.st-nav.next', stage);
     const dimSvg = $('.dims', stage), dimLabels = $('.dim-labels', stage);
@@ -2860,7 +2887,6 @@ const SITE = {
         st.view = b.dataset.view;
         $$('button', toggle).forEach(x => x.setAttribute('aria-pressed', String(x === b)));
         showView(true);
-        bg.src = small(cur().photo);
         layout(); renderPins(true, true);
       }));
     }
@@ -2875,14 +2901,13 @@ const SITE = {
       const old = st.imgs;
       const fresh = document.createElement('div');
       fresh.className = 'st-imgs' + (reduce ? '' : ' entering');
-      fresh.innerHTML = item.order.map(v => { const vw = item.views[v]; return `<img class="shot${v === st.view ? ' on' : ''}" data-view="${v}" src="${esc(vw.photo)}" srcset="${esc(small(vw.photo))} 800w, ${esc(vw.photo)} 1800w" sizes="(max-width: 860px) 94vw, 60vw" alt="${esc(vw.alt || vw.title || '')}" decoding="async">`; }).join('');
+      fresh.innerHTML = item.order.map(v => { const vw = item.views[v]; return `<img class="shot${v === st.view ? ' on' : ''}" data-view="${v}" src="${esc(vw.photo)}" srcset="${esc(small(vw.photo))} 800w, ${esc(vw.photo)} 1800w" sizes="(max-width: 860px) 94vw, 60vw" alt="${esc(vw.alt || vw.title || '')}" loading="lazy" decoding="async">`; }).join('');
       old.after(fresh);
       st.imgs = fresh;
       const startImg = shotFor(st.view);
       const reveal = () => { fresh.classList.remove('entering'); old.classList.add('leaving'); setTimeout(() => old.remove(), reduce ? 0 : 480); };
       if (startImg.complete) requestAnimationFrame(reveal);
       else { startImg.addEventListener('load', reveal, { once: true }); startImg.addEventListener('error', reveal, { once: true }); }
-      bg.src = small(cur().photo);
       renderToggle();
       layout();
       renderPins(st.seen);
@@ -3435,7 +3460,7 @@ const SITE = {
         if (r.ok && j.ok) {
           const inner = $('.trade-cart-inner', cart);
           inner.innerHTML = `<div class="trade-cart-head"><div><p class="eyebrow">Business orders</p><h2>Order enquiry sent</h2></div><button class="trade-cart-close" type="button" aria-label="Close trade basket">×</button></div>
-            <div class="msg-done"><h3>Reference ${esc(j.ref)}</h3><p>Thanks, ${esc(String(d.contact).trim().split(/\s+/)[0])}. We've got your enquiry for ${items.length} product${items.length === 1 ? '' : 's'} and will email a trade quotation to <strong>${esc(String(d.email).trim())}</strong>, with stock and delivery confirmed. Quote the reference if you call.</p></div>
+            <div class="msg-done"><h3>Reference ${esc(j.ref)}</h3><p>Thanks, ${esc(String(d.contact).trim().split(/\s+/)[0])}. We've got your enquiry for ${items.length} product${items.length === 1 ? '' : 's'} and will email an invoice to <strong>${esc(String(d.email).trim())}</strong> once stock and delivery are confirmed. Nothing is ordered until it's paid. Quote the reference in any email.</p></div>
             <div class="row"><button class="btn" type="button" data-close-cart>Done</button></div>`;
           $('[data-close-cart]', inner).addEventListener('click', () => cart.close());
           $('.trade-cart-close', inner).addEventListener('click', () => cart.close());
@@ -3467,7 +3492,7 @@ const SITE = {
     let copies = 0, offset = 0, speed = reduce ? 0 : SPEED, target = speed, vel = 0, last = performance.now();
     let dragging = null, suppressClick = false, hoverBand = false, visible = true, active = null, closeT = 0, capT = 0;
     const tileHTML = (a, i, copy) => `<button type="button" class="logo-tile" data-i="${i}"${copy ? ' tabindex="-1" aria-hidden="true"' : ` aria-label="${esc(a.name)}: show details"`}>${
-      a.logo ? `<img src="${esc(a.logo)}" alt="" draggable="false" data-fit="150,74,7400">`
+      a.logo ? `<img src="${esc(a.logo)}" alt="" draggable="false" loading="lazy" decoding="async" data-fit="150,74,7400">`
              : `<span class="t-short" style="font-size:${Math.min(30, Math.floor(330 / a.short.length))}px">${esc(a.short)}</span><span class="t-body">${esc(a.body)}</span>`}</button>`;
     function build() {
       const need = Math.max(2, Math.ceil(band.clientWidth / setW) + 1);
@@ -3625,7 +3650,7 @@ const SITE = {
         <div class="f"><label for="${id('message')}">What needs protecting?</label><textarea id="${id('message')}" name="message" required maxlength="4000" placeholder="Site address, type of building, the work you need and when."></textarea><span class="err" data-for="message"></span></div>
         <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="t" value="${Date.now()}">
-        <div class="row"><button class="btn" type="submit">Send message</button><span class="fine">Goes straight to our team. No mailing lists.</span></div>
+        <div class="row"><button class="btn" type="submit">Send message</button><span class="fine">Goes straight to our team. No mailing lists. <a href="/privacy" target="_blank" rel="noopener">Privacy notice</a></span></div>
         <div class="err" data-for="form" role="alert"></div>
       </form>`;
     };
@@ -3965,7 +3990,7 @@ const SITE = {
     },
     price: prods => `We don't publish ${prods.length ? `a price for **${prods.map(p => p.name).join('** or **')}**` : 'prices'} online. Trade prices, availability and delivery are confirmed with your order enquiry: add products to the Trade basket in ${link('Products', '#products')} and send it to us.\n\nFor installation work, every job is priced after a survey: ${QUOTE}.`,
     delivery: () => `Stock and delivery are confirmed with each order. Send your enquiry from the Trade basket in ${link('Products', '#products')}, with your delivery postcode and the date you need it, and the team will confirm availability and delivery before accepting the order.`,
-    pay: () => `The website doesn't take payment. Add products to the **Trade basket** in ${link('Products', '#products')} and send your company order enquiry. We reply with a trade quotation and delivery details, and confirm pricing, stock and delivery before the order is accepted.`,
+    pay: () => `The website doesn't take payment. Add products to the **Trade basket** in ${link('Products', '#products')} and send your company order enquiry. We check stock and delivery, then email an invoice to pay online or by bank transfer; the goods are ordered once it's paid. See the ${link('trade terms of sale', '/terms')}.`,
     catalogue: () => `We supply ${BRANDS.map(b => `**${b}**`).join(' and ') || 'firestopping'} materials to trade customers: coated batts, fire sealants, pipe collars, wraps and straps, fire mortar and intumescent steel coatings. ${link('Browse products', '#products')}\n\nAdd what you need to the Trade basket and send us your company order enquiry. Prices, stock and delivery are confirmed with your order.`,
 
     site: s => `**${s.name}** (${s.area}): ${s.about} It's one of the London buildings our installers have worked on. ${link('See our sites', '#sites')}`,
@@ -4363,6 +4388,7 @@ const SITE = {
   function safeHref(u) {
     u = String(u || '').trim();
     if (u === '#message') return u;   // opens the message form (see the click handler on the log)
+    if (u === '/terms' || u === '/privacy') return u;   // the site's own legal pages
     if (/^#[A-Za-z][\w-]*$/.test(u)) return document.getElementById(u.slice(1)) ? u : null;
     if (/^mailto:[^\s@<>"]+@[^\s@<>"]+$/i.test(u)) return u;
     if (/^tel:\+?[\d\s()-]{5,}$/i.test(u)) return u;

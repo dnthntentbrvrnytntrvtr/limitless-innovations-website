@@ -24,5 +24,8 @@
     // "on" = the whole website asks for the desk password (private preview). "off" = public.
     "SITE_LOCKED": "on"
   },
+  // Hourly clean-up (tidy in worker/index.js): old IP addresses, old messages and enquiries, rate-limit rows,
+  // as promised in the privacy notice.
+  "triggers": { "crons": ["23 * * * *"] },
   "observability": { "enabled": true }
 }

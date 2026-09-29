@@ -344,41 +344,37 @@ export default {
   ],
   "tool-wet-film": [
     {
-      "supplier": "Screwfix (search)",
-      "url": "https://www.screwfix.com/search?search=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
-      "price": "see results",
+      "supplier": "Industrial Physics (TQC Sheen)",
+      "url": "https://industrialphysics.com/product/wet-film-thickness-gauge-stainless-steel/",
+      "price": "£69.00 ex VAT, WG II 25 to 2000 µm",
       "checked": "29 Sep 2026"
     },
     {
-      "supplier": "Toolstation (search)",
-      "url": "https://www.toolstation.com/search?q=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
-      "price": "see results",
-      "checked": "29 Sep 2026"
+      "supplier": "Industrial Physics (TQC Sheen)",
+      "url": "https://industrialphysics.com/product/wet-film-thickness-gauge-stainless-steel/",
+      "price": "£118.00 ex VAT, WG III 50–10,000 µm, for coats thicker than 2 mm wet",
+      "checked": "29 Sep 2026",
+      "alt": true
     },
     {
-      "supplier": "Amazon Business (search)",
-      "url": "https://www.amazon.co.uk/s?k=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
-      "price": "see results",
-      "checked": "29 Sep 2026"
+      "supplier": "International Passive Fire",
+      "url": "https://www.fireproofpaint.co.uk/shop/tools-essentials/application-tools/wet-film-thickness-gauge-wft/",
+      "price": "£3.94 ex VAT, unbranded metal comb 25–2032 µm (budget spare)",
+      "checked": "29 Sep 2026",
+      "alt": true
     }
   ],
   "tool-dft-gauge": [
     {
-      "supplier": "Screwfix (search)",
-      "url": "https://www.screwfix.com/search?search=Elcometer+Dry+film+thickness+gauge",
-      "price": "see results",
+      "supplier": "DMV UK",
+      "url": "https://www.dmv-uk.com/products/coating-thickness-gauges-and-inspection-equipment/defelsko-positector-6000-coating-thickness-gauge/",
+      "price": "£720.00 ex VAT, PosiTector 6000 FT1 option",
       "checked": "29 Sep 2026"
     },
     {
-      "supplier": "Toolstation (search)",
-      "url": "https://www.toolstation.com/search?q=Elcometer+Dry+film+thickness+gauge",
-      "price": "see results",
-      "checked": "29 Sep 2026"
-    },
-    {
-      "supplier": "Amazon Business (search)",
-      "url": "https://www.amazon.co.uk/s?k=Elcometer+Dry+film+thickness+gauge",
-      "price": "see results",
+      "supplier": "Industrial Physics (TQC Sheen)",
+      "url": "https://industrialphysics.com/product/coating-thickness-gauge-positector-6000/",
+      "price": "£945.00 ex VAT, Standard body LD6057 £437 + FT integral 0–6 mm probe LD6026 £508",
       "checked": "29 Sep 2026"
     }
   ],

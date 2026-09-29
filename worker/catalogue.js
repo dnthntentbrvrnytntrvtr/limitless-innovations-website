@@ -281,20 +281,20 @@ export const PRODUCTS = [
     "id": "tool-wet-film",
     "category": "tools",
     "group": "Marking and inspection",
-    "brand": "Various",
-    "name": "Stainless wet film comb",
+    "brand": "TQC Sheen",
+    "name": "Stainless wet film comb, 25 to 2000 µm",
     "image": "images/products/tool-wet-film.jpg",
-    "size": "Range: 25 to 2000 microns",
+    "size": "Range: 25 to 2000 µm in 36 steps",
     "link": ""
   },
   {
     "id": "tool-dft-gauge",
     "category": "tools",
     "group": "Marking and inspection",
-    "brand": "Elcometer",
-    "name": "Dry film thickness gauge",
-    "image": "images/products/tool-dft-gauge.svg",
-    "size": "Reads: Ferrous and non-ferrous, 0 to 1500 µm",
+    "brand": "DeFelsko",
+    "name": "PosiTector 6000 FT1 dry film thickness gauge, 0 to 6 mm",
+    "image": "images/products/tool-dft-gauge.jpg",
+    "size": "Range: 0 to 6 mm on steel",
     "link": ""
   },
   {
@@ -436,6 +436,98 @@ export const PRODUCTS = [
     "image": "images/products/tool-work-platform.jpg",
     "size": "Material: Aluminium",
     "link": ""
+  },
+  {
+    "id": "kit-sealant",
+    "category": "tools",
+    "group": "Kits",
+    "brand": "Limitless Innovations",
+    "name": "Sealant kit",
+    "image": "images/products/kit-sealant.jpg",
+    "size": "Kit of 4",
+    "link": "",
+    "kit": [
+      [
+        "tool-gun-310",
+        1
+      ],
+      [
+        "tool-finishing",
+        1
+      ],
+      [
+        "tool-knife",
+        1
+      ],
+      [
+        "ppe-nitrile",
+        1
+      ]
+    ]
+  },
+  {
+    "id": "kit-batt",
+    "category": "tools",
+    "group": "Kits",
+    "brand": "Limitless Innovations",
+    "name": "Batt cutting kit",
+    "image": "images/products/kit-batt.jpg",
+    "size": "Kit of 5",
+    "link": "",
+    "kit": [
+      [
+        "tool-batt-saw",
+        1
+      ],
+      [
+        "tool-knife",
+        1
+      ],
+      [
+        "tool-tape",
+        1
+      ],
+      [
+        "ppe-cut-gloves",
+        1
+      ],
+      [
+        "ppe-ffp3",
+        1
+      ]
+    ]
+  },
+  {
+    "id": "kit-mixing",
+    "category": "tools",
+    "group": "Kits",
+    "brand": "Limitless Innovations",
+    "name": "Compound mixing kit",
+    "image": "images/products/kit-mixing.jpg",
+    "size": "Kit of 5",
+    "link": "",
+    "kit": [
+      [
+        "tool-paddle",
+        1
+      ],
+      [
+        "tool-tub",
+        1
+      ],
+      [
+        "tool-trowel",
+        1
+      ],
+      [
+        "ppe-ffp3",
+        1
+      ],
+      [
+        "ppe-nitrile",
+        1
+      ]
+    ]
   },
   {
     "id": "ppe-ffp3",
@@ -606,6 +698,38 @@ export const PRODUCTS = [
     "image": "images/products/ppe-knee-pads-strap.jpg",
     "size": "Standard: EN 14404 Type 1 Level 1",
     "link": ""
+  },
+  {
+    "id": "kit-ppe",
+    "category": "workwear",
+    "group": "Kits",
+    "brand": "Limitless Innovations",
+    "name": "Site PPE kit",
+    "image": "images/products/kit-ppe.jpg",
+    "size": "Kit of 5",
+    "link": "",
+    "kit": [
+      [
+        "ppe-hard-hat",
+        1
+      ],
+      [
+        "ppe-hi-vis",
+        1
+      ],
+      [
+        "ppe-glasses",
+        1
+      ],
+      [
+        "ppe-earplugs",
+        1
+      ],
+      [
+        "ppe-cut-gloves",
+        1
+      ]
+    ]
   }
 ];
 export const LOCK_PHOTOS = [
