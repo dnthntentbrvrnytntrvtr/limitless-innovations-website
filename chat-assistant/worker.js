@@ -184,12 +184,23 @@ Fire ratings below are product-level examples from the manufacturers; the tested
 - Erbauer Mixing paddle, 120 mm, M14: Helical paddle for mixing fire compound and mortar in the bucket without air pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Red Gorilla Flexible mixing tub, 26 L: Flexible rubber tub that mixes compound cleanly and knocks out when it's set. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Marshalltown Margin trowel, 127 mm: Narrow trowel for placing and finishing compound in tight openings. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Closed-cell backer rod: Foam rod that sets the depth of a sealant joint so the sealant works as tested. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Elcometer Wet film comb, 25 to 2000 µm: Stainless comb for checking wet film thickness as intumescent paint goes on. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Everbuild Closed-cell backer rod, 10 mm × 10 m: Foam rod that sets the depth of a sealant joint so the sealant works as tested. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Various Stainless wet film comb: Stainless comb for checking wet film thickness as intumescent paint goes on. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Elcometer Dry film thickness gauge: Digital gauge that measures cured coating thickness on steel, for the handover record. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Firestop identification labels: Self-adhesive labels that record the system, rating, installer and date next to each seal. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Limitless Innovations Firestop identification labels, 100 × 60 mm: Our own write-on labels: installer, date, system, fire rating and seal number, with a QR code to our contact page. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Nebo Rechargeable LED head torch: Bright, hands-free light for risers and ceiling voids where seals get photographed. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Stanley FatMax tape measure, 8 m: Wide-blade tape for sizing openings and checking batt depths. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt DCD796 18V XR brushless combi drill kit, 1 × 5.0 Ah: Compact brushless drill driver with hammer mode for fixings, pilot holes and screwing collars and brackets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt DCH172 18V XR compact SDS+ hammer drill, body only: Drills anchor and fixing holes in concrete, block and brick for brackets, support fixings and small service holes. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt DCS355 18V XR brushless multi-tool, body only: Plunge-cuts plasterboard openings and trims batt, seals and wraps neatly around services. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Makita DUT130Z 18V LXT brushless mixer, body only: Cordless paddle mixer for firestop mortar, compound and coatings, with no lead or generator needed. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Bosch Professional GLM 40-31 laser measure: Fast, accurate measurement of openings, voids and rooms for surveys and quantity take-offs. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Stabila Type 70 spirit level, 600 mm: Checks level and plumb when fitting board, brackets and penetration seals. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Wera Kraftform Plus 334/355/6 screwdriver set, PZ and slotted: Everyday Pozidriv and slotted drivers for collars, brackets, access panels and door hardware. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Bahco 325 Ergo hacksaw, 300 mm: Cuts steel channel, threaded rod, pipe and metal sleeves to length. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt TSTAK soft tool bag: Tough site bag with a moulded base for carrying guns, knives and hand tools between floors. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt DCL050 18V XR LED area light, body only: Hands-free light for inspecting and sealing penetrations in risers and ceiling voids. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Youngman Odd Job aluminium work platform: Stable low platform for reaching head-height penetrations and soffits without a ladder. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - JSP SpringFit FFP3 respirators, pack of 10: Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - 3M Half-mask respirator kit with P3 filters: Reusable half mask with particulate filters for long days on dusty work and coating. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Various Nitrile gloves, box of 100: Powder-free nitrile gloves for sealant, compound and coating work. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
@@ -202,6 +213,11 @@ Fire ratings below are product-level examples from the manufacturers; the tested
 - Snickers 9110 knee pad inserts: Certified knee pads that slot into the trouser pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - CAT Holton S3 safety boots: Steel-toe, midsole-protected boots that stay comfortable on concrete all day. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - DuPont Tyvek disposable coverall: Type 5/6 disposable coveralls for spraying intumescent paint. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt Cut D touchscreen work gloves: Cut-resistant grip gloves for handling steel and sharp board edges, still usable with a phone. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- 3M 2135 P3 particulate filters, 1 pair: Replacement P3 filters for the 3M 6000-series half mask when cutting, drilling and sanding. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Portwest C465 hi-vis 3-in-1 bomber jacket: Waterproof, insulated hi-vis jacket with zip-off sleeves for cold sites and external works. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DeWalt Titanium S3 safety boots, wheat: Waterproof leather safety boots with steel toe cap and midsole for all-day site wear. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Portwest KP40 Ultimate gel knee pads, strap-on: Strap-on gel knee pads for low-level sealing at slabs and skirtings, for trousers without knee pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 
 ## How to order trade products
 Open Products, choose a product and quantity, press "Add to basket", then open the "Trade basket", enter company name, contact name, work email (and optionally phone, VAT number, delivery postcode and notes) and press "Send order enquiry". This opens an email to info@limitlessinnovations.co.uk with the order enquiry.

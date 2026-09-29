@@ -204,6 +204,7 @@ export const DESK_HTML = `<!doctype html>
   function cost(pid) {
     let best = null;
     (suppliers[pid] || []).forEach(x => {
+      if (x.alt) return;
       const m = /£\\s*([0-9]+(?:\\.[0-9]+)?)/.exec(x.price || ''); if (!m) return;
       const n = parseFloat(m[1]); const inc = /inc\\.? ?VAT/i.test(x.price) ? n : n * (1 + VAT);
       if (!best || inc < best.inc) best = { inc, supplier: x.supplier, note: (x.price || '').replace(/^£[^ ]+\\s*/, '') };

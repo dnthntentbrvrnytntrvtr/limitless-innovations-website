@@ -271,19 +271,19 @@ export const PRODUCTS = [
     "id": "tool-backer-rod",
     "category": "tools",
     "group": "Mixing and application",
-    "brand": "Various",
-    "name": "Closed-cell backer rod",
-    "image": "images/products/tool-backer-rod.svg",
-    "size": "Sizes: 10, 15, 20 and 25 mm",
+    "brand": "Everbuild",
+    "name": "Closed-cell backer rod, 10 mm × 10 m",
+    "image": "images/products/tool-backer-rod.jpg",
+    "size": "Size: 10 mm diameter, other sizes to order",
     "link": ""
   },
   {
     "id": "tool-wet-film",
     "category": "tools",
     "group": "Marking and inspection",
-    "brand": "Elcometer",
-    "name": "Wet film comb, 25 to 2000 µm",
-    "image": "images/products/tool-wet-film.svg",
+    "brand": "Various",
+    "name": "Stainless wet film comb",
+    "image": "images/products/tool-wet-film.jpg",
     "size": "Range: 25 to 2000 microns",
     "link": ""
   },
@@ -301,9 +301,9 @@ export const PRODUCTS = [
     "id": "tool-labels",
     "category": "tools",
     "group": "Marking and inspection",
-    "brand": "Various",
-    "name": "Firestop identification labels",
-    "image": "images/products/tool-labels.svg",
+    "brand": "Limitless Innovations",
+    "name": "Firestop identification labels, 100 × 60 mm",
+    "image": "images/products/tool-labels.jpg",
     "size": "Pack: Roll of 100",
     "link": ""
   },
@@ -325,6 +325,116 @@ export const PRODUCTS = [
     "name": "FatMax tape measure, 8 m",
     "image": "images/products/tool-tape.jpg",
     "size": "Length: 8 m, 32 mm blade",
+    "link": ""
+  },
+  {
+    "id": "tool-combi-drill",
+    "category": "tools",
+    "group": "Power tools",
+    "brand": "DeWalt",
+    "name": "DCD796 18V XR brushless combi drill kit, 1 × 5.0 Ah",
+    "image": "images/products/tool-combi-drill.jpg",
+    "size": "Voltage: 18 V",
+    "link": ""
+  },
+  {
+    "id": "tool-sds-drill",
+    "category": "tools",
+    "group": "Power tools",
+    "brand": "DeWalt",
+    "name": "DCH172 18V XR compact SDS+ hammer drill, body only",
+    "image": "images/products/tool-sds-drill.jpg",
+    "size": "Voltage: 18 V",
+    "link": ""
+  },
+  {
+    "id": "tool-multi-tool",
+    "category": "tools",
+    "group": "Power tools",
+    "brand": "DeWalt",
+    "name": "DCS355 18V XR brushless multi-tool, body only",
+    "image": "images/products/tool-multi-tool.jpg",
+    "size": "Voltage: 18 V",
+    "link": ""
+  },
+  {
+    "id": "tool-mixer",
+    "category": "tools",
+    "group": "Mixing and application",
+    "brand": "Makita",
+    "name": "DUT130Z 18V LXT brushless mixer, body only",
+    "image": "images/products/tool-mixer.jpg",
+    "size": "Voltage: 18 V",
+    "link": ""
+  },
+  {
+    "id": "tool-laser-measure",
+    "category": "tools",
+    "group": "Marking and inspection",
+    "brand": "Bosch Professional",
+    "name": "GLM 40-31 laser measure",
+    "image": "images/products/tool-laser-measure.jpg",
+    "size": "Protection: IP65",
+    "link": ""
+  },
+  {
+    "id": "tool-spirit-level",
+    "category": "tools",
+    "group": "Marking and inspection",
+    "brand": "Stabila",
+    "name": "Type 70 spirit level, 600 mm",
+    "image": "images/products/tool-spirit-level.jpg",
+    "size": "Length: 60 cm",
+    "link": ""
+  },
+  {
+    "id": "tool-screwdriver-set",
+    "category": "tools",
+    "group": "Kit and access",
+    "brand": "Wera",
+    "name": "Kraftform Plus 334/355/6 screwdriver set, PZ and slotted",
+    "image": "images/products/tool-screwdriver-set.jpg",
+    "size": "Pieces: 6 with rack",
+    "link": ""
+  },
+  {
+    "id": "tool-hacksaw",
+    "category": "tools",
+    "group": "Cutting",
+    "brand": "Bahco",
+    "name": "325 Ergo hacksaw, 300 mm",
+    "image": "images/products/tool-hacksaw.jpg",
+    "size": "Blade length: 300 mm",
+    "link": ""
+  },
+  {
+    "id": "tool-bag",
+    "category": "tools",
+    "group": "Kit and access",
+    "brand": "DeWalt",
+    "name": "TSTAK soft tool bag",
+    "image": "images/products/tool-bag.jpg",
+    "size": "Fabric: 1200 denier polyester",
+    "link": ""
+  },
+  {
+    "id": "tool-work-light",
+    "category": "tools",
+    "group": "Power tools",
+    "brand": "DeWalt",
+    "name": "DCL050 18V XR LED area light, body only",
+    "image": "images/products/tool-work-light.jpg",
+    "size": "Output: 250 to 500 lumens",
+    "link": ""
+  },
+  {
+    "id": "tool-work-platform",
+    "category": "tools",
+    "group": "Kit and access",
+    "brand": "Youngman",
+    "name": "Odd Job aluminium work platform",
+    "image": "images/products/tool-work-platform.jpg",
+    "size": "Material: Aluminium",
     "link": ""
   },
   {
@@ -445,6 +555,56 @@ export const PRODUCTS = [
     "name": "Tyvek disposable coverall",
     "image": "images/products/ppe-coverall.jpg",
     "size": "Standard: Type 5 and 6",
+    "link": ""
+  },
+  {
+    "id": "ppe-cut-gloves-dewalt",
+    "category": "workwear",
+    "group": "Hands and eyes",
+    "brand": "DeWalt",
+    "name": "Cut D touchscreen work gloves",
+    "image": "images/products/ppe-cut-gloves-dewalt.jpg",
+    "size": "Cut level: D",
+    "link": ""
+  },
+  {
+    "id": "ppe-p3-filters",
+    "category": "workwear",
+    "group": "Respiratory",
+    "brand": "3M",
+    "name": "2135 P3 particulate filters, 1 pair",
+    "image": "images/products/ppe-p3-filters.jpg",
+    "size": "Protection: P3",
+    "link": ""
+  },
+  {
+    "id": "ppe-hi-vis-jacket",
+    "category": "workwear",
+    "group": "Clothing",
+    "brand": "Portwest",
+    "name": "C465 hi-vis 3-in-1 bomber jacket",
+    "image": "images/products/ppe-hi-vis-jacket.jpg",
+    "size": "Seams: Waterproof, taped",
+    "link": ""
+  },
+  {
+    "id": "ppe-safety-boots",
+    "category": "workwear",
+    "group": "Clothing",
+    "brand": "DeWalt",
+    "name": "Titanium S3 safety boots, wheat",
+    "image": "images/products/ppe-safety-boots.jpg",
+    "size": "Safety rating: S3 WR SRA",
+    "link": ""
+  },
+  {
+    "id": "ppe-knee-pads-strap",
+    "category": "workwear",
+    "group": "Clothing",
+    "brand": "Portwest",
+    "name": "KP40 Ultimate gel knee pads, strap-on",
+    "image": "images/products/ppe-knee-pads-strap.jpg",
+    "size": "Standard: EN 14404 Type 1 Level 1",
     "link": ""
   }
 ];

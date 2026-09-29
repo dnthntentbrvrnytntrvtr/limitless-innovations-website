@@ -24,6 +24,7 @@ import(path.join(__dirname, 'suppliers.js')).then(m => {
     if (!Array.isArray(list)) continue;
     let best = null;
     for (const x of list) {
+      if (x.alt) continue;   // a different product offered as an alternative: never sets the shop price
       const p = /£\s*([0-9]+(?:\.[0-9]+)?)/.exec(x.price || ''); if (!p) continue;
       const n = parseFloat(p[1]);
       const inc = /inc\.? ?VAT/i.test(x.price) ? n : n * (1 + VAT);
