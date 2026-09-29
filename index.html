@@ -634,6 +634,8 @@
   .trade-order-form .wide { grid-column: 1 / -1; }
   .trade-order-form .btn { justify-self: start; }
   .cart-status { min-height: 1.3em; color: var(--accent); font-size: 12px; }
+  .cart-status a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+  .trade-cart-inner .row { display: flex; gap: 10px; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
   @media (max-width: 640px) {
     .products { grid-template-columns: 1fr; }
@@ -1366,7 +1368,7 @@
         <label>VAT number<input name="vat" autocomplete="off"></label>
         <label>Delivery postcode<input name="postcode" autocomplete="postal-code"></label>
         <label class="wide">Product sizes, delivery needs or other notes<textarea name="notes" placeholder="For example: pipe collar sizes, quantities by delivery location, or required date"></textarea></label>
-        <button class="btn wide" type="submit">Prepare trade order email</button>
+        <button class="btn wide" type="submit">Send order enquiry</button>
         <p class="cart-status wide" id="tradeCartStatus" aria-live="polite"></p>
       </form>
     </div>
@@ -3096,18 +3098,47 @@ const SITE = {
     $('#closeTradeCart').addEventListener('click', () => cart.close());
     cart.addEventListener('click', e => { if (e.target === cart) cart.close(); });
     cart.addEventListener('touchmove', e => { if (e.target === cart) e.preventDefault(); }, { passive: false });
-    $('#tradeOrderForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const lines = P.filter(p => Number(basket[p.id]) > 0).map(p => `- ${p.name} (${p.brand}) — ${basket[p.id]} × ${p.size}`);
-      if (!lines.length) { $('#tradeCartStatus').textContent = 'Add at least one product before sending an order enquiry.'; return; }
-      const form = new FormData(e.currentTarget);
+    // Sending: the order goes to the site's own /api/orders (worker/index.js) and lands on the
+    // order desk. If that can't be reached, the old route (an email draft) is offered instead.
+    const orderForm = $('#tradeOrderForm'), status = $('#tradeCartStatus');
+    const orderItems = () => P.filter(p => Number(basket[p.id]) > 0).map(p => ({ id: p.id, brand: p.brand, name: p.name, qty: Number(basket[p.id]), size: p.size }));
+    const mailtoOrder = (form, items) => {
+      const lines = items.map(i => `- ${i.name} (${i.brand}) — ${i.qty} × ${i.size}`);
       const fields = [['Company', 'company'], ['Contact', 'contact'], ['Work email', 'email'], ['Phone', 'phone'], ['VAT number', 'vat'], ['Delivery postcode', 'postcode']];
       const details = fields.map(([label, key]) => `${label}: ${String(form.get(key) || '').trim()}`).join('\n');
       const notes = String(form.get('notes') || '').trim();
       const body = `Trade order enquiry\n\n${details}\n\nRequested products\n${lines.join('\n')}\n\nAdditional notes: ${notes || 'None'}\n\nPlease confirm trade pricing, availability and delivery before accepting this order.`;
       const subject = `Trade order enquiry — ${String(form.get('company') || 'Limitless Innovations').trim()}`;
-      $('#tradeCartStatus').textContent = 'Opening an email with your order enquiry…';
-      window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    };
+    orderForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const items = orderItems();
+      if (!items.length) { status.textContent = 'Add at least one product before sending an order enquiry.'; return; }
+      const form = new FormData(orderForm);
+      const d = Object.fromEntries(form.entries());
+      d.items = items;
+      const btn = $('button[type="submit"]', orderForm);
+      btn.disabled = true; status.textContent = 'Sending your order enquiry…';
+      try {
+        const r = await fetch((SITE.api || '') + '/api/orders', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok) {
+          const inner = $('.trade-cart-inner', cart);
+          inner.innerHTML = `<div class="trade-cart-head"><div><p class="eyebrow">Business orders</p><h2>Order enquiry sent</h2></div><button class="trade-cart-close" type="button" aria-label="Close trade basket">×</button></div>
+            <div class="msg-done"><h3>Reference ${esc(j.ref)}</h3><p>Thanks, ${esc(String(d.contact).trim().split(/\s+/)[0])}. We've got your enquiry for ${items.length} product${items.length === 1 ? '' : 's'} and will email a trade quotation to <strong>${esc(String(d.email).trim())}</strong>, with stock and delivery confirmed. Quote the reference if you call.</p></div>
+            <div class="row"><button class="btn" type="button" data-close-cart>Done</button></div>`;
+          $('[data-close-cart]', inner).addEventListener('click', () => cart.close());
+          $('.trade-cart-close', inner).addEventListener('click', () => cart.close());
+          basket = {}; updateBasket();
+          return;
+        }
+        if (r.status === 422 && j.fields) { status.textContent = Object.values(j.fields)[0]; return; }
+        if (r.status === 429) { status.textContent = 'Too many order enquiries from this connection for now. Please email us instead.'; return; }
+        throw new Error('server');
+      } catch (_) {
+        status.innerHTML = `We couldn't send that just now. <a href="${mailtoOrder(form, items)}">Send it as an email instead</a> (your basket is copied into it).`;
+      } finally { btn.disabled = false; }
     });
     updateBasket();
   })();
@@ -3627,7 +3658,7 @@ const SITE = {
     },
     order(cat) {
       const items = cat ? PRODUCTS.filter(p => cat.icons.includes(p.icon)).map(p => `**${p.brand} ${p.name}**`) : [];
-      return `To order${cat ? ' ' + cat.label : ''}:\n1. Go to ${link('Products', '#products')} and pick ${items.length ? listJoin(items, 'or') : 'what you need'}.\n2. Set the quantity and press **Add to basket**.\n3. Open the **Trade basket**, fill in your company details and press **Prepare trade order email**.\n\nNo payment is taken online. We confirm trade pricing, stock and delivery before the order is accepted.`;
+      return `To order${cat ? ' ' + cat.label : ''}:\n1. Go to ${link('Products', '#products')} and pick ${items.length ? listJoin(items, 'or') : 'what you need'}.\n2. Set the quantity and press **Add to basket**.\n3. Open the **Trade basket**, fill in your company details and press **Send order enquiry**. You get a reference straight away.\n\nNo payment is taken online. We confirm trade pricing, stock and delivery before the order is accepted.`;
     },
     price: prods => `We don't publish ${prods.length ? `a price for **${prods.map(p => p.name).join('** or **')}**` : 'prices'} online. Trade prices, availability and delivery are confirmed with your order enquiry: add products to the Trade basket in ${link('Products', '#products')} and send it to us.\n\nFor installation work, every job is priced after a survey: ${QUOTE}.`,
     delivery: () => `Stock and delivery are confirmed with each order. Send your enquiry from the Trade basket in ${link('Products', '#products')}, with your delivery postcode and the date you need it, and the team will confirm availability and delivery before accepting the order.`,
