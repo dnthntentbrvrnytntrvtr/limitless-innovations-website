@@ -112,7 +112,7 @@ export const DESK_HTML = `<!doctype html>
   const api = (path, opts) => fetch('/api/desk/' + path, { credentials: 'same-origin', ...opts }).then(r => { if (r.status === 401) { location.reload(); throw new Error('auth'); } return r.json(); });
   const post = (path, status) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status }) });
 
-  fetch('/data/suppliers.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).then(j => { suppliers = j || {}; if (tab === 'orders') load(); }).catch(() => {});
+  api('suppliers').then(j => { suppliers = (j && j.suppliers) || {}; if (tab === 'orders') load(); }).catch(() => {});
 
   function supplierLinks(pid) {
     const s = suppliers[pid];

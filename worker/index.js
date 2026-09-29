@@ -8,6 +8,7 @@
    (see DESK-SETUP.txt). */
 
 import { DESK_HTML, LOGIN_HTML } from './desk.js';
+import SUPPLIERS from './suppliers.js';   // supplier links per product, shown only on the desk
 
 const MAX = { name: 80, email: 120, phone: 40, message: 4000, company: 120, notes: 2000, items: 60 };
 const COOKIE = 'li_desk';
@@ -153,6 +154,7 @@ async function deskApi(request, env, url) {
   const DB = env.DB;
 
   if (request.method === 'GET') {
+    if (p[0] === 'suppliers') return json({ ok: true, suppliers: SUPPLIERS });
     if (p[0] === 'summary') {
       const m = await DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE status = 'new'").first('n');
       const o = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status = 'new'").first('n');
