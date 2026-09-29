@@ -17,6 +17,9 @@ const STYLE = `
   .btn:hover { border-color: var(--steel); }
   .btn.acc { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.sm { padding: 6px 9px; font-size: 12px; }
+  .btn.danger { color: #f0a08a; }
+  .btn.danger:hover { border-color: #f0a08a; }
+  .btn[disabled] { opacity: .45; cursor: default; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
   .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
   .tab { padding: 9px 14px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--ink-2); font: 600 14px/1 inherit; cursor: pointer; }
@@ -24,7 +27,17 @@ const STYLE = `
   .tab .n { display: inline-block; min-width: 20px; padding: 2px 6px; margin-left: 6px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11px; text-align: center; }
   .tab .n.zero { background: var(--panel-2); color: var(--muted); }
   .filters { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+  .filters[hidden] { display: none; }
   .filters label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+  .filters .spacer { flex: 1; }
+  .filters input[type="search"] { flex: 1 1 220px; min-width: 160px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font: 400 14px/1.3 inherit; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink-2); font: 500 13px/1 inherit; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--panel); color: var(--ink); border-color: var(--steel); }
+  .card h4.grp { margin: 6px 0 0; font: 500 11px/1 inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
+  table.items td .size { font-size: 12.5px; color: var(--muted); }
+  table.items td a.mf { display: inline-block; margin-top: 3px; font-size: 12px; color: var(--steel); }
+  .card .actions .del { margin-left: auto; }
   .list { display: grid; gap: 12px; }
   .card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); display: grid; gap: 10px; }
   .card.new { border-left: 3px solid var(--accent); }
@@ -49,7 +62,17 @@ const STYLE = `
   .empty { padding: 40px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
   .note { margin-top: 20px; padding: 12px 14px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
   .note b { color: var(--stone); font-weight: 600; }
-  @media (max-width: 640px) { .wrap { padding: 14px; } .card { padding: 14px; } .top { padding: 10px 14px; } .top .sub { display: none; } }
+  @media (max-width: 640px) {
+    .wrap { padding: 14px; } .card { padding: 14px; } .top { padding: 10px 14px; gap: 10px; } .top .sub { display: none; } .top h1 { white-space: nowrap; } .top .right { font-size: 12px; gap: 6px; }
+    .tab { padding: 8px 11px; font-size: 13px; }
+    /* Tables stack: product on one line, where to buy it underneath. */
+    table.items thead { display: none; }
+    table.items, table.items tbody, table.items tr, table.items td { display: block; }
+    table.items tr { padding: 8px 0; border-bottom: 1px solid var(--line); }
+    table.items td { border: 0; padding: 3px 0; }
+    table.items td.qty { display: inline-block; padding-right: 6px; } table.items td.qty + td { display: inline; }
+    .sup a { flex-wrap: wrap; }
+  }
 `;
 
 const MARK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 14l16-8 16 8-16 8z" fill="#e6dfd1"/><path d="M4 14l16 8v14L4 28z" fill="#b9b0a0"/><path d="M20 22l16-8v14l-16 8z" fill="#6f7882"/></svg>`;
@@ -96,15 +119,17 @@ export const DESK_HTML = `<!doctype html>
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="tabMsg" aria-selected="true" data-tab="messages">Messages<span class="n zero" id="nMsg">0</span></button>
     <button class="tab" role="tab" id="tabOrd" aria-selected="false" data-tab="orders">Orders<span class="n zero" id="nOrd">0</span></button>
+    <button class="tab" role="tab" id="tabSup" aria-selected="false" data-tab="suppliers">Suppliers</button>
   </div>
-  <div class="filters"><label><input type="checkbox" id="showAll"> Show archived and closed too</label><span id="updated"></span></div>
+  <div class="filters" id="filtersInbox"><label><input type="checkbox" id="showAll"> Show archived and closed too</label><button class="btn sm danger" id="purge" type="button">Clear archived messages</button><span class="spacer"></span><span id="updated"></span></div>
+  <div class="filters" id="filtersSup" hidden><div class="chips" id="rangeChips"></div><input type="search" id="supSearch" placeholder="Find a product, brand or group" autocomplete="off"></div>
   <div class="list" id="list"></div>
   <div class="note" id="note" hidden></div>
 </main>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
-  let tab = 'messages', suppliers = {};
+  let tab = 'messages', suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const when = iso => { const d = new Date(iso + (iso.endsWith('Z') ? '' : 'Z')); const m = (Date.now() - d) / 60000;
     if (m < 1) return 'just now'; if (m < 60) return Math.round(m) + ' min ago'; if (m < 36 * 60) return Math.round(m / 60) + ' h ago';
@@ -112,7 +137,11 @@ export const DESK_HTML = `<!doctype html>
   const api = (path, opts) => fetch('/api/desk/' + path, { credentials: 'same-origin', ...opts }).then(r => { if (r.status === 401) { location.reload(); throw new Error('auth'); } return r.json(); });
   const post = (path, status) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status }) });
 
-  api('suppliers').then(j => { suppliers = (j && j.suppliers) || {}; if (tab === 'orders') load(); }).catch(() => {});
+  api('suppliers').then(j => {
+    suppliers = (j && j.suppliers) || {}; cat = { ranges: (j && j.ranges) || [], products: (j && j.products) || [] };
+    $('#rangeChips').innerHTML = [{ id: 'all', name: 'All' }].concat(cat.ranges).map(r => '<button class="chip" type="button" data-range="' + esc(r.id) + '" aria-pressed="' + (r.id === range) + '">' + esc(r.name) + '</button>').join('');
+    if (tab !== 'messages') load();
+  }).catch(() => {});
 
   function supplierLinks(pid) {
     const s = suppliers[pid];
@@ -128,7 +157,8 @@ export const DESK_HTML = `<!doctype html>
       '<div class="meta"><span><b>Email</b><a href="mailto:' + esc(m.email) + '">' + esc(m.email) + '</a></span>' + (m.phone ? '<span><b>Phone</b><a href="tel:' + esc(m.phone.replace(/\\s+/g, '')) + '">' + esc(m.phone) + '</a></span>' : '') + (m.page ? '<span><b>From</b>' + esc(m.page) + '</span>' : '') + '</div>' +
       '<div class="body">' + esc(m.message) + '</div>' +
       '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(m.email) + '?subject=' + subject + '&body=' + body + '">Reply by email</a>' + (m.phone ? '<a class="btn sm" href="tel:' + esc(m.phone.replace(/\\s+/g, '')) + '">Call</a>' : '') +
-      '<select data-kind="messages" data-id="' + m.id + '">' + opts + '</select></div></article>';
+      '<select data-kind="messages" data-id="' + m.id + '">' + opts + '</select>' +
+      '<button class="btn sm danger del" type="button" data-del="messages" data-id="' + m.id + '" data-label="the message from ' + esc(m.name) + '">Delete</button></div></article>';
   }
   function orderCard(o) {
     const opts = ['new', 'confirmed', 'ordered', 'dispatched', 'closed', 'cancelled'].map(s => '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + ({ new: 'New', confirmed: 'Confirmed with customer', ordered: 'Ordered from supplier', dispatched: 'Dispatched', closed: 'Closed', cancelled: 'Cancelled' })[s] + '</option>').join('');
@@ -141,19 +171,55 @@ export const DESK_HTML = `<!doctype html>
       '<div class="meta"><span><b>Contact</b>' + esc(o.contact) + '</span><span><b>Email</b><a href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a></span>' + (o.phone ? '<span><b>Phone</b><a href="tel:' + esc(o.phone.replace(/\\s+/g, '')) + '">' + esc(o.phone) + '</a></span>' : '') + (o.vat ? '<span><b>VAT</b>' + esc(o.vat) + '</span>' : '') + (o.postcode ? '<span><b>Deliver to</b>' + esc(o.postcode) + '</span>' : '') + '</div>' +
       '<table class="items"><thead><tr><th>Qty</th><th>Item</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       (o.notes ? '<div class="body">' + esc(o.notes) + '</div>' : '') +
-      '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select></div></article>';
+      '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select>' +
+      '<button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="order ' + esc(o.ref) + ' from ' + esc(o.company) + '">Delete</button></div></article>';
+  }
+  /* Suppliers: every product in the shop with where to buy it. For the owner only; customers never see this. */
+  function renderSuppliers() {
+    const q = ($('#supSearch').value || '').trim().toLowerCase();
+    const hit = p => (range === 'all' || p.category === range) && (!q || (p.brand + ' ' + p.name + ' ' + p.group + ' ' + p.size).toLowerCase().includes(q));
+    const rows = cat.products.filter(hit);
+    if (!cat.products.length) { $('#list').innerHTML = '<div class="empty">Loading the product list…</div>'; return; }
+    if (!rows.length) { $('#list').innerHTML = '<div class="empty">No products match.</div>'; return; }
+    const out = [];
+    cat.ranges.forEach(r => {
+      const inRange = rows.filter(p => p.category === r.id);
+      if (!inRange.length) return;
+      out.push('<section class="card"><div class="head"><h3>' + esc(r.name) + '</h3><span class="when">' + inRange.length + (inRange.length === 1 ? ' product' : ' products') + '</span></div>');
+      [...new Set(inRange.map(p => p.group))].forEach(g => {
+        out.push('<h4 class="grp">' + esc(g) + '</h4><table class="items"><thead><tr><th>Product</th><th>Buy from</th></tr></thead><tbody>');
+        inRange.filter(p => p.group === g).forEach(p => {
+          out.push('<tr><td><span style="color:var(--muted)">' + esc(p.brand) + '</span> <b>' + esc(p.name) + '</b>' + (p.size ? '<div class="size">' + esc(p.size) + '</div>' : '') +
+            (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener">Manufacturer page</a>' : '') + '</td><td><div class="sup">' + supplierLinks(p.id) + '</div></td></tr>');
+        });
+        out.push('</tbody></table>');
+      });
+      out.push('</section>');
+    });
+    $('#list').innerHTML = out.join('');
   }
   async function load() {
+    const inbox = tab !== 'suppliers';
+    $('#filtersInbox').hidden = !inbox; $('#filtersSup').hidden = inbox;
     const all = $('#showAll').checked ? '?all=1' : '';
-    const [sum, data] = await Promise.all([api('summary'), api(tab + all)]);
+    const [sum, data] = await Promise.all([api('summary'), inbox ? api(tab + all) : null]);
     $('#nMsg').textContent = sum.newMessages; $('#nMsg').classList.toggle('zero', !sum.newMessages);
     $('#nOrd').textContent = sum.newOrders; $('#nOrd').classList.toggle('zero', !sum.newOrders);
     document.title = ((sum.newMessages + sum.newOrders) ? '(' + (sum.newMessages + sum.newOrders) + ') ' : '') + 'Order desk · Limitless Innovations';
     $('#alerts').textContent = sum.alerts ? 'Email alerts on' : 'Email alerts off';
+    counts = { archived: sum.archived || 0, closed: sum.closed || 0 };
+    const note = $('#note');
+    if (!inbox) {
+      renderSuppliers();
+      note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets; "search" links open that supplier\\'s results for the product. Links live in worker/suppliers.js.';
+      return;
+    }
     const rows = tab === 'messages' ? data.messages : data.orders;
     $('#list').innerHTML = rows.length ? rows.map(tab === 'messages' ? messageCard : orderCard).join('') : '<div class="empty">Nothing here yet.</div>';
     $('#updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    const note = $('#note');
+    const purge = $('#purge'); const n = tab === 'messages' ? counts.archived : counts.closed;
+    purge.textContent = tab === 'messages' ? 'Clear archived messages' + (n ? ' (' + n + ')' : '') : 'Clear closed and cancelled orders' + (n ? ' (' + n + ')' : '');
+    purge.disabled = !n;
     if (!sum.alerts) { note.hidden = false; note.innerHTML = '<b>Email alerts are off.</b> New messages and orders still arrive here; to get an email for each one, add the RESEND_API_KEY secret (see DESK-SETUP.txt).'; } else note.hidden = true;
   }
   document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { tab = b.dataset.tab; document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === b))); load(); }));
@@ -163,6 +229,25 @@ export const DESK_HTML = `<!doctype html>
     const s = e.target.closest('select[data-kind]'); if (!s) return;
     await post(s.dataset.kind + '/' + s.dataset.id, s.value); load();
   });
+  $('#list').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-del]'); if (!b) return;
+    if (!confirm('Delete ' + b.dataset.label + '? This cannot be undone.')) return;
+    b.disabled = true;
+    await api(b.dataset.del + '/' + b.dataset.id + '/delete', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
+    load();
+  });
+  $('#purge').addEventListener('click', async () => {
+    const what = tab === 'messages' ? 'all archived messages' : 'all closed and cancelled orders';
+    if (!confirm('Delete ' + what + '? This cannot be undone.')) return;
+    const r = await api('purge', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ kind: tab }) });
+    await load();
+    if (r && r.ok) $('#updated').textContent = 'Cleared ' + (r.deleted == null ? '' : r.deleted + ' ') + (tab === 'messages' ? 'archived messages' : 'closed orders');
+  });
+  $('#rangeChips').addEventListener('click', e => {
+    const c = e.target.closest('.chip[data-range]'); if (!c) return;
+    range = c.dataset.range; document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === c))); renderSuppliers();
+  });
+  $('#supSearch').addEventListener('input', renderSuppliers);
   load();
   setInterval(load, 60000);
 })();

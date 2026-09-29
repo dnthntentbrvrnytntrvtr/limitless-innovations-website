@@ -9,6 +9,15 @@ WHAT IT DOES
   (password protected). Each message has "Reply by email" and "Call" buttons;
   each order has a status (new, confirmed, ordered from supplier, dispatched,
   closed) and, per item, links to suppliers.
+- Clearing out: every message and order has a Delete button. Or set a
+  message to Archived (an order to Closed or Cancelled) and use
+  "Clear archived messages" / "Clear closed and cancelled orders" to remove
+  them all at once. Tick "Show archived and closed too" to see them first.
+- Suppliers tab: every product in the shop with where to buy it and the
+  price seen on the date shown. This is for you when an order comes in;
+  customers never see it. Filter by range or search by name, brand or group.
+  The links live in worker/suppliers.js; the product list is generated from
+  the website's shop data, so new products appear automatically.
 - Optionally, every new message and order also emails you.
 
 ------------------------------------------------------------------------

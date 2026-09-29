@@ -9,6 +9,7 @@
 
 import { DESK_HTML, LOGIN_HTML } from './desk.js';
 import SUPPLIERS from './suppliers.js';   // supplier links per product, shown only on the desk
+import { RANGES, PRODUCTS } from './catalogue.js';   // generated from index.html by build-catalogue.js
 
 const MAX = { name: 80, email: 120, phone: 40, message: 4000, company: 120, notes: 2000, items: 60 };
 const COOKIE = 'li_desk';
@@ -154,11 +155,13 @@ async function deskApi(request, env, url) {
   const DB = env.DB;
 
   if (request.method === 'GET') {
-    if (p[0] === 'suppliers') return json({ ok: true, suppliers: SUPPLIERS });
+    if (p[0] === 'suppliers') return json({ ok: true, suppliers: SUPPLIERS, ranges: RANGES, products: PRODUCTS });
     if (p[0] === 'summary') {
       const m = await DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE status = 'new'").first('n');
       const o = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status = 'new'").first('n');
-      return json({ ok: true, newMessages: m, newOrders: o, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO) });
+      const archived = await DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE status = 'archived'").first('n');
+      const closed = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status IN ('closed','cancelled')").first('n');
+      return json({ ok: true, newMessages: m, newOrders: o, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO) });
     }
     if (p[0] === 'messages') {
       const all = url.searchParams.get('all') === '1';
@@ -181,9 +184,39 @@ async function deskApi(request, env, url) {
 
   if (request.method === 'POST') {
     const body = (await readBody(request)) || {};
+
+    // Clear out finished items in one go: POST /api/desk/purge {kind: 'messages'|'orders'}
+    // removes archived messages, or closed and cancelled orders (with their lines).
+    if (p[0] === 'purge') {
+      const kind = clean(body.kind, 20);
+      if (kind === 'messages') {
+        const r = await DB.prepare("DELETE FROM messages WHERE status = 'archived'").run();
+        return json({ ok: true, deleted: changes(r) });
+      }
+      if (kind === 'orders') {
+        await DB.prepare("DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE status IN ('closed','cancelled'))").run();
+        const r = await DB.prepare("DELETE FROM orders WHERE status IN ('closed','cancelled')").run();
+        return json({ ok: true, deleted: changes(r) });
+      }
+      return json({ ok: false, error: 'invalid' }, 400);
+    }
+
     const id = parseInt(p[1], 10);
+    if (!id || !['messages', 'orders', 'items'].includes(p[0])) return json({ ok: false, error: 'invalid' }, 400);
+
+    // Delete one message or one order: POST /api/desk/<messages|orders>/<id>/delete
+    if (p[2] === 'delete') {
+      if (p[0] === 'messages') await DB.prepare('DELETE FROM messages WHERE id = ?').bind(id).run();
+      else if (p[0] === 'orders') {
+        await DB.prepare('DELETE FROM order_items WHERE order_id = ?').bind(id).run();
+        await DB.prepare('DELETE FROM orders WHERE id = ?').bind(id).run();
+      } else return json({ ok: false, error: 'invalid' }, 400);
+      return json({ ok: true });
+    }
+
+    // Otherwise a status change: POST /api/desk/<messages|orders|items>/<id> {status}
     const status = clean(body.status, 20);
-    if (!id || !status) return json({ ok: false, error: 'invalid' }, 400);
+    if (!status) return json({ ok: false, error: 'invalid' }, 400);
     const tables = { messages: ['new', 'read', 'replied', 'archived'], orders: ['new', 'confirmed', 'ordered', 'dispatched', 'closed', 'cancelled'], items: ['new', 'ordered', 'received', 'dispatched'] };
     const allowed = tables[p[0]];
     if (!allowed || !allowed.includes(status)) return json({ ok: false, error: 'invalid' }, 400);
@@ -213,6 +246,7 @@ async function alert(env, subject, text, replyTo) {
 /* ==========================================================================
    Helpers
    ========================================================================== */
+function changes(r) { return (r && r.meta && typeof r.meta.changes === 'number') ? r.meta.changes : null; }
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers } });
 }

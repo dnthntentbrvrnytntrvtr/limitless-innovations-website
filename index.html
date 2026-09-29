@@ -2140,7 +2140,9 @@ const SITE = {
   coatingPhotos: {
     prime:   { src: "images/coat/prime-1600.webp", srcset: "images/coat/prime-960.webp 960w, images/coat/prime-1600.webp 1600w", focus: "60% 55%", alt: "Red oxide primer being rolled onto a steel beam" },
     spray:   { src: "images/coat/spray-640.webp", focus: "50% 30%", alt: "White intumescent coating sprayed over primed beams and a column" },
-    topcoat: { src: "images/coat/topcoat-1600.webp", srcset: "images/coat/topcoat-960.webp 960w, images/coat/topcoat-1600.webp 1600w", focus: "50% 45%", alt: "White intumescent coat meeting red primer on a steel beam" }
+    topcoat: { src: "images/coat/topcoat-1600.webp", srcset: "images/coat/topcoat-960.webp 960w, images/coat/topcoat-1600.webp 1600w", focus: "50% 45%", alt: "White intumescent coat meeting red primer on a steel beam" },
+    apply:   { src: "images/coat/apply-1536.webp", srcset: "images/coat/apply-960.webp 960w, images/coat/apply-1536.webp 1536w", focus: "45% 40%", alt: "Intumescent coating sprayed onto a beam inside a containment, with the environment board and monitor beside it" },
+    record:  { src: "images/coat/record-1536.webp", srcset: "images/coat/record-960.webp 960w, images/coat/record-1536.webp 1536w", focus: "60% 60%", alt: "Wet and dry film thickness gauges and the coating record board in front of sprayed steelwork" }
   },
 
   // Steel coating: the five stages shown in the Steel coatings section.
@@ -3041,8 +3043,8 @@ const SITE = {
     const photos = `<div class="cx-photos">${[
       ph(1, 'prime', 'Prepared steel, primer going on'),
       ph(2, 'topcoat', 'Each member checked against its rating and section'),
-      ph(3, 'spray', 'Intumescent coat applied over the primer'),
-      ph(4, 'topcoat', 'Dry film measured and logged, member by member'),
+      ph(3, 'apply', 'Coating applied inside a containment, conditions checked before each coat'),
+      ph(4, 'record', 'Wet and dry film measured and logged, member by member'),
       ph(5, 'spray', 'Coated steelwork, ready for sign-off')
     ].join('')}</div>`;
     const cards = [
