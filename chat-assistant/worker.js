@@ -71,7 +71,7 @@ Company number: 14380770
 
 ## Page text: hero and about (#about)
 Limitless Innovations
-Certified passive fire protection for London's buildings.
+Certified passive fire protection.
 Firestopping / Fire-rated walls / Cavity barriers / Intumescent coatings
 Get a quote
 Third-party certified
@@ -95,8 +95,7 @@ Quotes: the quickest route is the "Message us" form on the website (name, email,
 
 ## Certifications (#certification)
 Certification
-Certified work
-Our installers and our work are independently audited and certified. Copies of our certificates are available on request.
+Independently audited installers and work. Copies of our certificates are available on request.
 - FIRAS installer certification (Warringtonfire): Third-party certification for installers of passive fire protection. Office systems, site workmanship and installer competence are all audited. https://www.warringtonfire.com/certification-services/fire-certification/firas
 - BM TRADA Q-Mark (BM TRADA): Third-party certification that checks fire stopping is installed to the manufacturer's tested details. https://www.bmtrada.com/certification-services/third-party-certification-fire/q-mark-fire-stopping-installation-scheme
 - IFC Certification (IFC Certification): UKAS-accredited third-party certification for fire protection installers, including penetration and linear gap seals. https://www.ifccertification.com
@@ -122,12 +121,12 @@ The website lists these London buildings the installers have worked on. It does 
 - Silvertown Tunnel (Silvertown to Greenwich Peninsula): Road tunnel under the Thames, opened in 2025.
 
 ## Before and after projects (#projects)
-- Project 01, install, September 2026: Large floor void closed. A large service void between floors was closed with coated batts laid across a steel support frame, sealed at every joint and edge. Materials: Coated fire batt; Steel support frame (Galvanised); Intumescent sealant.
-- Project 02, repair, August 2026: Riser seal broken by other trades. New cables were pulled through a finished floor seal in an electrical riser. We cut the damaged batt back, fitted new batt and sealed every cable, all within half an hour. Materials: Coated fire batt; Intumescent sealant.
-- Project 03, repair, August 2026: Gap cut beside a large cable. Another seal on the same riser floor had been cut back around a large cable. The gap was sealed and the damaged corner of the batt made good. Materials: Coated fire batt; Intumescent sealant.
-- Project 04, install, May 2024: Riser services sealed at the slab. Cable trays and pipes rising through a riser opening were sealed with coated batt, with every service wrapped where it passes through. Materials: Coated fire batt; Pipe and cable wraps, foil-faced; Intumescent sealant.
-- Project 05, install, March 2022: Partition head sealed around services. The head of a new partition was open along its length where pipes and ductwork cross above it. Coated batt now closes the gap, sealed around every service. Materials: Coated fire batt; Intumescent sealant.
-- Project 06, install, March 2022: Duct opening sealed in a wall. Coated batt closes the gap around a duct where it passes through the wall, before the grille and trim go on. Materials: Coated fire batt; Intumescent sealant.
+- Project 01, install, March 2022: Partition head sealed around services. The head of a new partition was open along its length where pipes and ductwork cross above it. Coated batt now closes the gap, sealed around every service. Materials: Coated fire batt; Intumescent sealant.
+- Project 02, install, September 2026: Large floor void closed. A large service void between floors was closed with coated batts laid across a steel support frame, sealed at every joint and edge. Materials: Coated fire batt; Steel support frame (Galvanised); Intumescent sealant.
+- Project 03, install, May 2024: Riser services sealed at the slab. Cable trays and pipes rising through a riser opening were sealed with coated batt, with every service wrapped where it passes through. Materials: Coated fire batt; Pipe and cable wraps, foil-faced; Intumescent sealant.
+- Project 04, install, March 2022: Duct opening sealed in a wall. Coated batt closes the gap around a duct where it passes through the wall, before the grille and trim go on. Materials: Coated fire batt; Intumescent sealant.
+- Project 05, repair, August 2026: Riser seal broken by other trades. New cables were pulled through a finished floor seal in an electrical riser. We cut the damaged batt back, fitted new batt and sealed every cable, all within half an hour. Materials: Coated fire batt; Intumescent sealant.
+- Project 06, repair, August 2026: Gap cut beside a large cable. Another seal on the same riser floor had been cut back around a large cable. The gap was sealed and the damaged corner of the batt made good. Materials: Coated fire batt; Intumescent sealant.
 
 ## Gallery jobs (#gallery)
 - Ducts and a large void (August and September 2026): Ducts sealed through painted and boarded walls, and a large void closed with batts laid on a steel frame. Photos: A wrapped duct sealed through a painted wall, with coating brushed out around it. A duct sealed through a board wall inside a coated batt surround. Close-up of the batts laid across a large void between floors.

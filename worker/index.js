@@ -71,7 +71,7 @@ async function newMessage(b, ip, env, ctx) {
   const id = r.meta.last_row_id;
 
   ctx.waitUntil(alert(env, `New message from ${name}`,
-    `${name} sent a message through the website.\n\nEmail: ${email}\nPhone: ${phone || '-'}\nFrom: ${page || '-'} (${source || 'form'})\n\n${message}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`)
+    `${name} sent a message through the website.\n\nEmail: ${email}\nPhone: ${phone || '-'}\nFrom: ${page || '-'} (${source || 'form'})\n\n${message}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`, email)
     .then(ok => ok && env.DB.prepare('UPDATE messages SET notified = 1 WHERE id = ?').bind(id).run()));
 
   return json({ ok: true, id });
@@ -104,7 +104,7 @@ async function newOrder(b, ip, env, ctx) {
 
   const lines = items.map(i => `  ${i.qty} x ${i.brand ? i.brand + ' ' : ''}${i.name}`).join('\n');
   ctx.waitUntil(alert(env, `New trade order ${ref} from ${company}`,
-    `${contact} at ${company} sent a trade order enquiry.\n\nRef: ${ref}\nEmail: ${email}\nPhone: ${phone || '-'}\nVAT: ${vat || '-'}\nDelivery postcode: ${postcode || '-'}\n\nItems:\n${lines}\n\nNotes: ${notes || '-'}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`)
+    `${contact} at ${company} sent a trade order enquiry.\n\nRef: ${ref}\nEmail: ${email}\nPhone: ${phone || '-'}\nVAT: ${vat || '-'}\nDelivery postcode: ${postcode || '-'}\n\nItems:\n${lines}\n\nNotes: ${notes || '-'}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`, email)
     .then(ok => ok && env.DB.prepare('UPDATE orders SET notified = 1 WHERE id = ?').bind(orderId).run()));
 
   return json({ ok: true, ref });
@@ -197,13 +197,13 @@ async function deskApi(request, env, url) {
 /* ==========================================================================
    Email alert (Resend). Without RESEND_API_KEY the desk still records everything.
    ========================================================================== */
-async function alert(env, subject, text) {
+async function alert(env, subject, text, replyTo) {
   if (!env.RESEND_API_KEY || !env.ALERT_TO) return false;
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { authorization: 'Bearer ' + env.RESEND_API_KEY, 'content-type': 'application/json' },
-      body: JSON.stringify({ from: env.ALERT_FROM || 'Limitless website <onboarding@resend.dev>', to: [env.ALERT_TO], subject, text })
+      body: JSON.stringify({ from: env.ALERT_FROM || 'Limitless website <onboarding@resend.dev>', to: [env.ALERT_TO], subject, text, ...(replyTo ? { reply_to: replyTo } : {}) })   // pressing Reply in your inbox answers the visitor directly
     });
     if (!r.ok) console.error('alert failed', r.status, await r.text());
     return r.ok;

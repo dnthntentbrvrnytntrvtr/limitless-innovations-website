@@ -284,8 +284,8 @@
   .hero-mark { width: 64px; height: 64px; }
   .hero-name { font: 600 13px/1 var(--body); letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-2); }
   .hero h1 { font-size: clamp(30px, 3.2vw, 46px); font-weight: 500; line-height: 1.12; max-width: 20ch; text-shadow: 0 2px 18px rgba(4, 7, 12, 0.5); }
-  .hero-svc { font-size: 15px; color: var(--muted); letter-spacing: 0.02em; text-shadow: 0 1px 12px rgba(4, 7, 12, 0.8); }
-  .hero-svc i { font-style: normal; color: var(--faint); margin: 0 8px; }
+  .hero-svc { font: 500 14px/1.6 var(--body); letter-spacing: 0.06em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 12px rgba(4, 7, 12, 0.9); }
+  .hero-svc i { font-style: normal; color: var(--steel); margin: 0 10px; }
   .hero-btn { margin-top: 4px; }
   .hero-certs {
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 20px; padding: 16px var(--gutter);
@@ -301,8 +301,8 @@
     .hero-mark { width: 56px; height: 56px; }
     .hero h1 { font-size: 27px; }
     .hero-name { letter-spacing: 0.22em; }
-    .hero-svc { font-size: 13px; }
-    .hero-svc i { margin: 0 5px; }
+    .hero-svc { font-size: 12px; letter-spacing: 0.05em; }
+    .hero-svc i { margin: 0 6px; }
     .hero-certs { flex-wrap: wrap; gap: 8px 10px; padding: 12px var(--gutter) calc(12px + env(safe-area-inset-bottom, 0px)); }
     .hero-certs .chips { margin-left: 0; gap: 16px; }
     .hero-certs img { height: 20px; max-width: 70px; }
@@ -713,6 +713,12 @@
   .coat-x > * { min-width: 0; }
   .cx-pic { position: relative; border: 1px solid var(--line); background: var(--panel-2); overflow: hidden; }
   .cx-pic svg { display: block; width: 100%; height: auto; }
+  .cx-photos { position: relative; aspect-ratio: 4 / 3; background: #0d1014; }
+  .cx-ph { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 0.9s ease; }
+  .cx-ph img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) contrast(1.04); }
+  .cx-ph figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 34px 14px 12px; font-size: 12.5px; color: var(--ink-2); background: linear-gradient(180deg, rgba(8, 10, 14, 0), rgba(8, 10, 14, 0.85)); }
+  .cx-x.s1 .cx-ph[data-stage="1"], .cx-x.s2 .cx-ph[data-stage="2"], .cx-x.s3 .cx-ph[data-stage="3"], .cx-x.s4 .cx-ph[data-stage="4"], .cx-x.s5 .cx-ph[data-stage="5"] { opacity: 1; }
+  .cx-x .cx-card { max-width: 46%; }
   .cx-pic .cx-fig { position: absolute; left: 14px; top: 12px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); }
   .cx-pic .cx-eg { position: absolute; right: 14px; bottom: 10px; font-size: 11px; color: var(--faint); }
   .cx-stages { list-style: none; margin: 0; padding: 0; display: grid; }
@@ -1265,7 +1271,7 @@
     <div class="hero-centre">
       <svg class="hero-mark" aria-hidden="true"><use href="#li-mark"/></svg>
       <p class="hero-name">Limitless Innovations</p>
-      <h1>Certified passive fire protection for London's buildings.</h1>
+      <h1>Certified passive fire protection.</h1>
       <p class="hero-svc">Firestopping <i>/</i> Fire-rated walls <i>/</i> Cavity barriers <i>/</i> Intumescent coatings</p>
       <a class="btn hero-btn" href="#contact" data-open-msg>Get a quote</a>
     </div>
@@ -1478,10 +1484,8 @@
       <div class="head-row">
         <div class="head veil">
           <p class="eyebrow"><span class="no">09</span> Certification</p>
-          <h2>Certified work</h2>
-          <p>Our installers and our work are independently audited and certified. Copies of our certificates are available on request.</p>
+          <p>Independently audited installers and work. Copies of our certificates are available on request.</p>
         </div>
-        <a class="btn-ghost" href="#contact" data-open-msg data-msg-text="Please could you send copies of your certificates.">Ask for our certificates</a>
       </div>
       <div class="band-wrap veil" id="bandWrap">
         <div class="band" id="band"><div class="band-track" id="bandTrack"></div></div>
@@ -1610,14 +1614,28 @@ const SITE = {
     { section: "coatings", title: "Steel coatings", photo: "images/arch/city-hall-1920.webp", srcset: "images/arch/city-hall-1280.webp 1280w, images/arch/city-hall-1920.webp 1920w", focus: "50% 50%",
       place: "City Hall, Royal Victoria Dock", note: "Home of the Mayor of London and the London Assembly.", alt: "City Hall at Royal Victoria Dock",
       credit: { by: "Matt Brown", licence: "CC BY 2.0", url: "https://creativecommons.org/licenses/by/2.0/", source: "https://commons.wikimedia.org/wiki/File:City_Hall_with_flags_January_19,_2022.jpg" } },
-    { section: "certification", title: "Certified", photo: "images/arch/one-canada-square-1920.webp", srcset: "images/arch/one-canada-square-1280.webp 1280w, images/arch/one-canada-square-1920.webp 1920w", focus: "50% 32%",
+    { section: "certification", title: "Certification", photo: "images/arch/one-canada-square-1920.webp", srcset: "images/arch/one-canada-square-1280.webp 1280w, images/arch/one-canada-square-1920.webp 1920w", focus: "50% 32%",
       place: "One Canada Square, Canary Wharf", note: "Our installers worked on level 43.", alt: "One Canada Square tower at Canary Wharf",
       credit: { by: "Mark Gilbert", licence: "CC BY-SA 3.0", url: "https://creativecommons.org/licenses/by-sa/3.0/", source: "https://commons.wikimedia.org/wiki/File:1_Canada_Square_From_Cabot_Square.jpg" } }
   ],
 
   projects: [
     {
-      type: "install", number: "Project 01", date: "September 2026",
+      type: "install", number: "Project 01", date: "March 2022",
+      title: "Partition head sealed around services",
+      summary: "The head of a new partition was open along its length where pipes and ductwork cross above it. Coated batt now closes the gap, sealed around every service.",
+      facts: [["Location", "Head of a partition"], ["Photographed", "7 and 8 March 2022"]],
+      materials: [BATT, SEAL],
+      before: { photo: "images/work/1745.jpg", ratio: 0.75, alt: "Open head of a partition below pipes and ducts", hotspots: [
+        { x: 50, y: 59, kind: "issue", reach: 10, title: "Open head of wall", text: "The top of the partition stops short of the soffit, leaving a gap along its whole length." },
+        { x: 45, y: 44, kind: "issue", title: "Services crossing the wall line", text: "Pipes and ductwork pass over the wall with no seal around them." } ] },
+      after: { photo: "images/work/1766.jpg", ratio: 0.75, alt: "Partition head sealed with coated batt around pipes and ducts", hotspots: [
+        { x: 72, y: 57, reach: 10, title: "Head of wall sealed", text: "Coated batt fills the gap along the full length of the wall head." },
+        { x: 44, y: 51, title: "Sealed around every pipe", text: "Each pipe is sealed where it passes through the batt." },
+        { x: 16, y: 57, title: "Duct sealed", text: "The ductwork is sealed into the batt as well." } ] }
+    },
+    {
+      type: "install", number: "Project 02", date: "September 2026",
       title: "Large floor void closed",
       summary: "A large service void between floors was closed with coated batts laid across a steel support frame, sealed at every joint and edge.",
       facts: [["Location", "Service void between floors"], ["Photographed", "1 September 2026"]],
@@ -1631,7 +1649,34 @@ const SITE = {
         { x: 14, y: 52, title: "Edges sealed", text: "Joints and edges are sealed so the batt surface is continuous." } ] }
     },
     {
-      type: "repair", number: "Project 02", date: "August 2026",
+      type: "install", number: "Project 03", date: "May 2024",
+      title: "Riser services sealed at the slab",
+      summary: "Cable trays and pipes rising through a riser opening were sealed with coated batt, with every service wrapped where it passes through.",
+      facts: [["Location", "Riser opening at slab level"], ["Photographed", "15 May 2024"]],
+      materials: [BATT, WRAP, SEAL],
+      before: { photo: "images/work/2952.jpg", ratio: 0.75, alt: "Cable trays and pipes through an unsealed riser opening", hotspots: [
+        { x: 48, y: 64, kind: "issue", title: "Open around the pipes", text: "Pipes pass up through the opening with nothing sealed around them." },
+        { x: 22, y: 60, kind: "issue", title: "Trays through an open slot", text: "Cable trays cross the compartment line with open space all round." } ] },
+      after: { photo: "images/work/2953.jpg", ratio: 0.75, alt: "Riser opening sealed with batt and wrapped services", hotspots: [
+        { x: 28, y: 61, title: "Trays wrapped", text: "The cable trays and cables are wrapped where they pass through the batt." },
+        { x: 72, y: 60, title: "Pipe wrapped", text: "Each pipe is wrapped at the batt line." },
+        { x: 51, y: 67, title: "Batt across the opening", text: "Coated batt cut around every service closes the opening." } ] }
+    },
+    {
+      type: "install", number: "Project 04", date: "March 2022",
+      title: "Duct opening sealed in a wall",
+      summary: "Coated batt closes the gap around a duct where it passes through the wall, before the grille and trim go on.",
+      facts: [["Location", "Wall below the soffit"], ["Photographed", "9 March 2022"]],
+      materials: [BATT, SEAL],
+      during: { photo: "images/work/1775.jpg", ratio: 0.75, alt: "Coated batt fitted around a duct in a wall opening", hotspots: [
+        { x: 22, y: 50, kind: "step", title: "Batt fitted around the duct", text: "Coated batt closes the gap between the duct and the edge of the wall opening." },
+        { x: 45, y: 47, kind: "step", title: "Grille still to fit", text: "The opening is sealed first, then the grille and trim go on." } ] },
+      after: { photo: "images/work/1780.jpg", ratio: 0.75, alt: "Grille fitted over the sealed duct opening", hotspots: [
+        { x: 52, y: 50, title: "Grille fitted", text: "The grille and frame are fitted over the sealed opening." },
+        { x: 34, y: 59, title: "Opening sealed behind", text: "The batt seal sits behind the frame, closing the wall around the duct." } ] }
+    },
+    {
+      type: "repair", number: "Project 05", date: "August 2026",
       title: "Riser seal broken by other trades",
       summary: "New cables were pulled through a finished floor seal in an electrical riser. We cut the damaged batt back, fitted new batt and sealed every cable, all within half an hour.",
       facts: [["Location", "Electrical riser floor"], ["Damage", "Batt torn out for new cables"], ["Photographed", "26 August 2026"]],
@@ -1648,7 +1693,7 @@ const SITE = {
         { x: 46, y: 57, title: "Sealed around every cable", text: "Sealant closes the gap around each cable, including the new one." } ] }
     },
     {
-      type: "repair", number: "Project 03", date: "August 2026",
+      type: "repair", number: "Project 06", date: "August 2026",
       title: "Gap cut beside a large cable",
       summary: "Another seal on the same riser floor had been cut back around a large cable. The gap was sealed and the damaged corner of the batt made good.",
       facts: [["Location", "Electrical riser floor"], ["Damage", "Gap cut beside a cable"], ["Photographed", "26 August 2026"]],
@@ -1662,47 +1707,6 @@ const SITE = {
       after: { photo: "images/work/6401.jpg", ratio: 0.75, alt: "Finished floor seal around the cables", hotspots: [
         { x: 63, y: 50, title: "Sealed around every cable", text: "Every cable is sealed where it passes through the batt." },
         { x: 44, y: 64, reach: 12, title: "Seal complete", text: "The opening is closed again and the batt surface is continuous." } ] }
-    },
-    {
-      type: "install", number: "Project 04", date: "May 2024",
-      title: "Riser services sealed at the slab",
-      summary: "Cable trays and pipes rising through a riser opening were sealed with coated batt, with every service wrapped where it passes through.",
-      facts: [["Location", "Riser opening at slab level"], ["Photographed", "15 May 2024"]],
-      materials: [BATT, WRAP, SEAL],
-      before: { photo: "images/work/2952.jpg", ratio: 0.75, alt: "Cable trays and pipes through an unsealed riser opening", hotspots: [
-        { x: 48, y: 64, kind: "issue", title: "Open around the pipes", text: "Pipes pass up through the opening with nothing sealed around them." },
-        { x: 22, y: 60, kind: "issue", title: "Trays through an open slot", text: "Cable trays cross the compartment line with open space all round." } ] },
-      after: { photo: "images/work/2953.jpg", ratio: 0.75, alt: "Riser opening sealed with batt and wrapped services", hotspots: [
-        { x: 28, y: 61, title: "Trays wrapped", text: "The cable trays and cables are wrapped where they pass through the batt." },
-        { x: 72, y: 60, title: "Pipe wrapped", text: "Each pipe is wrapped at the batt line." },
-        { x: 51, y: 67, title: "Batt across the opening", text: "Coated batt cut around every service closes the opening." } ] }
-    },
-    {
-      type: "install", number: "Project 05", date: "March 2022",
-      title: "Partition head sealed around services",
-      summary: "The head of a new partition was open along its length where pipes and ductwork cross above it. Coated batt now closes the gap, sealed around every service.",
-      facts: [["Location", "Head of a partition"], ["Photographed", "7 and 8 March 2022"]],
-      materials: [BATT, SEAL],
-      before: { photo: "images/work/1745.jpg", ratio: 0.75, alt: "Open head of a partition below pipes and ducts", hotspots: [
-        { x: 50, y: 59, kind: "issue", reach: 10, title: "Open head of wall", text: "The top of the partition stops short of the soffit, leaving a gap along its whole length." },
-        { x: 45, y: 44, kind: "issue", title: "Services crossing the wall line", text: "Pipes and ductwork pass over the wall with no seal around them." } ] },
-      after: { photo: "images/work/1766.jpg", ratio: 0.75, alt: "Partition head sealed with coated batt around pipes and ducts", hotspots: [
-        { x: 72, y: 57, reach: 10, title: "Head of wall sealed", text: "Coated batt fills the gap along the full length of the wall head." },
-        { x: 44, y: 51, title: "Sealed around every pipe", text: "Each pipe is sealed where it passes through the batt." },
-        { x: 16, y: 57, title: "Duct sealed", text: "The ductwork is sealed into the batt as well." } ] }
-    },
-    {
-      type: "install", number: "Project 06", date: "March 2022",
-      title: "Duct opening sealed in a wall",
-      summary: "Coated batt closes the gap around a duct where it passes through the wall, before the grille and trim go on.",
-      facts: [["Location", "Wall below the soffit"], ["Photographed", "9 March 2022"]],
-      materials: [BATT, SEAL],
-      during: { photo: "images/work/1775.jpg", ratio: 0.75, alt: "Coated batt fitted around a duct in a wall opening", hotspots: [
-        { x: 22, y: 50, kind: "step", title: "Batt fitted around the duct", text: "Coated batt closes the gap between the duct and the edge of the wall opening." },
-        { x: 45, y: 47, kind: "step", title: "Grille still to fit", text: "The opening is sealed first, then the grille and trim go on." } ] },
-      after: { photo: "images/work/1780.jpg", ratio: 0.75, alt: "Grille fitted over the sealed duct opening", hotspots: [
-        { x: 52, y: 50, title: "Grille fitted", text: "The grille and frame are fitted over the sealed opening." },
-        { x: 34, y: 59, title: "Opening sealed behind", text: "The batt seal sits behind the frame, closing the wall around the duct." } ] }
     }
   ],
 
@@ -2048,93 +2052,100 @@ const SITE = {
       link: "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/" },
 
     /* ---- Tools: a starter range of what firestoppers actually use (photos to follow) ---- */
-    { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "Cox", name: "PowerFlow Combi 310 ml gun", image: "",
+    { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "Cox", name: "PowerFlow Combi 310 ml gun", image: "images/products/tool-gun-310.svg",
       what: "Skeleton gun with a high-thrust ratio for stiff intumescent sealants and mastics.",
       specs: [["Takes", "310 ml cartridges"], ["Thrust", "12:1 and 25:1 versions"], ["Why", "Doesn't stall on cold graphite sealant"]] },
-    { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "Cox", name: "Ultraflow 600 ml sausage gun", image: "",
+    { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "Cox", name: "Ultraflow 600 ml sausage gun", image: "images/products/tool-gun-600.svg",
       what: "Barrel gun for 600 ml foil sausages: fewer changes on long linear seals.",
       specs: [["Takes", "600 ml sausages and 310 ml cartridges"], ["Body", "Aluminium barrel with cutter"], ["Why", "Half the cartridge changes on big runs"]] },
-    { id: "tool-gun-battery", category: "tools", group: "Sealant guns", brand: "Milwaukee", name: "M12 cordless sealant gun", image: "",
+    { id: "tool-gun-battery", category: "tools", group: "Sealant guns", brand: "Milwaukee", name: "M12 cordless sealant gun", image: "images/products/tool-gun-battery.svg",
       what: "Battery gun with a steady, adjustable flow for long days on sealant.",
       specs: [["Takes", "310 ml or 400 ml (barrel version 600 ml)"], ["Battery", "12 V, supplied with one battery and charger"], ["Why", "Even bead, no hand fatigue"]] },
-    { id: "tool-finishing", category: "tools", group: "Sealant guns", brand: "Cramer", name: "Fugi sealant finishing kit", image: "",
+    { id: "tool-finishing", category: "tools", group: "Sealant guns", brand: "Cramer", name: "Fugi sealant finishing kit", image: "images/products/tool-finishing.svg",
       what: "Profiling spatulas that leave a smooth, even sealant fillet on batt edges and joints.",
       specs: [["Set", "Five profiles"], ["Use", "Tooling sealant around pipes, cables and batt joints"], ["Why", "Tidy seals photograph well for the record"]] },
-    { id: "tool-batt-saw", category: "tools", group: "Cutting", brand: "Bahco", name: "Insulation saw, 22 inch", image: "",
+    { id: "tool-batt-saw", category: "tools", group: "Cutting", brand: "Bahco", name: "Insulation saw, 22 inch", image: "images/products/tool-batt-saw.svg",
       what: "Long, coarse-toothed saw that cuts coated batt cleanly without tearing the stone wool.",
       specs: [["Blade", "560 mm, 7 TPI"], ["Use", "Coated batt, mineral wool, foil-faced insulation"], ["Why", "Square, clean batt edges for a tight fit"]] },
-    { id: "tool-knife", category: "tools", group: "Cutting", brand: "Stanley", name: "FatMax retractable knife with blades", image: "",
+    { id: "tool-knife", category: "tools", group: "Cutting", brand: "Stanley", name: "FatMax retractable knife with blades", image: "images/products/tool-knife.svg",
       what: "Heavy-duty knife for trimming batt, wrap and backer rod, with a pack of blades.",
       specs: [["Blades", "Pack of 50 heavy-duty"], ["Use", "Trimming batt and intumescent wrap to size"], ["Why", "Quick blade change, solid body"]] },
-    { id: "tool-hole-saw", category: "tools", group: "Cutting", brand: "Various", name: "Hole saw set for batt and board", image: "",
+    { id: "tool-hole-saw", category: "tools", group: "Cutting", brand: "Various", name: "Hole saw set for batt and board", image: "images/products/tool-hole-saw.svg",
       what: "Bi-metal hole saws in the pipe sizes seen on site, for neat openings in batt and board.",
       specs: [["Sizes", "32 to 152 mm"], ["Use", "Pipe and cable penetrations through batt"], ["Why", "A round hole seals better than a cut-out"]] },
-    { id: "tool-paddle", category: "tools", group: "Mixing and application", brand: "Various", name: "Compound mixing paddle, M14", image: "",
+    { id: "tool-paddle", category: "tools", group: "Mixing and application", brand: "Various", name: "Compound mixing paddle, M14", image: "images/products/tool-paddle.svg",
       what: "Helical paddle for mixing fire compound and mortar in the bucket without air pockets.",
       specs: [["Fitting", "M14, for a paddle mixer or SDS drill with adaptor"], ["Size", "120 mm head"], ["Use", "Nullifire FR230, FSi Silverseal and similar"]] },
-    { id: "tool-tub", category: "tools", group: "Mixing and application", brand: "Gorilla Tub", name: "Flexible mixing tub, 26 L", image: "",
+    { id: "tool-tub", category: "tools", group: "Mixing and application", brand: "Gorilla Tub", name: "Flexible mixing tub, 26 L", image: "images/products/tool-tub.svg",
       what: "Flexible rubber tub that mixes compound cleanly and knocks out when it's set.",
       specs: [["Capacity", "26 litres"], ["Use", "Mixing and carrying compound"], ["Why", "Set compound pops out; the tub lasts years"]] },
-    { id: "tool-trowel", category: "tools", group: "Mixing and application", brand: "Marshalltown", name: "Margin trowel, 150 mm", image: "",
+    { id: "tool-trowel", category: "tools", group: "Mixing and application", brand: "Marshalltown", name: "Margin trowel, 150 mm", image: "images/products/tool-trowel.svg",
       what: "Narrow trowel for placing and finishing compound in tight openings.",
       specs: [["Blade", "150 × 50 mm"], ["Use", "Compound seals in walls and floors"], ["Why", "Reaches into small openings"]] },
-    { id: "tool-backer-rod", category: "tools", group: "Mixing and application", brand: "Various", name: "Closed-cell backer rod", image: "",
+    { id: "tool-backer-rod", category: "tools", group: "Mixing and application", brand: "Various", name: "Closed-cell backer rod", image: "images/products/tool-backer-rod.svg",
       what: "Foam rod that sets the depth of a sealant joint so the sealant works as tested.",
       specs: [["Sizes", "10, 15, 20 and 25 mm"], ["Length", "Coils of 50 to 100 m"], ["Use", "Linear joints before intumescent or acoustic sealant"]] },
-    { id: "tool-wet-film", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Wet film comb, 25 to 2000 µm", image: "",
+    { id: "tool-wet-film", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Wet film comb, 25 to 2000 µm", image: "images/products/tool-wet-film.svg",
       what: "Stainless comb for checking wet film thickness as intumescent paint goes on.",
       specs: [["Range", "25 to 2000 microns"], ["Use", "Every coat of intumescent paint"], ["Why", "The reading goes straight into the record"]] },
-    { id: "tool-dft-gauge", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Dry film thickness gauge", image: "",
+    { id: "tool-dft-gauge", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Dry film thickness gauge", image: "images/products/tool-dft-gauge.svg",
       what: "Digital gauge that measures cured coating thickness on steel, for the handover record.",
       specs: [["Reads", "Ferrous and non-ferrous, 0 to 1500 µm"], ["Use", "Signing off intumescent coating thickness"], ["Why", "Stores readings by member"]] },
-    { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Various", name: "Firestop identification labels", image: "",
+    { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Various", name: "Firestop identification labels", image: "images/products/tool-labels.svg",
       what: "Self-adhesive labels that record the system, rating, installer and date next to each seal.",
       specs: [["Pack", "Roll of 100"], ["Use", "Every penetration seal, so the inspection can find it"], ["Why", "Survives dust and damp"]] },
-    { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Various", name: "Rechargeable LED head torch", image: "",
+    { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Various", name: "Rechargeable LED head torch", image: "images/products/tool-torch.svg",
       what: "Bright, hands-free light for risers and ceiling voids where seals get photographed.",
       specs: [["Output", "Around 600 lumens"], ["Power", "USB rechargeable"], ["Use", "Surveys and photo records in dark voids"]] },
-    { id: "tool-tape", category: "tools", group: "Marking and inspection", brand: "Stanley", name: "Tape measure, 8 m", image: "",
+    { id: "tool-tape", category: "tools", group: "Marking and inspection", brand: "Stanley", name: "Tape measure, 8 m", image: "images/products/tool-tape.svg",
       what: "Wide-blade tape for sizing openings and checking batt depths.",
       specs: [["Length", "8 m, 32 mm blade"], ["Use", "Measuring openings and annular gaps"]] },
 
     /* ---- Workwear and PPE ---- */
-    { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "3M", name: "Aura FFP3 respirators, box of 10", image: "",
+    { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "3M", name: "Aura FFP3 respirators, box of 10", image: "images/products/ppe-ffp3.svg",
       what: "Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust.",
       specs: [["Standard", "EN 149 FFP3"], ["Pack", "Box of 10"], ["Use", "Cutting batt, mixing compound, sanding"]] },
-    { id: "ppe-half-mask", category: "workwear", group: "Respiratory", brand: "3M", name: "Half-mask respirator with P3 filters", image: "",
+    { id: "ppe-half-mask", category: "workwear", group: "Respiratory", brand: "3M", name: "Half-mask respirator with P3 filters", image: "images/products/ppe-half-mask.svg",
       what: "Reusable half mask with particulate filters for long days on dusty work and coating.",
       specs: [["Filters", "P3 R particulate; A2P3 for solvent-based coatings"], ["Sizes", "S, M, L"], ["Use", "Daily dust and spray work"]] },
-    { id: "ppe-nitrile", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Nitrile gloves, box of 100", image: "",
+    { id: "ppe-nitrile", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Nitrile gloves, box of 100", image: "images/products/ppe-nitrile.svg",
       what: "Powder-free nitrile gloves for sealant, compound and coating work.",
       specs: [["Pack", "Box of 100"], ["Sizes", "S to XL"], ["Use", "Keeping sealant and paint off skin"]] },
-    { id: "ppe-cut-gloves", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Cut-resistant work gloves", image: "",
+    { id: "ppe-cut-gloves", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Cut-resistant work gloves", image: "images/products/ppe-cut-gloves.svg",
       what: "Level D cut-resistant gloves with a nitrile palm for handling batt, mesh and cut steel.",
       specs: [["Standard", "EN 388, cut level D"], ["Sizes", "8 to 11"], ["Use", "Batt handling, sharp edges on trays and mesh"]] },
-    { id: "ppe-glasses", category: "workwear", group: "Hands and eyes", brand: "Bollé", name: "Safety glasses, clear anti-fog", image: "",
+    { id: "ppe-glasses", category: "workwear", group: "Hands and eyes", brand: "Bollé", name: "Safety glasses, clear anti-fog", image: "images/products/ppe-glasses.svg",
       what: "Wraparound safety glasses that stay clear while cutting overhead.",
       specs: [["Standard", "EN 166"], ["Lens", "Clear, anti-fog and anti-scratch"], ["Use", "Overhead cutting and sealing"]] },
-    { id: "ppe-earplugs", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Disposable earplugs, box of 200 pairs", image: "",
+    { id: "ppe-earplugs", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Disposable earplugs, box of 200 pairs", image: "images/products/ppe-earplugs.svg",
       what: "Foam earplugs for drilling and mixing.",
       specs: [["Attenuation", "SNR 37 dB"], ["Pack", "200 pairs"], ["Use", "Drilling, mixing, busy sites"]] },
-    { id: "ppe-hard-hat", category: "workwear", group: "Clothing", brand: "JSP", name: "Vented safety helmet", image: "",
+    { id: "ppe-hard-hat", category: "workwear", group: "Clothing", brand: "JSP", name: "Vented safety helmet", image: "images/products/ppe-hard-hat.svg",
       what: "Lightweight vented helmet with a wheel ratchet, in site colours.",
       specs: [["Standard", "EN 397"], ["Colours", "White, yellow, blue"], ["Use", "Every site"]] },
-    { id: "ppe-hi-vis", category: "workwear", group: "Clothing", brand: "Various", name: "Hi-vis vest, class 2", image: "",
+    { id: "ppe-hi-vis", category: "workwear", group: "Clothing", brand: "Various", name: "Hi-vis vest, class 2", image: "images/products/ppe-hi-vis.svg",
       what: "Yellow hi-vis vest to the site standard, with a chest pocket for the phone that takes the record photos.",
       specs: [["Standard", "EN ISO 20471 class 2"], ["Sizes", "S to 3XL"], ["Use", "Every site"]] },
-    { id: "ppe-trousers", category: "workwear", group: "Clothing", brand: "Snickers", name: "Stretch work trousers with knee pad pockets", image: "",
+    { id: "ppe-trousers", category: "workwear", group: "Clothing", brand: "Snickers", name: "Stretch work trousers with knee pad pockets", image: "images/products/ppe-trousers.svg",
       what: "Hard-wearing work trousers with holster pockets and knee pad pockets for floor seals.",
       specs: [["Sizes", "Waist 30 to 44, three leg lengths"], ["Pairs with", "Knee pads below"], ["Use", "Floor seals and riser work"]] },
-    { id: "ppe-knee-pads", category: "workwear", group: "Clothing", brand: "Snickers", name: "Knee pads for pocket trousers", image: "",
+    { id: "ppe-knee-pads", category: "workwear", group: "Clothing", brand: "Snickers", name: "Knee pads for pocket trousers", image: "images/products/ppe-knee-pads.svg",
       what: "Certified knee pads that slot into the trouser pockets.",
       specs: [["Standard", "EN 14404 type 2"], ["Use", "Floor penetrations and low-level seals"]] },
-    { id: "ppe-boots", category: "workwear", group: "Clothing", brand: "Various", name: "S3 safety boots", image: "",
+    { id: "ppe-boots", category: "workwear", group: "Clothing", brand: "Various", name: "S3 safety boots", image: "images/products/ppe-boots.svg",
       what: "Composite-toe, midsole-protected boots that stay comfortable on concrete all day.",
       specs: [["Standard", "EN ISO 20345 S3"], ["Sizes", "UK 6 to 13"], ["Use", "Every site"]] },
-    { id: "ppe-coverall", category: "workwear", group: "Clothing", brand: "DuPont", name: "Tyvek disposable coveralls", image: "",
+    { id: "ppe-coverall", category: "workwear", group: "Clothing", brand: "DuPont", name: "Tyvek disposable coveralls", image: "images/products/ppe-coverall.svg",
       what: "Type 5/6 disposable coveralls for spraying intumescent paint.",
       specs: [["Standard", "Type 5 and 6"], ["Pack", "Box of 25"], ["Use", "Spraying and dusty cutting"]] }
   ],
+
+  // Steel coating photographs, one per stage (images/coat/). Swap these for your own site photos whenever you have them.
+  coatingPhotos: {
+    prime:   { src: "images/coat/prime-1600.webp", srcset: "images/coat/prime-960.webp 960w, images/coat/prime-1600.webp 1600w", focus: "60% 55%", alt: "Red oxide primer being rolled onto a steel beam" },
+    spray:   { src: "images/coat/spray-640.webp", focus: "50% 30%", alt: "White intumescent coating sprayed over primed beams and a column" },
+    topcoat: { src: "images/coat/topcoat-1600.webp", srcset: "images/coat/topcoat-960.webp 960w, images/coat/topcoat-1600.webp 1600w", focus: "50% 45%", alt: "White intumescent coat meeting red primer on a steel beam" }
+  },
 
   // Steel coating: the five stages shown in the Steel coatings section.
   coating: [
@@ -3025,75 +3036,19 @@ const SITE = {
      ====================================================================== */
   function initCoatExplainer(root, steps) {
     if (!root || !steps.length) return;
-    // ---- the beam: an I-section drawn in oblique projection, back end up-left, front end down-right
-    const X0 = 600, Y0 = 262, L = 480, CZ = 0.866, SZ = 0.5;
-    const P = (x, y, z) => [X0 + x - CZ * z, Y0 + y - SZ * z];
-    const pt = a => a.map(p => p.map(v => Math.round(v * 10) / 10).join(',')).join(' ');
-    const prof = [[0, 0], [130, 0], [130, 18], [73, 18], [73, 132], [130, 132], [130, 150], [0, 150], [0, 132], [57, 132], [57, 18], [0, 18]];
-    const quad = (a, b, cls) => ({ cls, pts: pt([P(...a, 0), P(...b, 0), P(...b, L), P(...a, L)]) });
-    const faces = [
-      { cls: 'b', pts: pt(prof.map(([x, y]) => P(x, y, L))) },       // far end (seen down the channel)
-      quad([73, 132], [130, 132], 't'),                              // bottom flange, top, right of the web
-      quad([57, 18], [57, 132], 's'),                                // web, left side
-      quad([0, 132], [57, 132], 't'),                                // bottom flange, top, left of the web
-      quad([0, 0], [130, 0], 't'),                                   // top flange, top
-      quad([0, 0], [0, 18], 's'),                                    // top flange, left side
-      quad([0, 132], [0, 150], 's'),                                 // bottom flange, left side
-      { cls: 'f', pts: pt(prof.map(([x, y]) => P(x, y, 0))) }        // front end
-    ];
-    const PAL = {
-      rust:   { t: '#8b7864', f: '#6f5e4e', s: '#5c4d40', b: '#3f3530' },
-      clean:  { t: '#d6dde3', f: '#aab4bd', s: '#8b959e', b: '#525a61' },
-      primer: { t: '#bab5ad', f: '#9c9790', s: '#807b75', b: '#514e49' },
-      paint:  { t: '#fbfaf6', f: '#edeae2', s: '#d5d1c8', b: '#8e8a81' },
-      char:   { t: '#4a4441', f: '#332e2b', s: '#262220', b: '#1a1716' }
-    };
-    const layer = (name, extra = '') => `<g class="${name === 'char' ? 'char' : 'layer ' + name}"${name === 'char' ? ' filter="url(#cxpuff)"' : ''}>${faces.map(f => `<polygon class="${f.cls}" points="${f.pts}" fill="${PAL[name][f.cls]}"/>`).join('')}${extra}</g>`;
-    // rust flecks on the bare steel
-    let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
-    const flecks = Array.from({ length: 34 }, () => {
-      const onTop = rnd() < 0.6, z = rnd() * L * 0.96 + 8;
-      const [x, y] = onTop ? P(6 + rnd() * 118, 0, z) : P(4 + rnd() * 122, rnd() < 0.5 ? 2 + rnd() * 14 : 134 + rnd() * 14, 0);
-      return `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(2 + rnd() * 5).toFixed(1)}" ry="${(1 + rnd() * 2.5).toFixed(1)}" fill="#5e3f2a" opacity="${(0.35 + rnd() * 0.45).toFixed(2)}"/>`;
-    }).join('');
-    // tool paths (a blast nozzle, then a spray gun) run just above the top flange, back to front
-    const [bx0, by0] = P(70, -18, L * 0.98), [bx1, by1] = P(70, -18, 6);
-    const ride = `M ${bx0.toFixed(0)} ${by0.toFixed(0)} L ${bx1.toFixed(0)} ${by1.toFixed(0)}`;
-    // dry film probe points
-    const probes = [[P(66, 0, 120), '1 040 µm', 'd1'], [P(66, 0, 300), '1 010 µm', 'd2'], [P(100, 9, 0), '1 060 µm', 'd3']];
-    const svg = `
-      <svg viewBox="0 0 820 480" role="img" aria-label="A steel beam being cleaned, primed, coated, measured and signed off, then swelling in a fire">
-        <defs>
-          <filter id="cxpuff" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter>
-          <radialGradient id="cxglow" cx="50%" cy="100%" r="60%"><stop offset="0" stop-color="#f0903a" stop-opacity="0.75"/><stop offset="1" stop-color="#f0903a" stop-opacity="0"/></radialGradient>
-          <linearGradient id="cxflame" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e0782a"/><stop offset="0.6" stop-color="#f4a23a"/><stop offset="1" stop-color="#f7d27a" stop-opacity="0.2"/></linearGradient>
-          <linearGradient id="cxcone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f4" stop-opacity="0.9"/><stop offset="1" stop-color="#eef1f4" stop-opacity="0"/></linearGradient>
-        </defs>
-        <g class="fire">
-          <ellipse cx="480" cy="480" rx="260" ry="86" fill="url(#cxglow)"/>
-          <path class="flame f1" style="transform-origin:410px 480px" d="M410 480c-30-38-24-82 0-118 24 36 30 80 0 118z" fill="url(#cxflame)"/>
-          <path class="flame f2" style="transform-origin:490px 480px" d="M490 480c-36-44-28-96 0-140 28 44 36 96 0 140z" fill="url(#cxflame)"/>
-          <path class="flame f3" style="transform-origin:560px 480px" d="M560 480c-26-32-22-70 0-100 22 30 26 68 0 100z" fill="url(#cxflame)"/>
-        </g>
-        ${layer('rust', flecks)}${layer('clean')}${layer('primer')}${layer('paint')}${layer('char')}
-        <g class="beam-edges" fill="none" stroke="rgba(238,241,244,.32)" stroke-width="1" stroke-linejoin="round">${faces.slice(1).map(f => `<polygon points="${f.pts}"/>`).join('')}</g>
-        <g class="tool blast" style="offset-path:path('${ride}')">
-          <rect x="-36" y="-10" width="30" height="8" rx="2" fill="#4a5158"/><path d="M-6-12 8 0-6 12z" fill="#2c3238"/>
-          <g stroke="#7d8790" stroke-width="1.5" stroke-linecap="round"><path d="M10 4 32 24M12 8 30 34M6 12 22 38" stroke-dasharray="2 5"/></g>
-        </g>
-        <g class="tool spray" style="offset-path:path('${ride}')">
-          <path d="M-30-14h26l6 10h-8l-2 18h-10l-2-18h-10z" fill="#3c434a"/><rect x="-6" y="-12" width="12" height="6" rx="1.5" fill="#6b747c"/>
-          <path d="M4-4 44 36 4 52z" fill="url(#cxcone)" opacity="0.5"/>
-        </g>
-        <g class="ov o2 d1 svgtxt draw" fill="none" stroke="var(--accent)" stroke-width="1.4">
-          <path d="M600 438v10M730 438v10M600 443h130"/><path d="M752 262h10M752 412h10M757 262v150"/>
-          <path d="M600 443l6-3v6zM730 443l-6-3v6zM757 262l-3 6h6zM757 412l-3-6h6z" fill="var(--accent)" stroke="none"/>
-        </g>
-        <g class="ov o2 d1 svgtxt"><text class="sub" x="665" y="466" text-anchor="middle">flange width</text><text class="sub" x="778" y="337" text-anchor="middle" transform="rotate(-90 778 337)">section depth</text></g>
-        ${probes.map(([[x, y], v, d]) => `<g class="probe ${d}" style="transform-origin:${x.toFixed(0)}px ${y.toFixed(0)}px"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.6"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="var(--accent)"/><text class="lab svgtxt" x="${(x + 16).toFixed(0)}" y="${(y + 4).toFixed(0)}">${v}</text></g>`).join('')}
-      </svg>`;
+    // (the drawn beam that used to sit here was replaced by photographs)
     // ---- callout cards (HTML, so the text stays readable on a phone)
     const card = (stage, zone, delay, cls, html) => `<div class="cx-card ov o${stage} ${delay} ${zone} ${cls}">${html}</div>`;
+    // ---- photographs, one per stage (the third and fourth stages share the sprayed steel and the finished coat)
+    const PH = (SITE.coatingPhotos || {});
+    const ph = (stage, key, cap) => { const q = PH[key]; return q ? `<figure class="cx-ph" data-stage="${stage}"><img src="${esc(q.src)}"${q.srcset ? ` srcset="${esc(q.srcset)}" sizes="(max-width: 900px) 100vw, 60vw"` : ''} alt="${esc(q.alt || '')}" loading="lazy" decoding="async" style="object-position:${esc(q.focus || '50% 50%')}"><figcaption>${esc(cap)}</figcaption></figure>` : ''; };
+    const photos = `<div class="cx-photos">${[
+      ph(1, 'prime', 'Prepared steel, primer going on'),
+      ph(2, 'topcoat', 'Each member checked against its rating and section'),
+      ph(3, 'spray', 'Intumescent coat applied over the primer'),
+      ph(4, 'topcoat', 'Dry film measured and logged, member by member'),
+      ph(5, 'spray', 'Coated steelwork, ready for sign-off')
+    ].join('')}</div>`;
     const cards = [
       card(1, 'tr', 'd1', '', `<span class="cx-k">Clean to spec</span><p>Mill scale, rust and oil taken off to the coating manufacturer's standard.</p>`),
       card(1, 'bl', 'd4', '', `<span class="cx-k">Compatible primer</span><p>A primer the intumescent system is tested with.</p>`),
@@ -3113,7 +3068,7 @@ const SITE = {
         <div class="cx-bar"><span class="crit">critical</span><span class="fill temp"></span></div><em>Example</em>`)
     ].join('');
     root.innerHTML = `
-      <div class="cx-pic">${svg}<div class="cx-notes">${cards}</div><span class="cx-fig">One beam, five stages</span></div>
+      <div class="cx-pic">${photos}<div class="cx-notes">${cards}</div><span class="cx-fig">Real steel, five stages</span></div>
       <div class="cx-side">
         <ol class="cx-stages">${steps.map(([t, p], i) => `<li><button type="button" class="cx-btn" data-i="${i}" aria-pressed="false"><span class="n">${String(i + 1).padStart(2, '0')}</span><span class="t">${esc(t)}</span><span class="c" aria-hidden="true">+</span></button><div class="cx-text"><div><p>${esc(p)}</p></div></div></li>`).join('')}</ol>
         <div class="cx-copy" aria-live="polite"></div>
