@@ -7,7 +7,7 @@
    Settings live in wrangler.jsonc; secrets are set in the Cloudflare dashboard
    (see DESK-SETUP.txt). */
 
-import { DESK_HTML, LOGIN_HTML } from './desk.js';
+import { DESK_HTML, LOGIN_HTML, invoiceHTML } from './desk.js';
 import SUPPLIERS from './suppliers.js';   // supplier links per product, shown only on the desk
 import { RANGES, PRODUCTS } from './catalogue.js';   // generated from index.html by build-catalogue.js
 
@@ -81,7 +81,7 @@ async function newMessage(b, ip, env, ctx) {
   const id = r.meta.last_row_id;
 
   ctx.waitUntil(alert(env, `New message from ${name}`,
-    `${name} sent a message through the website.\n\nEmail: ${email}\nPhone: ${phone || '-'}\nFrom: ${page || '-'} (${source || 'form'})\n\n${message}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`, email)
+    `${name} sent a message through the website.\n\nEmail: ${email}\nPhone: ${phone || '-'}\nFrom: ${page || '-'} (${source || 'form'})\n\n${message}\n\nOpen the desk: ${env.SITE_URL || ''}${deskBase(env)}`, email)
     .then(ok => ok && env.DB.prepare('UPDATE messages SET notified = 1 WHERE id = ?').bind(id).run()));
 
   return json({ ok: true, id });
@@ -92,7 +92,8 @@ async function newOrder(b, ip, env, ctx) {
   const company = clean(b.company, MAX.company), contact = clean(b.contact, MAX.name), email = clean(b.email, MAX.email);
   const phone = clean(b.phone, MAX.phone), vat = clean(b.vat, 40), postcode = clean(b.postcode, 12), notes = clean(b.notes, MAX.notes, true);
   const items = Array.isArray(b.items) ? b.items.slice(0, MAX.items).map(i => ({
-    id: clean(i.id, 60), brand: clean(i.brand, 60), name: clean(i.name, 120), qty: Math.max(1, Math.min(9999, parseInt(i.qty, 10) || 0))
+    id: clean(i.id, 60), brand: clean(i.brand, 60), name: clean(i.name, 120), size: clean(i.size, 120), qty: Math.max(1, Math.min(9999, parseInt(i.qty, 10) || 0)),
+    price: (Number(i.price) > 0 && Number(i.price) < 100000) ? Math.round(Number(i.price) * 100) / 100 : null   // the price shown on the site when they ordered
   })).filter(i => i.id && i.name && i.qty) : [];
   const errors = {};
   if (company.length < 2) errors.company = 'Please add your company name.';
@@ -109,12 +110,13 @@ async function newOrder(b, ip, env, ctx) {
   ).bind(ref, company, contact, email, phone || null, vat || null, postcode || null, notes || null, ip).run();
   const orderId = r.meta.last_row_id;
   await env.DB.batch(items.map(i =>
-    env.DB.prepare('INSERT INTO order_items (order_id, product_id, brand, name, qty) VALUES (?, ?, ?, ?, ?)').bind(orderId, i.id, i.brand || null, i.name, i.qty)
+    env.DB.prepare('INSERT INTO order_items (order_id, product_id, brand, name, size, qty, price) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(orderId, i.id, i.brand || null, i.name, i.size || null, i.qty, i.price)
   ));
 
-  const lines = items.map(i => `  ${i.qty} x ${i.brand ? i.brand + ' ' : ''}${i.name}`).join('\n');
+  const lines = items.map(i => `  ${i.qty} x ${i.brand ? i.brand + ' ' : ''}${i.name}${i.price ? ` @ £${i.price.toFixed(2)}` : ''}`).join('\n');
+  const total = items.reduce((t, i) => t + (i.price ? i.price * i.qty : 0), 0);
   ctx.waitUntil(alert(env, `New trade order ${ref} from ${company}`,
-    `${contact} at ${company} sent a trade order enquiry.\n\nRef: ${ref}\nEmail: ${email}\nPhone: ${phone || '-'}\nVAT: ${vat || '-'}\nDelivery postcode: ${postcode || '-'}\n\nItems:\n${lines}\n\nNotes: ${notes || '-'}\n\nOpen the desk: ${env.SITE_URL || ''}/desk`, email)
+    `${contact} at ${company} sent a trade order enquiry.\n\nRef: ${ref}\nEmail: ${email}\nPhone: ${phone || '-'}\nVAT: ${vat || '-'}\nDelivery postcode: ${postcode || '-'}\n\nItems:\n${lines}\n\nEstimated total: £${total.toFixed(2)}${items.some(i => !i.price) ? ' (some items priced on request)' : ''}\nNotes: ${notes || '-'}\n\nOpen the desk: ${env.SITE_URL || ''}${deskBase(env)}`, email)
     .then(ok => ok && env.DB.prepare('UPDATE orders SET notified = 1 WHERE id = ?').bind(orderId).run()));
 
   return json({ ok: true, ref });
@@ -142,6 +144,13 @@ async function desk(request, env, url, base) {
 
   if (!(await authed(request, env))) return html(page(LOGIN_HTML, { error: '', form: '' }), 401);
   if (path === base || path === base + '/') return html(page(DESK_HTML, {}));
+  const inv = path.match(new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/invoice/(\\d+)$'));
+  if (inv) {
+    const o = await env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(Number(inv[1])).first();
+    if (!o) return html('<p>No such order.</p>', 404);
+    const items = (await env.DB.prepare('SELECT product_id, brand, name, size, qty, price FROM order_items WHERE order_id = ? ORDER BY id').bind(o.id).all()).results;
+    return html(invoiceHTML(o, items, env, env.SITE_URL || ''));
+  }
   return json({ ok: false, error: 'not-found' }, 404);
 }
 
@@ -173,6 +182,15 @@ async function deskApi(request, env, url) {
       const closed = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status IN ('closed','cancelled')").first('n');
       return json({ ok: true, newMessages: m, newOrders: o, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO) });
     }
+    if (p[0] === 'messages' && p[1]) {
+      const message = await DB.prepare('SELECT id, created_at, name, email, phone, message, page, source, status FROM messages WHERE id = ?').bind(parseInt(p[1], 10) || 0).first();
+      return json({ ok: true, message: message || null });
+    }
+    if (p[0] === 'orders' && p[1]) {
+      const order = await DB.prepare('SELECT id, ref, created_at, company, contact, email, phone, vat, postcode, notes, status FROM orders WHERE id = ?').bind(parseInt(p[1], 10) || 0).first();
+      if (order) order.items = (await DB.prepare('SELECT id, order_id, product_id, brand, name, size, qty, price, status FROM order_items WHERE order_id = ? ORDER BY id').bind(order.id).all()).results;
+      return json({ ok: true, order: order || null });
+    }
     if (p[0] === 'messages') {
       const all = url.searchParams.get('all') === '1';
       const rows = (await DB.prepare(`SELECT id, created_at, name, email, phone, message, page, source, status FROM messages ${all ? '' : "WHERE status IN ('new','read')"} ORDER BY id DESC LIMIT 300`).all()).results;
@@ -183,7 +201,7 @@ async function deskApi(request, env, url) {
       const orders = (await DB.prepare(`SELECT id, ref, created_at, company, contact, email, phone, vat, postcode, notes, status FROM orders ${all ? '' : "WHERE status NOT IN ('closed','cancelled')"} ORDER BY id DESC LIMIT 200`).all()).results;
       if (orders.length) {
         const ids = orders.map(o => o.id);
-        const items = (await DB.prepare(`SELECT id, order_id, product_id, brand, name, qty, status FROM order_items WHERE order_id IN (${ids.map(() => '?').join(',')}) ORDER BY id`).bind(...ids).all()).results;
+        const items = (await DB.prepare(`SELECT id, order_id, product_id, brand, name, size, qty, price, status FROM order_items WHERE order_id IN (${ids.map(() => '?').join(',')}) ORDER BY id`).bind(...ids).all()).results;
         const by = {}; items.forEach(i => (by[i.order_id] = by[i.order_id] || []).push(i));
         orders.forEach(o => { o.items = by[o.id] || []; });
       }
@@ -227,7 +245,7 @@ async function deskApi(request, env, url) {
     // Otherwise a status change: POST /api/desk/<messages|orders|items>/<id> {status}
     const status = clean(body.status, 20);
     if (!status) return json({ ok: false, error: 'invalid' }, 400);
-    const tables = { messages: ['new', 'read', 'replied', 'archived'], orders: ['new', 'confirmed', 'ordered', 'dispatched', 'closed', 'cancelled'], items: ['new', 'ordered', 'received', 'dispatched'] };
+    const tables = { messages: ['new', 'read', 'replied', 'archived'], orders: ['new', 'confirmed', 'invoiced', 'paid', 'ordered', 'dispatched', 'closed', 'cancelled'], items: ['new', 'ordered', 'received', 'dispatched'] };
     const allowed = tables[p[0]];
     if (!allowed || !allowed.includes(status)) return json({ ok: false, error: 'invalid' }, 400);
     const table = p[0] === 'items' ? 'order_items' : p[0];

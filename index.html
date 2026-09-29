@@ -27,6 +27,7 @@
     --accent-glow: rgba(185, 98, 63, 0.3);
     --stone: #d3c9b8;
     --steel: #b3bcc4;
+    --price: #7cc796;   /* selling prices in the shop and basket */
     --btn-hover: #ffffff;
     --shadow: rgba(0, 0, 0, 0.6);
     --warn: #f2a54a;
@@ -665,6 +666,10 @@
   .product dt { color: var(--faint); }
   .product dd { margin: 0; color: var(--ink-2); }
   .product .trade-price { color: var(--accent); font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; }
+  .product .trade-price.priced { color: var(--price); font-size: 15px; } .product .trade-price.priced small { font-size: 11.5px; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+  .cart-line .line-price { text-align: right; white-space: nowrap; font-size: 13px; color: var(--price); font-weight: 600; } .cart-line .line-price small { display: block; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .cart-total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-top: 0; background: rgba(255, 255, 255, 0.04); font-size: 13.5px; }
+  .cart-total b { font-size: 17px; color: var(--price); } .cart-total small { color: var(--muted); font-size: 11.5px; }
   .product .acts { grid-area: acts; align-self: end; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 4px; }
   .product .add-basket { flex: 0 1 auto; min-width: 150px; min-height: 42px; padding: 10px 16px; border: 1px solid var(--accent); border-radius: 3px; color: var(--on-accent); background: var(--accent); font-size: 12px; font-weight: 700; text-align: center; cursor: pointer; }
   .product .add-basket:hover { background: #c6eaff; }
@@ -694,7 +699,7 @@
   .trade-cart-close { position: absolute; z-index: 2; top: clamp(18px, 4vw, 30px); right: clamp(18px, 4vw, 30px); width: 40px; height: 40px; border: 1px solid var(--line-strong); color: var(--ink); background: #101419; font-size: 21px; cursor: pointer; }
   .trade-cart-items { display: grid; gap: 8px; max-height: 240px; overflow: auto; }
   .cart-empty { padding: 16px; border: 1px dashed var(--line-strong); color: var(--muted); font-size: 14px; text-align: center; }
-  .cart-line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
+  .cart-line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
   .cart-line strong { display: block; font-size: 14px; }
   .cart-line small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
   .cart-line input { width: 58px; min-height: 36px; padding: 5px; border: 1px solid var(--line-strong); color: var(--ink); background: var(--panel); text-align: center; font: inherit; }
@@ -720,7 +725,7 @@
     .trade-cart-items { max-height: none; overflow: visible; }
     .trade-cart-close { width: 44px; height: 44px; top: 14px; right: 14px; }
     .trade-order-form { grid-template-columns: 1fr; } .trade-order-form .wide { grid-column: auto; } .trade-order-form .btn { justify-self: stretch; min-height: 48px; }
-    .cart-line { grid-template-columns: minmax(0, 1fr) auto; } .cart-line input { min-height: 44px; width: 64px; }
+    .cart-line { grid-template-columns: minmax(0, 1fr) auto auto; } .cart-line .line-price { grid-column: 1 / -1; text-align: left; } .cart-line .line-price small { display: inline; margin-left: 6px; } .cart-line input { min-height: 44px; width: 64px; }
     .cart-remove { grid-column: 1 / -1; justify-self: start; min-height: 40px; padding: 0 2px; }
   }
   /* 16px inputs on touch screens, or iOS zooms the page in when a field is tapped */
@@ -1416,7 +1421,7 @@
       </div>
       <div class="shop-tiles" id="shopTiles"></div>
       <div class="products-bar veil">
-        <p>Trade prices, availability and delivery are confirmed with your order.</p>
+        <p>Prices are what you pay, no VAT to add. Stock and delivery are confirmed with your order.</p>
         <button class="trade-basket-open" type="button" id="openTradeCart" data-open-basket aria-haspopup="dialog">Trade basket <span class="basket-count" id="tradeCartCount" data-basket-count>0</span></button>
       </div>
       <span class="sr-only" id="productCartAnnounce" aria-live="polite"></span>
@@ -1437,7 +1442,7 @@
     <div class="shop-body">
       <div class="wrap">
         <div class="head-row">
-          <p class="cart-note" id="shopNote">Trade prices, availability and delivery are confirmed with your order.</p>
+          <p class="cart-note" id="shopNote">Prices are what you pay, no VAT to add. Stock and delivery are confirmed with your order.</p>
           <div class="tabs" id="productFilters" role="group" aria-label="Show a part of this range"></div>
         </div>
         <div class="products all" id="productList"></div>
@@ -1457,7 +1462,7 @@
         <button class="trade-cart-close" type="button" id="closeTradeCart" aria-label="Close trade basket">×</button>
       </div>
       <div class="trade-cart-items" id="tradeCartItems" aria-live="polite"></div>
-      <p class="cart-note">No payment is taken here. We’ll reply with a trade quotation and delivery details.</p>
+      <p class="cart-note">Prices shown are what you pay: we're not VAT registered, so there's no VAT on top. No payment is taken here; we confirm stock, delivery and the final total, then send an invoice to pay before the goods are ordered.</p>
       <form class="trade-order-form" id="tradeOrderForm">
         <label>Company name *<input name="company" autocomplete="organization" required></label>
         <label>Contact name *<input name="contact" autocomplete="name" required></label>
@@ -1606,6 +1611,9 @@ const FB750 = ["Intumescent coated batt", "Nullifire FB750, seen on this job"];
 const SITE = {
   email: "info@limitlessinnovations.co.uk",
   api: "",   // where the message form and basket send to: "" means this same website (see worker/index.js)
+  /* prices:begin (generated by worker/build-prices.js from worker/suppliers.js: do not edit by hand) */
+  pricing: { markup: 20, updated: "29 Sep 2026", sell: {"fb750-intubatt":33.03,"fs702-intumastic":3.9,"fs709-sealant":12.31,"fp302-intustrap":331.99,"fp170-intucollar":26.05,"fr230-intucompound":37.7,"fi025-intuflex":127.12,"sc902-steel-coating":505.14,"sc802-steel-coating":126.65,"stopseal-batt":38.22,"pyrocoustic-sealant":3.38,"pyropro-hpe-sealant":10.83,"silverseal-compound":48.97,"pipebloc-pcp-collar":23.9,"pipebloc-pwp-wrap":7.6,"tool-gun-310":20.39,"tool-gun-600":27.59,"tool-gun-battery":275.99,"tool-finishing":18.35,"tool-batt-saw":22.79,"tool-knife":18.59,"tool-hole-saw":67.19,"tool-paddle":13.19,"tool-tub":11.99,"tool-trowel":9.58,"tool-torch":39.59,"tool-tape":17.99,"ppe-ffp3":55.19,"ppe-half-mask":71.99,"ppe-nitrile":15.94,"ppe-cut-gloves":11.03,"ppe-glasses":11.99,"ppe-earplugs":41.99,"ppe-hard-hat":16.19,"ppe-hi-vis":4.79,"ppe-trousers":107.99,"ppe-knee-pads":24.56,"ppe-boots":107.99,"ppe-coverall":16.79}, from: {"fb750-intubatt":true,"fp170-intucollar":true,"sc802-steel-coating":true,"pipebloc-pcp-collar":true,"pipebloc-pwp-wrap":true,"tool-gun-battery":true} },
+  /* prices:end */
   // UK company websites must show the registered name, number, where registered and registered office.
   address: "Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE",
   companyNumber: "14380770",
@@ -2022,7 +2030,7 @@ const SITE = {
       blurb: "Batts, sealants, collars, wraps, compounds and intumescent paint from the ranges we install." },
     { id: "tools", name: "Tools", tag: "What we use on site", groups: "group",
       blurb: "Sealant guns, batt saws, mixing kit and the small tools that make a clean, recordable seal.",
-      note: "Starter range: tell us what you use and we'll add it. Trade prices are confirmed with your order." },
+      note: "Prices are what you pay, no VAT to add. Tell us what else you use and we'll add it." },
     { id: "workwear", name: "Workwear and PPE", tag: "Kit for the trade", groups: "group",
       blurb: "Respiratory protection, gloves, eyewear and workwear for firestopping and coating work.",
       note: "Sizes and quantities are confirmed with your order." }
@@ -2079,33 +2087,33 @@ const SITE = {
     { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "No Nonsense", name: "Premium sealant gun", image: "images/products/tool-gun-premium.jpg",
       what: "Aluminium-barrel gun with anti-drip switch and a choice of thrust ratio for stiff intumescent sealants.",
       specs: [["Takes", "Standard 310 ml cartridges"], ["Thrust", "10:1 and 20:1, switchable"], ["Also", "Anti-drip, rotating barrel, built-in nozzle cutter and seal punch"]] },
-    { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "Cox", name: "Ultraflow 600 ml sausage gun", image: "images/products/tool-gun-600.svg",
+    { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "No Nonsense", name: "600 ml foil and cartridge gun", image: "images/products/tool-gun-600.jpg",
       what: "Barrel gun for 600 ml foil sausages: fewer changes on long linear seals.",
       specs: [["Takes", "600 ml sausages and 310 ml cartridges"], ["Body", "Aluminium barrel with cutter"], ["Why", "Half the cartridge changes on big runs"]] },
-    { id: "tool-gun-battery", category: "tools", group: "Sealant guns", brand: "Milwaukee", name: "M12 cordless sealant gun", image: "images/products/tool-gun-battery.svg",
+    { id: "tool-gun-battery", category: "tools", group: "Sealant guns", brand: "Milwaukee", name: "M12 cordless sealant gun, 600 ml", image: "images/products/tool-gun-battery.jpg",
       what: "Battery gun with a steady, adjustable flow for long days on sealant.",
       specs: [["Takes", "310 ml or 400 ml (barrel version 600 ml)"], ["Battery", "12 V, supplied with one battery and charger"], ["Why", "Even bead, no hand fatigue"]] },
-    { id: "tool-finishing", category: "tools", group: "Sealant guns", brand: "Cramer", name: "Fugi sealant finishing kit", image: "images/products/tool-finishing.svg",
+    { id: "tool-finishing", category: "tools", group: "Sealant guns", brand: "Cramer", name: "Fugi sealant finishing kit, 3 profiles", image: "images/products/tool-finishing.jpg",
       what: "Profiling spatulas that leave a smooth, even sealant fillet on batt edges and joints.",
-      specs: [["Set", "Five profiles"], ["Use", "Tooling sealant around pipes, cables and batt joints"], ["Why", "Tidy seals photograph well for the record"]] },
-    { id: "tool-batt-saw", category: "tools", group: "Cutting", brand: "Bahco", name: "Insulation saw, 22 inch", image: "images/products/tool-batt-saw.svg",
+      specs: [["Set", "Three profiles"], ["Use", "Tooling sealant around pipes, cables and batt joints"], ["Why", "Tidy seals photograph well for the record"]] },
+    { id: "tool-batt-saw", category: "tools", group: "Cutting", brand: "Bahco", name: "Insulation saw, 550 mm", image: "images/products/tool-batt-saw.jpg",
       what: "Long, coarse-toothed saw that cuts coated batt cleanly without tearing the stone wool.",
       specs: [["Blade", "560 mm, 7 TPI"], ["Use", "Coated batt, mineral wool, foil-faced insulation"], ["Why", "Square, clean batt edges for a tight fit"]] },
-    { id: "tool-knife", category: "tools", group: "Cutting", brand: "Stanley", name: "FatMax retractable knife with blades", image: "images/products/tool-knife.svg",
+    { id: "tool-knife", category: "tools", group: "Cutting", brand: "Stanley", name: "FatMax retractable knife", image: "images/products/tool-knife.jpg",
       what: "Heavy-duty knife for trimming batt, wrap and backer rod, with a pack of blades.",
       specs: [["Blades", "Pack of 50 heavy-duty"], ["Use", "Trimming batt and intumescent wrap to size"], ["Why", "Quick blade change, solid body"]] },
-    { id: "tool-hole-saw", category: "tools", group: "Cutting", brand: "Various", name: "Hole saw set for batt and board", image: "images/products/tool-hole-saw.svg",
+    { id: "tool-hole-saw", category: "tools", group: "Cutting", brand: "Erbauer", name: "Multi-material hole saw set, 11 pieces", image: "images/products/tool-hole-saw.jpg",
       what: "Bi-metal hole saws in the pipe sizes seen on site, for neat openings in batt and board.",
-      specs: [["Sizes", "32 to 152 mm"], ["Use", "Pipe and cable penetrations through batt"], ["Why", "A round hole seals better than a cut-out"]] },
-    { id: "tool-paddle", category: "tools", group: "Mixing and application", brand: "Various", name: "Compound mixing paddle, M14", image: "images/products/tool-paddle.svg",
+      specs: [["Sizes", "11 saws, 19 to 76 mm, with arbors"], ["Use", "Pipe and cable penetrations through batt"], ["Why", "A round hole seals better than a cut-out"]] },
+    { id: "tool-paddle", category: "tools", group: "Mixing and application", brand: "Erbauer", name: "Mixing paddle, 120 mm, M14", image: "images/products/tool-paddle.jpg",
       what: "Helical paddle for mixing fire compound and mortar in the bucket without air pockets.",
       specs: [["Fitting", "M14, for a paddle mixer or SDS drill with adaptor"], ["Size", "120 mm head"], ["Use", "Nullifire FR230, FSi Silverseal and similar"]] },
-    { id: "tool-tub", category: "tools", group: "Mixing and application", brand: "Gorilla Tub", name: "Flexible mixing tub, 26 L", image: "images/products/tool-tub.svg",
+    { id: "tool-tub", category: "tools", group: "Mixing and application", brand: "Red Gorilla", name: "Flexible mixing tub, 26 L", image: "images/products/tool-tub.jpg",
       what: "Flexible rubber tub that mixes compound cleanly and knocks out when it's set.",
       specs: [["Capacity", "26 litres"], ["Use", "Mixing and carrying compound"], ["Why", "Set compound pops out; the tub lasts years"]] },
-    { id: "tool-trowel", category: "tools", group: "Mixing and application", brand: "Marshalltown", name: "Margin trowel, 150 mm", image: "images/products/tool-trowel.svg",
+    { id: "tool-trowel", category: "tools", group: "Mixing and application", brand: "Marshalltown", name: "Margin trowel, 127 mm", image: "images/products/tool-trowel.jpg",
       what: "Narrow trowel for placing and finishing compound in tight openings.",
-      specs: [["Blade", "150 × 50 mm"], ["Use", "Compound seals in walls and floors"], ["Why", "Reaches into small openings"]] },
+      specs: [["Blade", "127 × 50 mm"], ["Use", "Compound seals in walls and floors"], ["Why", "Reaches into small openings"]] },
     { id: "tool-backer-rod", category: "tools", group: "Mixing and application", brand: "Various", name: "Closed-cell backer rod", image: "images/products/tool-backer-rod.svg",
       what: "Foam rod that sets the depth of a sealant joint so the sealant works as tested.",
       specs: [["Sizes", "10, 15, 20 and 25 mm"], ["Length", "Coils of 50 to 100 m"], ["Use", "Linear joints before intumescent or acoustic sealant"]] },
@@ -2118,50 +2126,50 @@ const SITE = {
     { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Various", name: "Firestop identification labels", image: "images/products/tool-labels.svg",
       what: "Self-adhesive labels that record the system, rating, installer and date next to each seal.",
       specs: [["Pack", "Roll of 100"], ["Use", "Every penetration seal, so the inspection can find it"], ["Why", "Survives dust and damp"]] },
-    { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Various", name: "Rechargeable LED head torch", image: "images/products/tool-torch.svg",
+    { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Nebo", name: "Rechargeable LED head torch", image: "images/products/tool-torch.jpg",
       what: "Bright, hands-free light for risers and ceiling voids where seals get photographed.",
       specs: [["Output", "Around 600 lumens"], ["Power", "USB rechargeable"], ["Use", "Surveys and photo records in dark voids"]] },
-    { id: "tool-tape", category: "tools", group: "Marking and inspection", brand: "Stanley", name: "Tape measure, 8 m", image: "images/products/tool-tape.svg",
+    { id: "tool-tape", category: "tools", group: "Marking and inspection", brand: "Stanley", name: "FatMax tape measure, 8 m", image: "images/products/tool-tape.jpg",
       what: "Wide-blade tape for sizing openings and checking batt depths.",
       specs: [["Length", "8 m, 32 mm blade"], ["Use", "Measuring openings and annular gaps"]] },
 
     /* ---- Workwear and PPE ---- */
-    { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "3M", name: "Aura FFP3 respirators, box of 10", image: "images/products/ppe-ffp3.svg",
+    { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "JSP", name: "SpringFit FFP3 respirators, pack of 10", image: "images/products/ppe-ffp3.jpg",
       what: "Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust.",
       specs: [["Standard", "EN 149 FFP3"], ["Pack", "Box of 10"], ["Use", "Cutting batt, mixing compound, sanding"]] },
-    { id: "ppe-half-mask", category: "workwear", group: "Respiratory", brand: "3M", name: "Half-mask respirator with P3 filters", image: "images/products/ppe-half-mask.svg",
+    { id: "ppe-half-mask", category: "workwear", group: "Respiratory", brand: "3M", name: "Half-mask respirator kit with P3 filters", image: "images/products/ppe-half-mask.jpg",
       what: "Reusable half mask with particulate filters for long days on dusty work and coating.",
       specs: [["Filters", "P3 R particulate; A2P3 for solvent-based coatings"], ["Sizes", "S, M, L"], ["Use", "Daily dust and spray work"]] },
-    { id: "ppe-nitrile", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Nitrile gloves, box of 100", image: "images/products/ppe-nitrile.svg",
+    { id: "ppe-nitrile", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Nitrile gloves, box of 100", image: "images/products/ppe-nitrile.jpg",
       what: "Powder-free nitrile gloves for sealant, compound and coating work.",
-      specs: [["Pack", "Box of 100"], ["Sizes", "S to XL"], ["Use", "Keeping sealant and paint off skin"]] },
-    { id: "ppe-cut-gloves", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Cut-resistant work gloves", image: "images/products/ppe-cut-gloves.svg",
+      specs: [["Pack", "Box of 100"], ["Sizes", "M to XL"], ["Use", "Keeping sealant and paint off skin"]] },
+    { id: "ppe-cut-gloves", category: "workwear", group: "Hands and eyes", brand: "MCR Safety", name: "Cut-resistant work gloves", image: "images/products/ppe-cut-gloves.jpg",
       what: "Level D cut-resistant gloves with a nitrile palm for handling batt, mesh and cut steel.",
       specs: [["Standard", "EN 388, cut level D"], ["Sizes", "8 to 11"], ["Use", "Batt handling, sharp edges on trays and mesh"]] },
-    { id: "ppe-glasses", category: "workwear", group: "Hands and eyes", brand: "Bollé", name: "Safety glasses, clear anti-fog", image: "images/products/ppe-glasses.svg",
+    { id: "ppe-glasses", category: "workwear", group: "Hands and eyes", brand: "Bollé", name: "Contour safety glasses, clear", image: "images/products/ppe-glasses.jpg",
       what: "Wraparound safety glasses that stay clear while cutting overhead.",
       specs: [["Standard", "EN 166"], ["Lens", "Clear, anti-fog and anti-scratch"], ["Use", "Overhead cutting and sealing"]] },
-    { id: "ppe-earplugs", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Disposable earplugs, box of 200 pairs", image: "images/products/ppe-earplugs.svg",
+    { id: "ppe-earplugs", category: "workwear", group: "Hands and eyes", brand: "Howard Leight", name: "Foam earplugs, 200 pairs", image: "images/products/ppe-earplugs.jpg",
       what: "Foam earplugs for drilling and mixing.",
       specs: [["Attenuation", "SNR 37 dB"], ["Pack", "200 pairs"], ["Use", "Drilling, mixing, busy sites"]] },
-    { id: "ppe-hard-hat", category: "workwear", group: "Clothing", brand: "JSP", name: "Vented safety helmet", image: "images/products/ppe-hard-hat.svg",
+    { id: "ppe-hard-hat", category: "workwear", group: "Clothing", brand: "JSP", name: "EVO3 vented safety helmet", image: "images/products/ppe-hard-hat.jpg",
       what: "Lightweight vented helmet with a wheel ratchet, in site colours.",
       specs: [["Standard", "EN 397"], ["Colours", "White, yellow, blue"], ["Use", "Every site"]] },
-    { id: "ppe-hi-vis", category: "workwear", group: "Clothing", brand: "Various", name: "Hi-vis vest, class 2", image: "images/products/ppe-hi-vis.svg",
+    { id: "ppe-hi-vis", category: "workwear", group: "Clothing", brand: "Site", name: "Hi-vis vest, class 2", image: "images/products/ppe-hi-vis.jpg",
       what: "Yellow hi-vis vest to the site standard, with a chest pocket for the phone that takes the record photos.",
       specs: [["Standard", "EN ISO 20471 class 2"], ["Sizes", "S to 3XL"], ["Use", "Every site"]] },
-    { id: "ppe-trousers", category: "workwear", group: "Clothing", brand: "Snickers", name: "Stretch work trousers with knee pad pockets", image: "images/products/ppe-trousers.svg",
+    { id: "ppe-trousers", category: "workwear", group: "Clothing", brand: "Snickers", name: "6241 stretch work trousers", image: "images/products/ppe-trousers.jpg",
       what: "Hard-wearing work trousers with holster pockets and knee pad pockets for floor seals.",
       specs: [["Sizes", "Waist 30 to 44, three leg lengths"], ["Pairs with", "Knee pads below"], ["Use", "Floor seals and riser work"]] },
-    { id: "ppe-knee-pads", category: "workwear", group: "Clothing", brand: "Snickers", name: "Knee pads for pocket trousers", image: "images/products/ppe-knee-pads.svg",
+    { id: "ppe-knee-pads", category: "workwear", group: "Clothing", brand: "Snickers", name: "9110 knee pad inserts", image: "images/products/ppe-knee-pads.jpg",
       what: "Certified knee pads that slot into the trouser pockets.",
       specs: [["Standard", "EN 14404 type 2"], ["Use", "Floor penetrations and low-level seals"]] },
-    { id: "ppe-boots", category: "workwear", group: "Clothing", brand: "Various", name: "S3 safety boots", image: "images/products/ppe-boots.svg",
-      what: "Composite-toe, midsole-protected boots that stay comfortable on concrete all day.",
+    { id: "ppe-boots", category: "workwear", group: "Clothing", brand: "CAT", name: "Holton S3 safety boots", image: "images/products/ppe-boots.jpg",
+      what: "Steel-toe, midsole-protected boots that stay comfortable on concrete all day.",
       specs: [["Standard", "EN ISO 20345 S3"], ["Sizes", "UK 6 to 13"], ["Use", "Every site"]] },
-    { id: "ppe-coverall", category: "workwear", group: "Clothing", brand: "DuPont", name: "Tyvek disposable coveralls", image: "images/products/ppe-coverall.svg",
+    { id: "ppe-coverall", category: "workwear", group: "Clothing", brand: "DuPont", name: "Tyvek disposable coverall", image: "images/products/ppe-coverall.jpg",
       what: "Type 5/6 disposable coveralls for spraying intumescent paint.",
-      specs: [["Standard", "Type 5 and 6"], ["Pack", "Box of 25"], ["Use", "Spraying and dusty cutting"]] }
+      specs: [["Standard", "Type 5 and 6"], ["Pack", "Sold singly, sizes S to 3XL"], ["Use", "Spraying and dusty cutting"]] }
   ],
 
   // Steel coating photographs, one per stage (images/coat/). Swap these for your own site photos whenever you have them.
@@ -3159,10 +3167,14 @@ const SITE = {
     };
     const ph = cat => `<div class="product-media ph" aria-hidden="true">${ICON[cat] || ICON.materials}</div>`;
     const specsOf = p => p.specs || [['Fire rating', p.fire], ['Used for', p.uses], ['Sizes', p.size]];
+    const PR = SITE.pricing || { sell: {}, from: {} };
+    const gbp = n => '£' + n.toFixed(2);
+    const priceOf = p => (PR.sell && PR.sell[p.id] > 0) ? PR.sell[p.id] : 0;
+    const priceHTML = p => { const v = priceOf(p); return v ? `<p class="trade-price priced">${PR.from && PR.from[p.id] ? 'from ' : ''}${gbp(v)}<small>each · no VAT to add</small></p>` : '<p class="trade-price">Trade price on request</p>'; };
     const card = p => `<article class="product" data-brand="${esc(p.brand)}" data-group="${esc(p.group || '')}" data-cat="${esc(catOf(p))}" data-product-id="${esc(p.id)}">
       ${p.image ? `<button class="product-media" type="button" data-zoom="${esc(p.image)}" aria-label="See a larger photo of ${esc(p.name)}"><img src="${esc(p.image)}" alt="${esc(p.name)} product image" width="96" height="96" loading="lazy" decoding="async"><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.8 12.8L17 17M8.5 6v5M6 8.5h5"/></svg></span></button>` : ph(catOf(p))}
       <div class="p-head"><span class="brand${p.brand === 'Various' ? ' generic' : ''}">${esc(p.brand)}</span><h3>${esc(p.name)}</h3><p class="what">${esc(p.what)}</p></div>
-      <div class="p-spec"><p class="trade-price">Trade price on request</p>
+      <div class="p-spec">${priceHTML(p)}
         <dl>${specsOf(p).filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>
       <div class="acts"><button class="add-basket" type="button">Add to basket</button><input class="product-qty" type="number" min="1" max="999" step="1" value="1" inputmode="numeric" aria-label="Quantity for ${esc(p.name)}">${p.link ? `<a class="maker" href="${esc(p.link)}" target="_blank" rel="noopener">Manufacturer details ↗</a>` : ''}</div>
     </article>`;
@@ -3182,7 +3194,7 @@ const SITE = {
       const items = P.filter(p => catOf(p) === c.id);
       $('#shopTitle').textContent = c.name;
       $('#shopSub').textContent = c.blurb;
-      $('#shopNote').textContent = c.note || 'Trade prices, availability and delivery are confirmed with your order.';
+      $('#shopNote').textContent = c.note || 'Prices are what you pay, no VAT to add. Stock and delivery are confirmed with your order.';
       listEl.innerHTML = items.map(card).join('');
       const key = c.groups === 'brand' ? 'brand' : 'group';
       const parts = [...new Set(items.map(p => p[key]).filter(Boolean))];
@@ -3274,11 +3286,15 @@ const SITE = {
       const label = `Open trade basket with ${count} ${count === 1 ? 'item' : 'items'}`;
       $$('[data-open-basket]').forEach(b => b.setAttribute('aria-label', label));
       const entries = P.filter(p => Number(basket[p.id]) > 0);
+      const qtyOf = p => Math.min(999, Math.max(1, Number(basket[p.id]) || 1));
+      let total = 0, unpriced = 0;
+      entries.forEach(p => { const v = priceOf(p); if (v) total += v * qtyOf(p); else unpriced++; });
       cartItemsEl.innerHTML = entries.length ? entries.map(p => `<div class="cart-line" data-cart-id="${esc(p.id)}">
         <div><strong>${esc(p.name)}</strong><small>${esc(p.brand)} · ${esc(p.size)}</small></div>
-        <input class="cart-quantity" type="number" min="1" max="999" step="1" value="${Math.min(999, Math.max(1, Number(basket[p.id]) || 1))}" aria-label="Quantity for ${esc(p.name)}">
+        <input class="cart-quantity" type="number" min="1" max="999" step="1" value="${qtyOf(p)}" aria-label="Quantity for ${esc(p.name)}">
         <button class="cart-remove" type="button">Remove</button>
-      </div>`).join('') : '<p class="cart-empty">Your trade basket is empty. Add a product to start an enquiry.</p>';
+        <div class="line-price">${priceOf(p) ? `${gbp(priceOf(p) * qtyOf(p))}<small>${PR.from && PR.from[p.id] ? 'from ' : ''}${gbp(priceOf(p))} each</small>` : '<small>Price on request</small>'}</div>
+      </div>`).join('') + `<div class="cart-total"><span>Estimated total${unpriced ? `<br><small>${unpriced} item${unpriced === 1 ? '' : 's'} priced on request, not included</small>` : ''}</span><span><b>${gbp(total)}</b><br><small>No VAT to add · confirmed with your order</small></span></div>` : '<p class="cart-empty">Your trade basket is empty. Add a product to start an enquiry.</p>';
       persistBasket();
     }
     listEl.addEventListener('click', e => {
@@ -3333,7 +3349,7 @@ const SITE = {
     // Sending: the order goes to the site's own /api/orders (worker/index.js) and lands on the
     // order desk. If that can't be reached, the old route (an email draft) is offered instead.
     const orderForm = $('#tradeOrderForm'), status = $('#tradeCartStatus');
-    const orderItems = () => P.filter(p => Number(basket[p.id]) > 0).map(p => ({ id: p.id, brand: p.brand, name: p.name, qty: Number(basket[p.id]), size: p.size }));
+    const orderItems = () => P.filter(p => Number(basket[p.id]) > 0).map(p => ({ id: p.id, brand: p.brand, name: p.name, qty: Number(basket[p.id]), size: p.size || '', price: priceOf(p) || null }));
     const mailtoOrder = (form, items) => {
       const lines = items.map(i => `- ${i.name} (${i.brand}) — ${i.qty} × ${i.size}`);
       const fields = [['Company', 'company'], ['Contact', 'contact'], ['Work email', 'email'], ['Phone', 'phone'], ['VAT number', 'vat'], ['Delivery postcode', 'postcode']];
@@ -3881,7 +3897,7 @@ const SITE = {
     },
     order(cat) {
       const items = cat ? PRODUCTS.filter(p => cat.icons.includes(p.icon)).map(p => `**${p.brand} ${p.name}**`) : [];
-      return `To order${cat ? ' ' + cat.label : ''}:\n1. Go to ${link('Products', '#products')} and pick ${items.length ? listJoin(items, 'or') : 'what you need'}.\n2. Set the quantity and press **Add to basket**.\n3. Open the **Trade basket**, fill in your company details and press **Send order enquiry**. You get a reference straight away.\n\nNo payment is taken online. We confirm trade pricing, stock and delivery before the order is accepted.`;
+      return `To order${cat ? ' ' + cat.label : ''}:\n1. Go to ${link('Products', '#products')} and pick ${items.length ? listJoin(items, 'or') : 'what you need'}.\n2. Set the quantity and press **Add to basket**.\n3. Open the **Trade basket**, fill in your company details and press **Send order enquiry**. You get a reference straight away.\n\nPrices on the site are what you pay (no VAT to add). We confirm stock and delivery, then send an invoice to pay before the goods are ordered.`;
     },
     price: prods => `We don't publish ${prods.length ? `a price for **${prods.map(p => p.name).join('** or **')}**` : 'prices'} online. Trade prices, availability and delivery are confirmed with your order enquiry: add products to the Trade basket in ${link('Products', '#products')} and send it to us.\n\nFor installation work, every job is priced after a survey: ${QUOTE}.`,
     delivery: () => `Stock and delivery are confirmed with each order. Send your enquiry from the Trade basket in ${link('Products', '#products')}, with your delivery postcode and the date you need it, and the team will confirm availability and delivery before accepting the order.`,

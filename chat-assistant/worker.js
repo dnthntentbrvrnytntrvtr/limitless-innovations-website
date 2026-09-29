@@ -157,7 +157,7 @@ Typical examples drawn to scale. Each real opening must follow the manufacturer'
 Products
 Trade supplies
 Firestopping materials, the tools we use on site, and workwear. Open a range, add what you need to your trade basket, and send us the order enquiry.
-Trade prices, availability and delivery are confirmed with your order.
+Prices are what you pay, no VAT to add. Stock and delivery are confirmed with your order.
 Fire ratings below are product-level examples from the manufacturers; the tested system decides the actual rating.
 - Nullifire FB750 Intubatt: Coated stone wool batt that closes large openings with services running through. Uses: Walls and floors: cables, trays, trunking and plastic pipes. Fire: Up to 240 minutes. Size: 1200 × 600 × 50 mm. Manufacturer page: https://www.nullifire.com/en-gb/products-systems/product-finder/fb750-intubatt/
 - Nullifire FS702 Intumastic: Acrylic fire sealant that cures firm but stays flexible. Uses: Linear gaps, metal pipes, cable bundles and trays. Fire: Up to 4 hours. Size: 310 ml and 600 ml, white or grey. Manufacturer page: https://www.nullifire.com/en-gb/products-systems/product-finder/fs702-intumastic-fire-resistant-acrylic-sealant/
@@ -174,39 +174,39 @@ Fire ratings below are product-level examples from the manufacturers; the tested
 - FSi Promat Silverseal Compound: Gypsum-based fire mortar for openings with several services. Uses: Plastic pipes, cables and insulated metal pipes in walls and floors. Fire: Up to 120 minutes. Size: 20 kg bag. Manufacturer page: https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/mortar/silversealcompound/
 - FSi Promat PipeBloc PCP Collar: Metal-cased pipe collar with an intumescent insert. Uses: Plastic pipes, cables and insulated metal pipes, including angled pipes. Fire: Up to 240 minutes. Size: Sized to the pipe. Manufacturer page: https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpcpcollar/
 - FSi Promat PipeBloc PWP Wrap: Pre-formed intumescent pipe wrap in a polyethylene sleeve. Uses: Plastic pipes through batt, mortar or sealant seals. Fire: Up to 240 minutes. Size: 40 mm wide, sized to the pipe. Manufacturer page: https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/
-- Cox PowerFlow Combi 310 ml gun: Skeleton gun with a high-thrust ratio for stiff intumescent sealants and mastics. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Cox Ultraflow 600 ml sausage gun: Barrel gun for 600 ml foil sausages: fewer changes on long linear seals. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Milwaukee M12 cordless sealant gun: Battery gun with a steady, adjustable flow for long days on sealant. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Cramer Fugi sealant finishing kit: Profiling spatulas that leave a smooth, even sealant fillet on batt edges and joints. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Bahco Insulation saw, 22 inch: Long, coarse-toothed saw that cuts coated batt cleanly without tearing the stone wool. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Stanley FatMax retractable knife with blades: Heavy-duty knife for trimming batt, wrap and backer rod, with a pack of blades. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Hole saw set for batt and board: Bi-metal hole saws in the pipe sizes seen on site, for neat openings in batt and board. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Compound mixing paddle, M14: Helical paddle for mixing fire compound and mortar in the bucket without air pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Gorilla Tub Flexible mixing tub, 26 L: Flexible rubber tub that mixes compound cleanly and knocks out when it's set. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Marshalltown Margin trowel, 150 mm: Narrow trowel for placing and finishing compound in tight openings. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- No Nonsense Premium sealant gun: Aluminium-barrel gun with anti-drip switch and a choice of thrust ratio for stiff intumescent sealants. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- No Nonsense 600 ml foil and cartridge gun: Barrel gun for 600 ml foil sausages: fewer changes on long linear seals. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Milwaukee M12 cordless sealant gun, 600 ml: Battery gun with a steady, adjustable flow for long days on sealant. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Cramer Fugi sealant finishing kit, 3 profiles: Profiling spatulas that leave a smooth, even sealant fillet on batt edges and joints. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Bahco Insulation saw, 550 mm: Long, coarse-toothed saw that cuts coated batt cleanly without tearing the stone wool. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Stanley FatMax retractable knife: Heavy-duty knife for trimming batt, wrap and backer rod, with a pack of blades. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Erbauer Multi-material hole saw set, 11 pieces: Bi-metal hole saws in the pipe sizes seen on site, for neat openings in batt and board. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Erbauer Mixing paddle, 120 mm, M14: Helical paddle for mixing fire compound and mortar in the bucket without air pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Red Gorilla Flexible mixing tub, 26 L: Flexible rubber tub that mixes compound cleanly and knocks out when it's set. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Marshalltown Margin trowel, 127 mm: Narrow trowel for placing and finishing compound in tight openings. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Various Closed-cell backer rod: Foam rod that sets the depth of a sealant joint so the sealant works as tested. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Elcometer Wet film comb, 25 to 2000 µm: Stainless comb for checking wet film thickness as intumescent paint goes on. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Elcometer Dry film thickness gauge: Digital gauge that measures cured coating thickness on steel, for the handover record. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Various Firestop identification labels: Self-adhesive labels that record the system, rating, installer and date next to each seal. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Rechargeable LED head torch: Bright, hands-free light for risers and ceiling voids where seals get photographed. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Stanley Tape measure, 8 m: Wide-blade tape for sizing openings and checking batt depths. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- 3M Aura FFP3 respirators, box of 10: Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- 3M Half-mask respirator with P3 filters: Reusable half mask with particulate filters for long days on dusty work and coating. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Nebo Rechargeable LED head torch: Bright, hands-free light for risers and ceiling voids where seals get photographed. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Stanley FatMax tape measure, 8 m: Wide-blade tape for sizing openings and checking batt depths. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- JSP SpringFit FFP3 respirators, pack of 10: Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- 3M Half-mask respirator kit with P3 filters: Reusable half mask with particulate filters for long days on dusty work and coating. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 - Various Nitrile gloves, box of 100: Powder-free nitrile gloves for sealant, compound and coating work. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Cut-resistant work gloves: Level D cut-resistant gloves with a nitrile palm for handling batt, mesh and cut steel. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Bollé Safety glasses, clear anti-fog: Wraparound safety glasses that stay clear while cutting overhead. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Disposable earplugs, box of 200 pairs: Foam earplugs for drilling and mixing. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- JSP Vented safety helmet: Lightweight vented helmet with a wheel ratchet, in site colours. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various Hi-vis vest, class 2: Yellow hi-vis vest to the site standard, with a chest pocket for the phone that takes the record photos. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Snickers Stretch work trousers with knee pad pockets: Hard-wearing work trousers with holster pockets and knee pad pockets for floor seals. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Snickers Knee pads for pocket trousers: Certified knee pads that slot into the trouser pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- Various S3 safety boots: Composite-toe, midsole-protected boots that stay comfortable on concrete all day. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
-- DuPont Tyvek disposable coveralls: Type 5/6 disposable coveralls for spraying intumescent paint. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- MCR Safety Cut-resistant work gloves: Level D cut-resistant gloves with a nitrile palm for handling batt, mesh and cut steel. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Bollé Contour safety glasses, clear: Wraparound safety glasses that stay clear while cutting overhead. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Howard Leight Foam earplugs, 200 pairs: Foam earplugs for drilling and mixing. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- JSP EVO3 vented safety helmet: Lightweight vented helmet with a wheel ratchet, in site colours. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Site Hi-vis vest, class 2: Yellow hi-vis vest to the site standard, with a chest pocket for the phone that takes the record photos. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Snickers 6241 stretch work trousers: Hard-wearing work trousers with holster pockets and knee pad pockets for floor seals. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- Snickers 9110 knee pad inserts: Certified knee pads that slot into the trouser pockets. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- CAT Holton S3 safety boots: Steel-toe, midsole-protected boots that stay comfortable on concrete all day. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
+- DuPont Tyvek disposable coverall: Type 5/6 disposable coveralls for spraying intumescent paint. Uses: undefined. Fire: undefined. Size: undefined. Manufacturer page: undefined
 
 ## How to order trade products
 Open Products, choose a product and quantity, press "Add to basket", then open the "Trade basket", enter company name, contact name, work email (and optionally phone, VAT number, delivery postcode and notes) and press "Send order enquiry". This opens an email to info@limitlessinnovations.co.uk with the order enquiry.
 Tell us what your company needs. We’ll confirm pricing, stock and delivery before the order is accepted.
-No payment is taken here. We’ll reply with a trade quotation and delivery details.
+Prices shown are what you pay: we're not VAT registered, so there's no VAT on top. No payment is taken here; we confirm stock, delivery and the final total, then send an invoice to pay before the goods are ordered.
 No online payment. Trade prices, stock, availability and delivery are confirmed by the team in reply to each enquiry. The basket is saved in the visitor's own browser only.
 
 ## Intumescent coating to structural steel (#coatings)

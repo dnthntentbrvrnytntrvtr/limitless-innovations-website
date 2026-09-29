@@ -13,6 +13,16 @@ WHAT IT DOES
   message to Archived (an order to Closed or Cancelled) and use
   "Clear archived messages" / "Clear closed and cancelled orders" to remove
   them all at once. Tick "Show archived and closed too" to see them first.
+- Every message and order opens on its own page. An order page shows the
+  customer, what was quoted on the website, what it costs you, your margin,
+  where to buy each line, and an Invoice button (opens a printable invoice:
+  use the browser's Print > Save as PDF and email it, or print it).
+  Statuses: New > Confirmed > Invoice sent > Paid > Ordered from supplier >
+  Dispatched > Closed. Order from the supplier once it says Paid.
+- Mark-up: the box in the desk header (default 20%) sets the "Sell at"
+  figures on the desk. The SHOP's prices are worked out at build time from
+  worker/suppliers.js at +20% (worker/build-prices.js); change MARKUP there
+  to reprice the shop.
 - Suppliers tab: every product in the shop with where to buy it and the
   price seen on the date shown. This is for you when an order comes in;
   customers never see it. Filter by range or search by name, brand or group.
@@ -42,6 +52,18 @@ still password protected). To make the login page itself private:
    https://limitlessinnovations.co.uk/desk-7k3q9x-limitless
    and /desk is just a missing page like any other. Bookmark the new one.
    Change the value any time to move it; remove it to go back to /desk.
+
+------------------------------------------------------------------------
+STEP 1c - INVOICE DETAILS (2 minutes)
+------------------------------------------------------------------------
+Invoices show Limitless Innovations Ltd, the registered office and company
+number already. Add your bank details so customers can pay:
+   Cloudflare > the Worker > Settings > Variables and Secrets > Add >
+   Type: Text.  Name: BANK_DETAILS.
+   Value: e.g.  Bank transfer to Limitless Innovations Ltd, sort code 00-00-00,
+                account 00000000. Reference: the invoice number.
+Optional, same way: COMPANY_PHONE (shown on invoices), COMPANY_EMAIL,
+COMPANY_ADDRESS, COMPANY_NUMBER, COMPANY_NAME to override the defaults.
 
 ------------------------------------------------------------------------
 STEP 2 - EMAIL ALERTS (5 minutes, optional but recommended)

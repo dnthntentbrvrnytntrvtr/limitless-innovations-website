@@ -122,12 +122,49 @@ export const DESK_HTML = `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>Order desk · Limitless Innovations</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600&family=Inter:wght@400;500;600&display=swap">
-<style>${STYLE}</style></head>
+<style>${STYLE}
+  /* Gallery: everything is a tile you click to open, so the lists stay short. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
+  .tile { position: relative; display: grid; gap: 8px; align-content: start; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); cursor: pointer; text-align: left; color: inherit; font: inherit; transition: border-color .15s ease, transform .15s ease; }
+  .tile:hover { border-color: var(--steel); transform: translateY(-1px); }
+  .tile.new { border-left: 3px solid var(--accent); }
+  .tile .t-top { display: flex; align-items: baseline; gap: 8px; }
+  .tile h3 { font-size: 15.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile .when { margin-left: auto; flex: none; font-size: 12px; color: var(--muted); }
+  .tile .excerpt { font-size: 13.5px; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tile .t-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--muted); }
+  .tile .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; background: var(--panel-2); color: var(--stone); }
+  .tile .pill.new { background: var(--accent); color: #fff; } .tile .pill.paid { background: var(--ok); color: #0b0d10; }
+  .tile .thumbs { display: flex; gap: 4px; } .tile .thumbs img { width: 40px; height: 40px; object-fit: contain; padding: 2px; border-radius: 3px; background: #f3f4f6; border: 1px solid var(--line); }
+  .tile .thumbs .more { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 3px; border: 1px dashed var(--line); font-size: 12px; color: var(--muted); }
+  .tile .money { font-size: 14px; color: var(--ink); } .tile .money b { color: var(--ok); font-weight: 600; }
+  .tile.product { grid-template-columns: 64px minmax(0, 1fr); gap: 8px 12px; cursor: default; }
+  .tile.product:hover { transform: none; }
+  .tile.product .thumb { width: 64px; height: 64px; grid-row: span 3; }
+  .tile.product h3 { white-space: normal; font-size: 14.5px; }
+  .tile.product .sup { grid-column: 2; }
+  .tile.product .cost { grid-column: 2; margin-top: 0; }
+  /* Detail pages */
+  .detail { display: grid; gap: 14px; }
+  .detail .bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail .bar h2 { font-size: 22px; }
+  .detail .bar .pill { margin-left: 4px; }
+  .panel { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); display: grid; gap: 10px; }
+  .panel h4 { margin: 0; font: 500 11px/1 inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
+  .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 18px; font-size: 13.5px; }
+  .kv span b { display: block; color: var(--muted); font-weight: 500; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
+  .two { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 14px; align-items: start; }
+  @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
+  table.items td.num { text-align: right; white-space: nowrap; } table.items th.num { text-align: right; }
+  table.items td .quote { color: var(--ok); font-weight: 600; }
+  .sum { display: grid; gap: 6px; font-size: 13.5px; } .sum div { display: flex; justify-content: space-between; gap: 12px; } .sum b { font-weight: 600; } .sum .big b { font-size: 18px; color: var(--ok); } .sum .dim { color: var(--muted); }
+  .empty-mini { font-size: 13px; color: var(--faint); }
+</style></head>
 <body>
 <header class="top">
   ${MARK}
-  <div><h1>Order desk</h1><div class="sub">Messages and trade orders from the website</div></div>
-  <div class="right"><label class="markup" title="Your mark-up on the price you pay (inc VAT); used for the sell-at prices on orders and suppliers">Mark-up <input type="number" id="markup" min="0" max="100" step="1" value="15">%</label><span id="alerts"></span><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="{{base}}/logout">Log out</a></div>
+  <div><h1>Order desk</h1><div class="sub">Messages, trade orders and where to buy</div></div>
+  <div class="right"><label class="markup" title="Your mark-up on the price you pay (inc VAT); used for the sell-at prices on orders and suppliers">Mark-up <input type="number" id="markup" min="0" max="100" step="1" value="20">%</label><span id="alerts"></span><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="{{base}}/logout">Log out</a></div>
 </header>
 <main class="wrap">
   <div class="tabs" role="tablist">
@@ -137,80 +174,93 @@ export const DESK_HTML = `<!doctype html>
   </div>
   <div class="filters" id="filtersInbox"><label><input type="checkbox" id="showAll"> Show archived and closed too</label><button class="btn sm danger" id="purge" type="button">Clear archived messages</button><span class="spacer"></span><span id="updated"></span></div>
   <div class="filters" id="filtersSup" hidden><div class="chips" id="rangeChips"></div><input type="search" id="supSearch" placeholder="Find a product, brand or group" autocomplete="off"></div>
-  <dialog class="zoom" id="zoom"><figure><img id="zoomImg" alt=""><figcaption id="zoomCap"></figcaption></figure></dialog>
-  <div class="list" id="list"></div>
+  <div id="list"></div>
   <div class="note" id="note" hidden></div>
+  <dialog class="zoom" id="zoom"><figure><img id="zoomImg" alt=""><figcaption id="zoomCap"></figcaption></figure></dialog>
 </main>
 <script>
 (() => {
   const $ = s => document.querySelector(s);
-  let tab = 'messages', suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 };
+  const BASE = '{{base}}';
+  let tab = 'messages', open = null, suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 };
   const VAT = 0.2;
-  let markup = 15; try { markup = Math.min(100, Math.max(0, Number(localStorage.getItem('li-markup')) || 15)); } catch (e) {}
+  let markup = 20; try { const v = localStorage.getItem('li-markup'); if (v !== null) markup = Math.min(100, Math.max(0, Number(v) || 0)); } catch (e) {}
   const gbp = n => '£' + n.toFixed(2);
-  /* Cheapest priced supplier for a product, as what you pay (inc VAT: not VAT registered, so it's the full price) and what to sell at. */
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const when = iso => { const d = new Date(iso + (iso.endsWith('Z') ? '' : 'Z')); const m = (Date.now() - d) / 60000;
+    if (m < 1) return 'just now'; if (m < 60) return Math.round(m) + ' min ago'; if (m < 36 * 60) return Math.round(m / 60) + ' h ago';
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); };
+  const tel = p => 'tel:' + esc(String(p).replace(/\\s+/g, ''));
+  const api = (path, opts) => fetch('/api/desk/' + path, { credentials: 'same-origin', ...opts }).then(r => { if (r.status === 401) { location.reload(); throw new Error('auth'); } return r.json(); });
+  const postJSON = (path, body) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body || {}) });
+  const MSG_STATUS = { new: 'New', read: 'Read', replied: 'Replied', archived: 'Archived' };
+  const ORD_STATUS = { new: 'New', confirmed: 'Confirmed with customer', invoiced: 'Invoice sent', paid: 'Paid', ordered: 'Ordered from supplier', dispatched: 'Dispatched', closed: 'Closed', cancelled: 'Cancelled' };
+  const pill = s => '<span class="pill ' + esc(s) + '">' + esc((ORD_STATUS[s] || MSG_STATUS[s] || s)) + '</span>';
+  const productOf = pid => cat.products.find(p => p.id === pid);
+  const thumb = (p, size) => p && p.image ? '<img class="thumb" src="/' + esc(p.image) + '" alt="" data-zoom="' + esc(p.image) + '" data-cap="' + esc((p.brand ? p.brand + ' ' : '') + p.name) + '"' + (size ? ' style="width:' + size + 'px;height:' + size + 'px"' : '') + '>' : '';
+
+  /* Cheapest priced supplier for a product: what you pay (inc VAT, since you can't reclaim it) and what to sell at. */
   function cost(pid) {
     let best = null;
     (suppliers[pid] || []).forEach(x => {
-      const m = /£\s*([0-9]+(?:\.[0-9]+)?)/.exec(x.price || ''); if (!m) return;
-      const n = parseFloat(m[1]); const inc = /inc\.? ?VAT/i.test(x.price) ? n : (/ex\.? ?VAT/i.test(x.price) ? n * (1 + VAT) : n * (1 + VAT));
-      if (!best || inc < best.inc) best = { inc, supplier: x.supplier, note: (x.price || '').replace(/^£[^ ]+\s*/, '') };
+      const m = /£\\s*([0-9]+(?:\\.[0-9]+)?)/.exec(x.price || ''); if (!m) return;
+      const n = parseFloat(m[1]); const inc = /inc\\.? ?VAT/i.test(x.price) ? n : n * (1 + VAT);
+      if (!best || inc < best.inc) best = { inc, supplier: x.supplier, note: (x.price || '').replace(/^£[^ ]+\\s*/, '') };
     });
     if (!best) return null;
     best.sell = best.inc * (1 + markup / 100);
     return best;
   }
+  const supplierLinks = pid => { const s = suppliers[pid]; if (!s || !s.length) return '<span class="none">No supplier links yet</span>';
+    return s.map(x => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener"><b>' + esc(x.supplier) + '</b>' + (x.price ? esc(x.price) : '') + (x.checked ? ' <span style="color:var(--faint)">(' + esc(x.checked) + ')</span>' : '') + '</a>').join(''); };
   const costHTML = (pid, qty) => { const c = cost(pid); if (!c) return ''; const q = qty || 1;
     return '<div class="cost"><span>You pay <b>' + gbp(c.inc * q) + '</b> inc VAT' + (q > 1 ? ' (' + gbp(c.inc) + ' each)' : '') + ' <span class="from">· ' + esc(c.supplier) + (c.note ? ', ' + esc(c.note) : '') + '</span></span><span>Sell at <span class="sell">' + gbp(c.sell * q) + '</span> (+' + markup + '%)</span></div>'; };
-  const thumb = p => p && p.image ? '<img class="thumb" src="/' + esc(p.image) + '" alt="" data-zoom="' + esc(p.image) + '" data-cap="' + esc((p.brand ? p.brand + ' ' : '') + p.name) + '">' : '';
-  const productOf = pid => cat.products.find(p => p.id === pid);
-  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const when = iso => { const d = new Date(iso + (iso.endsWith('Z') ? '' : 'Z')); const m = (Date.now() - d) / 60000;
-    if (m < 1) return 'just now'; if (m < 60) return Math.round(m) + ' min ago'; if (m < 36 * 60) return Math.round(m / 60) + ' h ago';
-    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); };
-  const api = (path, opts) => fetch('/api/desk/' + path, { credentials: 'same-origin', ...opts }).then(r => { if (r.status === 401) { location.reload(); throw new Error('auth'); } return r.json(); });
-  const post = (path, status) => api(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status }) });
+  const orderMoney = o => { let quoted = 0, pay = 0, sell = 0, unq = 0, unp = 0;
+    (o.items || []).forEach(i => { if (i.price) quoted += i.price * i.qty; else unq++; const c = cost(i.product_id); if (c) { pay += c.inc * i.qty; sell += c.sell * i.qty; } else unp++; });
+    return { quoted, pay, sell, unq, unp }; };
 
-  api('suppliers').then(j => {
-    suppliers = (j && j.suppliers) || {}; cat = { ranges: (j && j.ranges) || [], products: (j && j.products) || [] };
-    $('#rangeChips').innerHTML = [{ id: 'all', name: 'All' }].concat(cat.ranges).map(r => '<button class="chip" type="button" data-range="' + esc(r.id) + '" aria-pressed="' + (r.id === range) + '">' + esc(r.name) + '</button>').join('');
-    if (tab !== 'messages') load();
-  }).catch(() => {});
+  /* ---- tiles ---- */
+  const messageTile = m => '<button class="tile ' + (m.status === 'new' ? 'new' : '') + '" type="button" data-open="messages/' + m.id + '"><div class="t-top"><h3>' + esc(m.name) + '</h3><span class="when">' + when(m.created_at) + '</span></div>' +
+    '<div class="excerpt">' + esc(m.message) + '</div><div class="t-meta">' + pill(m.status) + '<span>' + esc(m.email) + '</span>' + (m.phone ? '<span>' + esc(m.phone) + '</span>' : '') + '</div></button>';
+  const orderTile = o => { const $m = orderMoney(o); const th = (o.items || []).slice(0, 4).map(i => { const p = productOf(i.product_id); return p && p.image ? '<img src="/' + esc(p.image) + '" alt="">' : ''; }).join('') + ((o.items || []).length > 4 ? '<span class="more">+' + ((o.items || []).length - 4) + '</span>' : '');
+    return '<button class="tile ' + (o.status === 'new' ? 'new' : '') + '" type="button" data-open="orders/' + o.id + '"><div class="t-top"><h3>' + esc(o.company) + '</h3><span class="when">' + when(o.created_at) + '</span></div>' +
+      '<div class="thumbs">' + th + '</div>' +
+      '<div class="money">' + (o.items || []).length + ' item' + ((o.items || []).length === 1 ? '' : 's') + ' · quoted <b>' + gbp($m.quoted) + '</b>' + ($m.unq ? ' <span style="color:var(--faint)">+ ' + $m.unq + ' on request</span>' : '') + '</div>' +
+      '<div class="t-meta">' + pill(o.status) + '<span>' + esc(o.ref) + '</span><span>' + esc(o.contact) + '</span></div></button>'; };
+  const productTile = p => '<div class="tile product">' + (thumb(p, 64) || '<span class="thumb"></span>') + '<div><span style="color:var(--muted);font-size:12px">' + esc(p.brand) + '</span><h3>' + esc(p.name) + '</h3>' + (p.size ? '<div class="size" style="font-size:12.5px;color:var(--muted)">' + esc(p.size) + '</div>' : '') + (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener" style="font-size:12px;color:var(--steel)">Manufacturer page</a>' : '') + '</div>' +
+    '<div class="sup">' + supplierLinks(p.id) + '</div>' + costHTML(p.id) + '</div>';
 
-  function supplierLinks(pid) {
-    const s = suppliers[pid];
-    if (!s || !s.length) return '<span class="none">No supplier links yet</span>';
-    return s.map(x => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener"><b>' + esc(x.supplier) + '</b>' + (x.price ? esc(x.price) : '') + (x.checked ? ' <span style="color:var(--faint)">(' + esc(x.checked) + ')</span>' : '') + '</a>').join('');
-  }
-  function messageCard(m) {
-    const opts = ['new', 'read', 'replied', 'archived'].map(s => '<option value="' + s + '"' + (m.status === s ? ' selected' : '') + '>' + s[0].toUpperCase() + s.slice(1) + '</option>').join('');
+  /* ---- detail pages ---- */
+  const back = (t, label) => '<div class="bar"><button class="btn sm" type="button" data-back="' + t + '">← ' + label + '</button>';
+  function messageDetail(m) {
+    const opts = Object.keys(MSG_STATUS).map(s => '<option value="' + s + '"' + (m.status === s ? ' selected' : '') + '>' + MSG_STATUS[s] + '</option>').join('');
     const subject = encodeURIComponent('Re: your message to Limitless Innovations');
     const body = encodeURIComponent('Hello ' + m.name + ',\\n\\nThank you for your message.\\n\\n\\n\\n---\\nYour message:\\n' + m.message);
-    return '<article class="card ' + (m.status === 'new' ? 'new' : '') + '" data-id="' + m.id + '">' +
-      '<div class="head"><h3>' + esc(m.name) + '</h3><span class="when">' + when(m.created_at) + (m.source ? ' · via ' + esc(m.source) : '') + '</span><span class="status">' + esc(m.status) + '</span></div>' +
-      '<div class="meta"><span><b>Email</b><a href="mailto:' + esc(m.email) + '">' + esc(m.email) + '</a></span>' + (m.phone ? '<span><b>Phone</b><a href="tel:' + esc(m.phone.replace(/\\s+/g, '')) + '">' + esc(m.phone) + '</a></span>' : '') + (m.page ? '<span><b>From</b>' + esc(m.page) + '</span>' : '') + '</div>' +
+    return '<div class="detail">' + back('messages', 'Messages') + '<h2>' + esc(m.name) + '</h2>' + pill(m.status) + '<span class="when">' + when(m.created_at) + (m.source ? ' · via ' + esc(m.source) : '') + '</span></div>' +
+      '<div class="panel"><div class="kv"><span><b>Email</b><a href="mailto:' + esc(m.email) + '">' + esc(m.email) + '</a></span>' + (m.phone ? '<span><b>Phone</b><a href="' + tel(m.phone) + '">' + esc(m.phone) + '</a></span>' : '') + (m.page ? '<span><b>Sent from</b>' + esc(m.page) + '</span>' : '') + '</div>' +
       '<div class="body">' + esc(m.message) + '</div>' +
-      '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(m.email) + '?subject=' + subject + '&body=' + body + '">Reply by email</a>' + (m.phone ? '<a class="btn sm" href="tel:' + esc(m.phone.replace(/\\s+/g, '')) + '">Call</a>' : '') +
-      '<select data-kind="messages" data-id="' + m.id + '">' + opts + '</select>' +
-      '<button class="btn sm danger del" type="button" data-del="messages" data-id="' + m.id + '" data-label="the message from ' + esc(m.name) + '">Delete</button></div></article>';
+      '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(m.email) + '?subject=' + subject + '&body=' + body + '">Reply by email</a>' + (m.phone ? '<a class="btn sm" href="' + tel(m.phone) + '">Call</a>' : '') +
+      '<select data-kind="messages" data-id="' + m.id + '">' + opts + '</select><button class="btn sm danger del" type="button" data-del="messages" data-id="' + m.id + '" data-label="the message from ' + esc(m.name) + '">Delete</button></div></div></div>';
   }
-  function orderCard(o) {
-    const opts = ['new', 'confirmed', 'ordered', 'dispatched', 'closed', 'cancelled'].map(s => '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + ({ new: 'New', confirmed: 'Confirmed with customer', ordered: 'Ordered from supplier', dispatched: 'Dispatched', closed: 'Closed', cancelled: 'Cancelled' })[s] + '</option>').join('');
-    const rows = (o.items || []).map(i => '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + i.qty + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + '</td><td><div class="sup">' + supplierLinks(i.product_id) + '</div>' + costHTML(i.product_id, i.qty) + '</td></tr>').join('');
-    let pay = 0, sell = 0, priced = 0; (o.items || []).forEach(i => { const c = cost(i.product_id); if (c) { pay += c.inc * i.qty; sell += c.sell * i.qty; priced++; } });
-    const totals = priced ? '<div class="totals"><span>Cost to you <b>' + gbp(pay) + '</b> inc VAT</span><span>Charge the customer <span class="sell">' + gbp(sell) + '</span> at +' + markup + '%</span><span>Margin <b>' + gbp(sell - pay) + '</b></span>' + (priced < (o.items || []).length ? '<span style="color:var(--faint)">' + ((o.items || []).length - priced) + ' line(s) without a price yet</span>' : '') + '</div>' : '';
-    const lines = (o.items || []).map(i => i.qty + ' x ' + (i.brand ? i.brand + ' ' : '') + i.name).join('\\n');
-    const subject = encodeURIComponent('Your trade order ' + o.ref + ' - Limitless Innovations');
-    const body = encodeURIComponent('Hello ' + o.contact + ',\\n\\nThank you for your order enquiry ' + o.ref + '.\\n\\n' + lines + '\\n\\n');
-    return '<article class="card ' + (o.status === 'new' ? 'new' : '') + '" data-id="' + o.id + '">' +
-      '<div class="head"><h3>' + esc(o.company) + '</h3><span class="when">' + esc(o.ref) + ' · ' + when(o.created_at) + '</span><span class="status">' + esc(o.status) + '</span></div>' +
-      '<div class="meta"><span><b>Contact</b>' + esc(o.contact) + '</span><span><b>Email</b><a href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a></span>' + (o.phone ? '<span><b>Phone</b><a href="tel:' + esc(o.phone.replace(/\\s+/g, '')) + '">' + esc(o.phone) + '</a></span>' : '') + (o.vat ? '<span><b>VAT</b>' + esc(o.vat) + '</span>' : '') + (o.postcode ? '<span><b>Deliver to</b>' + esc(o.postcode) + '</span>' : '') + '</div>' +
-      '<table class="items"><thead><tr><th></th><th>Qty</th><th>Item</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table>' + totals +
-      (o.notes ? '<div class="body">' + esc(o.notes) + '</div>' : '') +
-      '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select>' +
-      '<button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="order ' + esc(o.ref) + ' from ' + esc(o.company) + '">Delete</button></div></article>';
+  function orderDetail(o) {
+    const opts = Object.keys(ORD_STATUS).map(s => '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + ORD_STATUS[s] + '</option>').join('');
+    const $m = orderMoney(o);
+    const rows = (o.items || []).map(i => '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + i.qty + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + (i.size ? '<div class="size">' + esc(i.size) + '</div>' : '') + '</td>' +
+      '<td class="num">' + (i.price ? '<span class="quote">' + gbp(i.price * i.qty) + '</span><div class="size">' + gbp(i.price) + ' each</div>' : '<span class="empty-mini">on request</span>') + '</td>' +
+      '<td><div class="sup">' + supplierLinks(i.product_id) + '</div>' + costHTML(i.product_id, i.qty) + '</td></tr>').join('');
+    const lines = (o.items || []).map(i => i.qty + ' x ' + (i.brand ? i.brand + ' ' : '') + i.name + (i.price ? ' @ £' + i.price.toFixed(2) : '')).join('\\n');
+    const subject = encodeURIComponent('Your order ' + o.ref + ' - Limitless Innovations');
+    const body = encodeURIComponent('Hello ' + o.contact + ',\\n\\nThank you for your order ' + o.ref + '.\\n\\n' + lines + '\\n\\nTotal: £' + $m.quoted.toFixed(2) + '\\n\\n');
+    return '<div class="detail">' + back('orders', 'Orders') + '<h2>' + esc(o.company) + '</h2>' + pill(o.status) + '<span class="when">' + esc(o.ref) + ' · ' + when(o.created_at) + '</span></div>' +
+      '<div class="two"><div class="panel"><h4>Customer</h4><div class="kv"><span><b>Contact</b>' + esc(o.contact) + '</span><span><b>Email</b><a href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a></span>' + (o.phone ? '<span><b>Phone</b><a href="' + tel(o.phone) + '">' + esc(o.phone) + '</a></span>' : '') + (o.vat ? '<span><b>VAT number</b>' + esc(o.vat) + '</span>' : '') + (o.postcode ? '<span><b>Deliver to</b>' + esc(o.postcode) + '</span>' : '') + '</div>' + (o.notes ? '<h4>Customer notes</h4><div class="body">' + esc(o.notes) + '</div>' : '') + '</div>' +
+      '<div class="panel"><h4>Money</h4><div class="sum"><div class="big"><span>Quoted to customer</span><b>' + gbp($m.quoted) + '</b></div>' + ($m.unq ? '<div class="dim"><span>' + $m.unq + ' item' + ($m.unq === 1 ? '' : 's') + ' priced on request</span><span>add when confirmed</span></div>' : '') +
+      '<div><span>Cost to you (inc VAT)</span><b>' + gbp($m.pay) + '</b></div><div><span>At today\\'s mark-up (+' + markup + '%)</span><b>' + gbp($m.sell) + '</b></div><div><span>Margin on quoted</span><b>' + gbp($m.quoted - $m.pay) + '</b></div>' + ($m.unp ? '<div class="dim"><span>' + $m.unp + ' line' + ($m.unp === 1 ? '' : 's') + ' without a supplier price</span></div>' : '') + '</div>' +
+      '<div class="actions"><a class="btn acc sm" href="' + BASE + '/invoice/' + o.id + '" target="_blank" rel="noopener">Invoice</a><a class="btn sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a></div></div></div>' +
+      '<div class="panel"><h4>Items</h4><table class="items"><thead><tr><th></th><th>Qty</th><th>Item</th><th class="num">Quoted</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="panel"><div class="actions"><label style="font-size:13px;color:var(--muted)">Status</label><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select><button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="order ' + esc(o.ref) + ' from ' + esc(o.company) + '">Delete</button></div></div></div>';
   }
-  /* Suppliers: every product in the shop with where to buy it. For the owner only; customers never see this. */
+
+  /* ---- suppliers gallery ---- */
   function renderSuppliers() {
     const q = ($('#supSearch').value || '').trim().toLowerCase();
     const hit = p => (range === 'all' || p.category === range) && (!q || (p.brand + ' ' + p.name + ' ' + p.group + ' ' + p.size).toLowerCase().includes(q));
@@ -219,80 +269,151 @@ export const DESK_HTML = `<!doctype html>
     if (!rows.length) { $('#list').innerHTML = '<div class="empty">No products match.</div>'; return; }
     const out = [];
     cat.ranges.forEach(r => {
-      const inRange = rows.filter(p => p.category === r.id);
-      if (!inRange.length) return;
-      out.push('<section class="card"><div class="head"><h3>' + esc(r.name) + '</h3><span class="when">' + inRange.length + (inRange.length === 1 ? ' product' : ' products') + '</span></div>');
-      [...new Set(inRange.map(p => p.group))].forEach(g => {
-        out.push('<h4 class="grp">' + esc(g) + '</h4><table class="items"><thead><tr><th></th><th>Product</th><th>Buy from</th></tr></thead><tbody>');
-        inRange.filter(p => p.group === g).forEach(p => {
-          out.push('<tr><td class="pic">' + thumb(p) + '</td><td><span style="color:var(--muted)">' + esc(p.brand) + '</span> <b>' + esc(p.name) + '</b>' + (p.size ? '<div class="size">' + esc(p.size) + '</div>' : '') +
-            (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener">Manufacturer page</a>' : '') + '</td><td><div class="sup">' + supplierLinks(p.id) + '</div>' + costHTML(p.id) + '</td></tr>');
-        });
-        out.push('</tbody></table>');
-      });
-      out.push('</section>');
+      const inRange = rows.filter(p => p.category === r.id); if (!inRange.length) return;
+      out.push('<h3 style="margin:18px 0 10px;font-size:16px">' + esc(r.name) + ' <span style="font-size:12px;color:var(--muted);font-weight:500">' + inRange.length + '</span></h3><div class="tiles">' + inRange.map(productTile).join('') + '</div>');
     });
     $('#list').innerHTML = out.join('');
   }
+
+  /* ---- routing: #messages, #orders, #orders/12, #messages/5, #suppliers ---- */
+  function route() {
+    const m = location.hash.match(/^#(messages|orders|suppliers)(?:\\/(\\d+))?/);
+    tab = m ? m[1] : 'messages'; open = m && m[2] ? Number(m[2]) : null;
+    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === tab)));
+    load();
+  }
+  const go = h => { if (location.hash !== h) location.hash = h; else route(); };
+
   async function load() {
     const inbox = tab !== 'suppliers';
-    $('#filtersInbox').hidden = !inbox; $('#filtersSup').hidden = inbox;
+    $('#filtersInbox').hidden = !inbox || !!open; $('#filtersSup').hidden = inbox;
     const all = $('#showAll').checked ? '?all=1' : '';
-    const [sum, data] = await Promise.all([api('summary'), inbox ? api(tab + all) : null]);
+    const want = !inbox ? null : open ? tab + '/' + open : tab + all;
+    const [sum, data] = await Promise.all([api('summary'), want ? api(want) : null]);
     $('#nMsg').textContent = sum.newMessages; $('#nMsg').classList.toggle('zero', !sum.newMessages);
     $('#nOrd').textContent = sum.newOrders; $('#nOrd').classList.toggle('zero', !sum.newOrders);
     document.title = ((sum.newMessages + sum.newOrders) ? '(' + (sum.newMessages + sum.newOrders) + ') ' : '') + 'Order desk · Limitless Innovations';
     $('#alerts').textContent = sum.alerts ? 'Email alerts on' : 'Email alerts off';
     counts = { archived: sum.archived || 0, closed: sum.closed || 0 };
     const note = $('#note');
-    if (!inbox) {
-      renderSuppliers();
-      note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets; "search" links open that supplier\\'s results for the product. "You pay" adds 20% VAT to ex-VAT prices (you are not VAT registered, so that is your real cost); "Sell at" adds your mark-up, set at the top. Links live in worker/suppliers.js.';
-      return;
+    if (!inbox) { renderSuppliers(); note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets. "You pay" adds 20% VAT to ex-VAT prices (not VAT registered, so that is your real cost); "Sell at" adds your mark-up from the top bar. The shop shows these sell prices at +20%.'; return; }
+    if (open) {
+      const item = tab === 'messages' ? data.message : data.order;
+      if (!item) { $('#list').innerHTML = '<div class="empty">Not found: it may have been deleted.</div>'; return; }
+      $('#list').innerHTML = tab === 'messages' ? messageDetail(item) : orderDetail(item);
+      if (tab === 'messages' && item.status === 'new') postJSON('messages/' + item.id, { status: 'read' }).then(() => api('summary')).then(s => { $('#nMsg').textContent = s.newMessages; $('#nMsg').classList.toggle('zero', !s.newMessages); }).catch(() => {});
+    } else {
+      const rows = tab === 'messages' ? data.messages : data.orders;
+      $('#list').innerHTML = rows.length ? '<div class="tiles">' + rows.map(tab === 'messages' ? messageTile : orderTile).join('') + '</div>' : '<div class="empty">Nothing here yet.</div>';
+      $('#updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      const purge = $('#purge'); const n = tab === 'messages' ? counts.archived : counts.closed;
+      purge.textContent = (tab === 'messages' ? 'Clear archived messages' : 'Clear closed and cancelled orders') + (n ? ' (' + n + ')' : ''); purge.disabled = !n;
     }
-    const rows = tab === 'messages' ? data.messages : data.orders;
-    $('#list').innerHTML = rows.length ? rows.map(tab === 'messages' ? messageCard : orderCard).join('') : '<div class="empty">Nothing here yet.</div>';
-    $('#updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    const purge = $('#purge'); const n = tab === 'messages' ? counts.archived : counts.closed;
-    purge.textContent = tab === 'messages' ? 'Clear archived messages' + (n ? ' (' + n + ')' : '') : 'Clear closed and cancelled orders' + (n ? ' (' + n + ')' : '');
-    purge.disabled = !n;
     if (!sum.alerts) { note.hidden = false; note.innerHTML = '<b>Email alerts are off.</b> New messages and orders still arrive here; to get an email for each one, add the RESEND_API_KEY secret (see DESK-SETUP.txt).'; } else note.hidden = true;
   }
-  document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => { tab = b.dataset.tab; document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === b))); load(); }));
+
+  api('suppliers').then(j => {
+    suppliers = (j && j.suppliers) || {}; cat = { ranges: (j && j.ranges) || [], products: (j && j.products) || [] };
+    $('#rangeChips').innerHTML = [{ id: 'all', name: 'All' }].concat(cat.ranges).map(r => '<button class="chip" type="button" data-range="' + esc(r.id) + '" aria-pressed="' + (r.id === range) + '">' + esc(r.name) + '</button>').join('');
+    load();
+  }).catch(() => {});
+
+  document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => go('#' + b.dataset.tab)));
+  addEventListener('hashchange', route);
   $('#showAll').addEventListener('change', load);
   $('#refresh').addEventListener('click', load);
-  $('#list').addEventListener('change', async e => {
-    const s = e.target.closest('select[data-kind]'); if (!s) return;
-    await post(s.dataset.kind + '/' + s.dataset.id, s.value); load();
-  });
   $('#list').addEventListener('click', async e => {
+    const t = e.target.closest('[data-open]'); if (t) { go('#' + t.dataset.open); return; }
+    const bk = e.target.closest('[data-back]'); if (bk) { go('#' + bk.dataset.back); return; }
     const b = e.target.closest('button[data-del]'); if (!b) return;
     if (!confirm('Delete ' + b.dataset.label + '? This cannot be undone.')) return;
-    b.disabled = true;
-    await api(b.dataset.del + '/' + b.dataset.id + '/delete', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
-    load();
+    b.disabled = true; await postJSON(b.dataset.del + '/' + b.dataset.id + '/delete'); go('#' + b.dataset.del);
   });
+  $('#list').addEventListener('change', async e => { const s = e.target.closest('select[data-kind]'); if (!s) return; await postJSON(s.dataset.kind + '/' + s.dataset.id, { status: s.value }); load(); });
   $('#purge').addEventListener('click', async () => {
     const what = tab === 'messages' ? 'all archived messages' : 'all closed and cancelled orders';
     if (!confirm('Delete ' + what + '? This cannot be undone.')) return;
-    const r = await api('purge', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ kind: tab }) });
-    await load();
+    const r = await postJSON('purge', { kind: tab }); await load();
     if (r && r.ok) $('#updated').textContent = 'Cleared ' + (r.deleted == null ? '' : r.deleted + ' ') + (tab === 'messages' ? 'archived messages' : 'closed orders');
   });
-  $('#rangeChips').addEventListener('click', e => {
-    const c = e.target.closest('.chip[data-range]'); if (!c) return;
-    range = c.dataset.range; document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === c))); renderSuppliers();
-  });
+  $('#rangeChips').addEventListener('click', e => { const c = e.target.closest('.chip[data-range]'); if (!c) return; range = c.dataset.range; document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === c))); renderSuppliers(); });
   $('#supSearch').addEventListener('input', renderSuppliers);
   $('#markup').value = markup;
   $('#markup').addEventListener('input', () => { markup = Math.min(100, Math.max(0, Number($('#markup').value) || 0)); try { localStorage.setItem('li-markup', String(markup)); } catch (e) {} load(); });
-  document.addEventListener('click', e => {
-    const t = e.target.closest('img[data-zoom]'); const z = $('#zoom');
+  document.addEventListener('click', e => { const t = e.target.closest('img[data-zoom]'); const z = $('#zoom');
     if (t) { $('#zoomImg').src = '/' + t.dataset.zoom; $('#zoomCap').textContent = t.dataset.cap; z.showModal(); return; }
-    if (e.target === z) z.close();
-  });
-  load();
+    if (e.target === z) z.close(); });
+  route();
   setInterval(load, 60000);
 })();
 </script>
 </body></html>`;
+
+/* ==========================================================================
+   Invoice: a printable page for one order (Print > Save as PDF in the browser).
+   Company details come from the Worker's variables when set (COMPANY_NAME, COMPANY_ADDRESS,
+   COMPANY_NUMBER, COMPANY_EMAIL, COMPANY_PHONE, BANK_DETAILS); otherwise the defaults below.
+   ========================================================================== */
+export function invoiceHTML(o, items, env, siteUrl) {
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const gbp = n => '£' + Number(n).toFixed(2);
+  const co = {
+    name: env.COMPANY_NAME || 'Limitless Innovations Ltd',
+    address: env.COMPANY_ADDRESS || 'Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE',
+    number: env.COMPANY_NUMBER || '14380770',
+    email: env.COMPANY_EMAIL || env.ALERT_TO || 'info@limitlessinnovations.co.uk',
+    phone: env.COMPANY_PHONE || '',
+    bank: env.BANK_DETAILS || ''
+  };
+  const d = new Date((o.created_at || '') + (String(o.created_at || '').endsWith('Z') ? '' : 'Z'));
+  const date = isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  let total = 0, tbc = 0;
+  const rows = items.map(i => { const line = i.price ? i.price * i.qty : null; if (line != null) total += line; else tbc++;
+    return `<tr><td>${esc(i.brand ? i.brand + ' ' : '')}${esc(i.name)}${i.size ? `<div class="s">${esc(i.size)}</div>` : ''}</td><td class="n">${i.qty}</td><td class="n">${i.price ? gbp(i.price) : 'TBC'}</td><td class="n">${line != null ? gbp(line) : 'TBC'}</td></tr>`; }).join('');
+  return `<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Invoice ${esc(o.ref)} · ${esc(co.name)}</title>
+<style>
+  body { margin: 0; padding: 40px; color: #111; background: #fff; font: 14px/1.5 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .sheet { max-width: 820px; margin: 0 auto; }
+  .head { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 18px; }
+  .brand { display: flex; align-items: center; gap: 12px; } .brand svg { width: 40px; height: 40px; }
+  .brand b { display: block; font: 600 20px/1.1 Archivo, Inter, system-ui, sans-serif; } .brand small { display: block; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #666; }
+  .inv h1 { margin: 0; font: 600 26px/1.1 Archivo, Inter, system-ui, sans-serif; text-align: right; } .inv div { text-align: right; color: #444; font-size: 13px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 22px 0; }
+  .cols h4 { margin: 0 0 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #666; }
+  .cols p { margin: 0; white-space: pre-line; }
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid #ddd; vertical-align: top; }
+  th { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #666; border-bottom: 1px solid #111; }
+  td.n, th.n { text-align: right; white-space: nowrap; } td .s { font-size: 12px; color: #666; }
+  .tot td { border: 0; font-weight: 600; font-size: 16px; padding-top: 14px; }
+  .terms { margin-top: 26px; padding-top: 14px; border-top: 1px solid #ddd; font-size: 13px; color: #333; }
+  .terms h4 { margin: 0 0 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #666; }
+  .terms p { margin: 0 0 8px; white-space: pre-line; }
+  .foot { margin-top: 30px; font-size: 11.5px; color: #666; text-align: center; }
+  .print { position: fixed; top: 14px; right: 14px; padding: 9px 14px; border: 1px solid #111; border-radius: 4px; background: #111; color: #fff; font: 600 13px/1 inherit; cursor: pointer; }
+  @media print { .print { display: none; } body { padding: 0; } }
+</style></head><body>
+<button class="print" onclick="print()">Print / save as PDF</button>
+<div class="sheet">
+  <div class="head">
+    <div class="brand">${MARK}<div><b>${esc(co.name)}</b><small>Passive fire protection</small></div></div>
+    <div class="inv"><h1>Invoice</h1><div>Invoice no. <b>${esc(o.ref)}</b></div><div>Date ${esc(today)}</div><div>Order received ${esc(date)}</div></div>
+  </div>
+  <div class="cols">
+    <div><h4>From</h4><p>${esc(co.name)}\n${esc(co.address)}\nCompany no. ${esc(co.number)}\n${esc(co.email)}${co.phone ? '\n' + esc(co.phone) : ''}${siteUrl ? '\n' + esc(siteUrl.replace(/^https?:\/\//, '')) : ''}</p></div>
+    <div><h4>Invoice to</h4><p>${esc(o.company)}\n${esc(o.contact)}\n${esc(o.email)}${o.phone ? '\n' + esc(o.phone) : ''}${o.vat ? '\nVAT no. ' + esc(o.vat) : ''}${o.postcode ? '\nDeliver to: ' + esc(o.postcode) : ''}</p></div>
+  </div>
+  <table><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Unit price</th><th class="n">Total</th></tr></thead><tbody>${rows}
+    <tr class="tot"><td colspan="3">Total to pay${tbc ? ` (${tbc} line${tbc === 1 ? '' : 's'} to be confirmed)` : ''}</td><td class="n">${gbp(total)}</td></tr></tbody></table>
+  <div class="terms">
+    <h4>Payment</h4>
+    <p>Payment is due before goods are ordered. Please quote <b>${esc(o.ref)}</b> with your payment.${co.bank ? '\n' + esc(co.bank) : '\nBank details: to be added (set BANK_DETAILS in Cloudflare, see DESK-SETUP.txt).'}</p>
+    <p>${esc(co.name)} is not VAT registered: no VAT is charged and this is not a VAT invoice.</p>
+    ${o.notes ? `<h4>Notes</h4><p>${esc(o.notes)}</p>` : ''}
+  </div>
+  <div class="foot">${esc(co.name)} · Registered in England and Wales no. ${esc(co.number)} · ${esc(co.address)}</div>
+</div>
+</body></html>`;
+}
