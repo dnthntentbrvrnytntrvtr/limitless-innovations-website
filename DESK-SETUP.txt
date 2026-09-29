@@ -105,7 +105,7 @@ Your bank details are never on the website: only on invoices you send.
 
 1. In Stripe: Developers > API keys > "Create restricted key".
    Name: Website desk.  Give it these permissions, "Write":
-     Customers, Invoices, Products, Prices, Webhook Endpoints.
+     Customers, Invoices (and Invoice items, if listed separately).
    (Everything else: None.)  Create, then copy the key (starts rk_live_).
 2. Cloudflare > the Worker > Settings > Variables and Secrets > Add >
    Type: Secret.  Name: STRIPE_SECRET_KEY.  Value: that key. Save.

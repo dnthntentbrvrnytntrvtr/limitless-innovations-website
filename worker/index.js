@@ -276,7 +276,7 @@ async function stripe(env, path, params) {
   const body = new URLSearchParams();
   const add = (k, v) => { if (v === undefined || v === null) return; if (typeof v === 'object') Object.entries(v).forEach(([kk, vv]) => add(k + '[' + kk + ']', vv)); else body.append(k, String(v)); };
   Object.entries(params || {}).forEach(([k, v]) => add(k, v));
-  const r = await fetch('https://api.stripe.com/v1/' + path, { method: 'POST', headers: { authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'content-type': 'application/x-www-form-urlencoded' }, body });
+  const r = await fetch('https://api.stripe.com/v1/' + path, { method: 'POST', headers: { authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'content-type': 'application/x-www-form-urlencoded', 'stripe-version': '2024-06-20' }   // pinned so Stripe's future API changes can't break the desk, body });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error((j.error && j.error.message) || ('Stripe error ' + r.status));
   return j;
