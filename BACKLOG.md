@@ -12,6 +12,8 @@ Owner-side = things only the owner can do (accounts, keys, decisions).
 - [ ] Nullifire / distributor (e.g. Fire Seals Direct): reseller or trade account, blind dispatch; send discount so desk costs can be updated.
 - [ ] Pick which label to print (C2 fire / acoustic / fire & acoustic); decide a shop price for labels.
 - [ ] Optional: Cloudflare Access (email code) in front of the desk; `DESK_PATH`.
+- [ ] Check which certifications are issued in Limitless Innovations Ltd's own name (owner holds a personal FIRAS card via another company; FIRAS certifies companies). Until confirmed the website's certification section stays as is; then show only company-held schemes.
+- [ ] Certifications plan (29 Sep 2026 research): keep ONE third-party fire scheme (FIRAS likely cheapest route, 1 module: penetration seals; needs 2+ employees, 4 contracts) + ONE SSIP at CAS level (CHAS Elite £949/yr or Constructionline Gold) + CSCS cards + free Nullifire/FSi training; drop SafeContractor (not CAS); ISO 9001 / ASFP later. Get TPC quotes from two schemes.
 
 ## Build-side (Claude)
 - [ ] Live Stripe test once keys are in; watch order → invoiced → paid.
