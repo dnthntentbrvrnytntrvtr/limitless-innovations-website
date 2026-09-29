@@ -9,7 +9,7 @@
 
 import { DESK_HTML, LOGIN_HTML, invoiceHTML } from './desk.js';
 import SUPPLIERS from './suppliers.js';   // supplier links per product, shown only on the desk
-import { RANGES, PRODUCTS } from './catalogue.js';   // generated from index.html by build-catalogue.js
+import { RANGES, PRODUCTS, LOCK_PHOTOS } from './catalogue.js';   // generated from index.html by build-catalogue.js
 
 const MAX = { name: 80, email: 120, phone: 40, message: 4000, company: 120, notes: 2000, items: 60 };
 const COOKIE = 'li_desk';
@@ -20,10 +20,36 @@ function siteLocked(env) { return /^(on|1|true|yes)$/i.test(String(env.SITE_LOCK
 
 // The login page, filled in for the desk (default) or for the locked website.
 function loginPage(base, vars) {
-  const v = { base, error: '', form: '', heading: 'Order desk', sub: 'Messages and trade orders from limitlessinnovations.co.uk.', button: 'Open the desk', next: '', ...vars };
+  const v = { base, error: '', form: '', heading: 'Order desk', sub: 'Messages and trade orders from limitlessinnovations.co.uk.', button: 'Open the desk', next: '', bg: '', ...vars };
   v.next = String(v.next).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   return Object.entries(v).reduce((t, [k, val]) => t.split('{{' + k + '}}').join(val), LOGIN_HTML);
 }
+// Private preview page: one of the big building photos behind the login, the next one on every
+// visit or refresh (a small cookie remembers which was shown last).
+const escH = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const abs = p => String(p || '').split(',').map(x => x.trim()).filter(Boolean).map(x => /^(\/|https?:)/.test(x) ? x : '/' + x).join(', ');   // "images/a.webp 1280w, ..." -> "/images/a.webp 1280w, ..."
+const LOCK_ASSETS = new Set(LOCK_PHOTOS.flatMap(p => [p.src, ...String(p.srcset).split(',').map(x => x.trim().split(/\s+/)[0])]).filter(Boolean).map(x => abs(x)));
+function lockPage(request, base, vars, status) {
+  const n = LOCK_PHOTOS.length;
+  let idx = 0, headers = {};
+  if (n) {
+    const m = (request.headers.get('cookie') || '').match(/(?:^|;\s*)li_bg=(\d+)/);
+    idx = m ? (Number(m[1]) + 1) % n : Math.floor(Math.random() * n);
+    headers['set-cookie'] = `li_bg=${idx}; Path=/; Max-Age=31536000; Secure; SameSite=Lax`;
+  }
+  const p = LOCK_PHOTOS[idx];
+  let bg = '';
+  if (p) {
+    const c = p.credit || {};
+    const who = c.by ? (c.source ? `<a href="${escH(c.source)}" rel="noopener" target="_blank">${escH(c.by)}</a>` : escH(c.by)) : '';
+    const lic = c.licence ? (c.url ? `, <a href="${escH(c.url)}" rel="noopener" target="_blank">${escH(c.licence)}</a>` : ', ' + escH(c.licence)) : '';
+    bg = `<div class="lock-bg" aria-hidden="true"><img src="${escH(abs(p.src))}"${p.srcset ? ` srcset="${escH(abs(p.srcset))}" sizes="100vw"` : ''} alt="" fetchpriority="high" decoding="async" style="object-position:${escH(p.focus)}"></div>` +
+         `<div class="lock-credit"><b>${escH(p.place)}</b>${who ? 'Photo: ' + who + lic : ''}</div>`;
+  }
+  const page = loginPage(base, { heading: 'Private preview', sub: 'This website is not public yet.', button: 'Enter', ...vars, bg });
+  return html(page, status || 401, headers);
+}
+
 const safeNext = n => (typeof n === 'string' && /^\/(?![\/\\])/.test(n) && n.length < 500) ? n : null;   // only paths on this site
 
 function deskBase(env) {
@@ -43,11 +69,11 @@ export default {
 
       // Private mode: while SITE_LOCKED is "on" (wrangler.jsonc), the whole website needs the desk
       // password. Logging in once (here or at the desk) unlocks both for 30 days on that device.
-      if (siteLocked(env) && !isDesk && path !== '/api/stripe/webhook' && path !== '/favicon.svg') {
+      if (siteLocked(env) && !isDesk && path !== '/api/stripe/webhook' && path !== '/favicon.svg' && !LOCK_ASSETS.has(path)) {
         if (path === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain', 'cache-control': 'no-store' } });
         if (!(await authed(request, env))) {
           if (path.startsWith('/api/')) return json({ ok: false, error: 'locked' }, 401);
-          return html(loginPage(base, { heading: 'Private preview', sub: 'This website is not public yet.', button: 'Enter', next: path + url.search }), 401);
+          return lockPage(request, base, { next: path + url.search }, 401);
         }
       }
 
@@ -155,12 +181,15 @@ async function desk(request, env, url, base) {
 
   if (path === base + '/login' && request.method === 'POST') {
     const ip = request.headers.get('cf-connecting-ip') || '0.0.0.0';
-    if (!(await rateLimit(env, 'login:' + ip, LIMITS.logins, 3600))) return html(page(LOGIN_HTML, { error: 'Too many attempts. Try again in an hour.', form: 'hidden' }), 429);
     const body = await readBody(request);
-    const ok = body && (await safeEqual(String(body.password || ''), env.DESK_PASSWORD));
     const next = safeNext(body && body.next);
-    const site = next && !(next === base || next.startsWith(base + '/') || next.startsWith(base + '?'));
-    if (!ok) { await sleep(600); return html(page(LOGIN_HTML, site ? { error: 'Wrong password.', heading: 'Private preview', sub: 'This website is not public yet.', button: 'Enter', next } : { error: 'Wrong password.' }), 401); }
+    const site = next && !(next === base || next.startsWith(base + '/') || next.startsWith(base + '?'));   // came from the private-preview page
+    if (!(await rateLimit(env, 'login:' + ip, LIMITS.logins, 3600))) {
+      const vars = { error: 'Too many attempts. Try again in an hour.', form: 'hidden' };
+      return site ? lockPage(request, base, { ...vars, next }, 429) : html(page(LOGIN_HTML, vars), 429);
+    }
+    const ok = body && (await safeEqual(String(body.password || ''), env.DESK_PASSWORD));
+    if (!ok) { await sleep(600); return site ? lockPage(request, base, { error: 'Wrong password.', next }, 401) : html(page(LOGIN_HTML, { error: 'Wrong password.' }), 401); }
     const exp = Math.floor(Date.now() / 1000) + SESSION_DAYS * 86400;
     const token = exp + '.' + (await hmac(env, 'session:' + exp));
     return redirect(next || base, `${COOKIE}=${token}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`);

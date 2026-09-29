@@ -608,3 +608,80 @@ export const PRODUCTS = [
     "link": ""
   }
 ];
+export const LOCK_PHOTOS = [
+  {
+    "src": "images/arch/battersea-1920.webp",
+    "srcset": "images/arch/battersea-1280.webp 1280w, images/arch/battersea-1920.webp 1920w, images/arch/battersea-2560.webp 2560w, images/arch/battersea-3840.webp 3840w",
+    "focus": "50% 38%",
+    "place": "Battersea Power Station",
+    "alt": "Battersea Power Station and its four chimneys",
+    "credit": {
+      "by": "Matt Brown",
+      "licence": "CC BY 2.0",
+      "url": "https://creativecommons.org/licenses/by/2.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Battersea_Power_Station_2023-11-29.jpg"
+    }
+  },
+  {
+    "src": "images/arch/vantage-1500.webp",
+    "srcset": "images/arch/vantage-1280.webp 1280w, images/arch/vantage-1500.webp 1500w",
+    "focus": "50% 72%",
+    "place": "Vantage Data Centre, North Acton",
+    "alt": "The reflective facade of the Vantage data centre behind trees",
+    "credit": {
+      "by": "Vantage Data Centers"
+    }
+  },
+  {
+    "src": "images/arch/bloomberg-1920.webp",
+    "srcset": "images/arch/bloomberg-1280.webp 1280w, images/arch/bloomberg-1920.webp 1920w",
+    "focus": "50% 45%",
+    "place": "Bloomberg London, City of London",
+    "alt": "The bronze-finned facade of Bloomberg London",
+    "credit": {
+      "by": "The wub",
+      "licence": "CC BY-SA 4.0",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:Bloomberg_London_exterior_-_Cannon_Street,_Walbrook.jpg"
+    }
+  },
+  {
+    "src": "images/arch/silvertown-1920.webp",
+    "srcset": "images/arch/silvertown-1280.webp 1280w, images/arch/silvertown-1920.webp 1920w",
+    "focus": "50% 55%",
+    "place": "Silvertown Tunnel",
+    "alt": "The Silvertown Tunnel entrance",
+    "credit": {
+      "by": "Tom Page",
+      "licence": "CC BY-SA 2.0",
+      "url": "https://creativecommons.org/licenses/by-sa/2.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:2024-12-17_Silvertown_Tunnel_entrance.jpg"
+    }
+  },
+  {
+    "src": "images/arch/city-hall-1920.webp",
+    "srcset": "images/arch/city-hall-1280.webp 1280w, images/arch/city-hall-1920.webp 1920w",
+    "focus": "50% 50%",
+    "place": "City Hall, Royal Victoria Dock",
+    "alt": "City Hall at Royal Victoria Dock",
+    "credit": {
+      "by": "Matt Brown",
+      "licence": "CC BY 2.0",
+      "url": "https://creativecommons.org/licenses/by/2.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:City_Hall_with_flags_January_19,_2022.jpg"
+    }
+  },
+  {
+    "src": "images/arch/one-canada-square-1920.webp",
+    "srcset": "images/arch/one-canada-square-1280.webp 1280w, images/arch/one-canada-square-1920.webp 1920w",
+    "focus": "50% 32%",
+    "place": "One Canada Square, Canary Wharf",
+    "alt": "One Canada Square tower at Canary Wharf",
+    "credit": {
+      "by": "Mark Gilbert",
+      "licence": "CC BY-SA 3.0",
+      "url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source": "https://commons.wikimedia.org/wiki/File:1_Canada_Square_From_Cabot_Square.jpg"
+    }
+  }
+];

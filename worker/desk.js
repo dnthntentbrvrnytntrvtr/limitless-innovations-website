@@ -106,8 +106,25 @@ export const LOGIN_HTML = `<!doctype html>
   .box .err { color: #f0a08a; font-size: 13.5px; }
   .box .btn { justify-content: center; padding: 12px; font-size: 14px; }
   .hidden { display: none; }
+  /* Private preview: a big building photo behind the login, a different one each visit */
+  .lock-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: #0b0d10; }
+  .lock-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06);
+    animation: lock-in 1.2s ease-out .05s forwards, lock-drift 26s ease-out forwards; }
+  .lock-bg::after { content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,13,16,.62) 0%, rgba(11,13,16,.18) 30%, rgba(11,13,16,.28) 62%, rgba(11,13,16,.94) 100%),
+                radial-gradient(ellipse 60% 55% at 50% 50%, rgba(11,13,16,.45), rgba(11,13,16,0) 70%); }
+  @keyframes lock-in { to { opacity: 1; } }
+  @keyframes lock-drift { from { transform: scale(1.06); } to { transform: scale(1); } }
+  .lock-bg ~ .login { position: relative; z-index: 1; padding-bottom: 84px; }
+  .lock-bg ~ .login .box { background: rgba(13,16,20,.7); border-color: rgba(238,241,244,.16); box-shadow: 0 30px 70px -24px rgba(0,0,0,.85);
+    backdrop-filter: blur(16px) saturate(1.1); -webkit-backdrop-filter: blur(16px) saturate(1.1); }
+  .lock-bg ~ .login .box p { color: var(--ink-2); }
+  .lock-credit { position: fixed; z-index: 1; left: 22px; right: 22px; bottom: 18px; font-size: 11.5px; line-height: 1.45; color: rgba(238,241,244,.62); }
+  .lock-credit b { display: block; margin-bottom: 2px; font: 600 14px/1.25 Archivo, Inter, system-ui, sans-serif; color: #fff; letter-spacing: .01em; }
+  .lock-credit a { color: inherit; }
+  @media (prefers-reduced-motion: reduce) { .lock-bg img { animation: lock-in .01s forwards; transform: none; } }
 </style></head>
-<body><div class="login"><form class="box" method="post" action="{{base}}/login">
+<body>{{bg}}<div class="login"><form class="box" method="post" action="{{base}}/login">
   <div class="brand">${MARK}<h1>{{heading}}</h1></div>
   <p>{{sub}}</p>
   <input type="hidden" name="next" value="{{next}}">
