@@ -16,6 +16,16 @@ const COOKIE = 'li_desk';
 const SESSION_DAYS = 30;
 const LIMITS = { messages: 5, orders: 5, logins: 5 };   // per visitor, per hour
 
+function siteLocked(env) { return /^(on|1|true|yes)$/i.test(String(env.SITE_LOCKED || '').trim()); }
+
+// The login page, filled in for the desk (default) or for the locked website.
+function loginPage(base, vars) {
+  const v = { base, error: '', form: '', heading: 'Order desk', sub: 'Messages and trade orders from limitlessinnovations.co.uk.', button: 'Open the desk', next: '', ...vars };
+  v.next = String(v.next).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  return Object.entries(v).reduce((t, [k, val]) => t.split('{{' + k + '}}').join(val), LOGIN_HTML);
+}
+const safeNext = n => (typeof n === 'string' && /^\/(?![\/\\])/.test(n) && n.length < 500) ? n : null;   // only paths on this site
+
 function deskBase(env) {
   const p = String(env.DESK_PATH || 'desk').replace(/^\/+|\/+$/g, '').replace(/[^A-Za-z0-9_\-\/]/g, '');
   return '/' + (p || 'desk');
@@ -26,11 +36,23 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
     try {
-      if (path.startsWith('/api/')) return await api(request, env, ctx, url);
       // The desk lives at /desk, or at a private address of your own if the DESK_PATH secret is set
       // (then /desk is just another missing page). See DESK-SETUP.txt.
       const base = deskBase(env);
-      if (path === base || path.startsWith(base + '/')) return await desk(request, env, url, base);
+      const isDesk = path === base || path.startsWith(base + '/');
+
+      // Private mode: while SITE_LOCKED is "on" (wrangler.jsonc), the whole website needs the desk
+      // password. Logging in once (here or at the desk) unlocks both for 30 days on that device.
+      if (siteLocked(env) && !isDesk && path !== '/api/stripe/webhook' && path !== '/favicon.svg') {
+        if (path === '/robots.txt') return new Response('User-agent: *\nDisallow: /\n', { headers: { 'content-type': 'text/plain', 'cache-control': 'no-store' } });
+        if (!(await authed(request, env))) {
+          if (path.startsWith('/api/')) return json({ ok: false, error: 'locked' }, 401);
+          return html(loginPage(base, { heading: 'Private preview', sub: 'This website is not public yet.', button: 'Enter', next: path + url.search }), 401);
+        }
+      }
+
+      if (path.startsWith('/api/')) return await api(request, env, ctx, url);
+      if (isDesk) return await desk(request, env, url, base);
     } catch (err) {
       console.error('worker error', err && err.stack || err);
       return json({ ok: false, error: 'server' }, 500);
@@ -128,7 +150,7 @@ async function newOrder(b, ip, env, ctx) {
    ========================================================================== */
 async function desk(request, env, url, base) {
   const path = url.pathname;
-  const page = (tpl, vars) => Object.entries({ base, ...vars }).reduce((t, [k, v]) => t.split('{{' + k + '}}').join(v), tpl);
+  const page = (tpl, vars) => tpl === LOGIN_HTML ? loginPage(base, vars) : Object.entries({ base, ...vars }).reduce((t, [k, v]) => t.split('{{' + k + '}}').join(v), tpl);
   if (!env.DESK_PASSWORD) return html(page(LOGIN_HTML, { error: 'The desk is not switched on yet: add the DESK_PASSWORD secret in Cloudflare (see DESK-SETUP.txt).', form: 'hidden' }), 503);
 
   if (path === base + '/login' && request.method === 'POST') {
@@ -136,10 +158,12 @@ async function desk(request, env, url, base) {
     if (!(await rateLimit(env, 'login:' + ip, LIMITS.logins, 3600))) return html(page(LOGIN_HTML, { error: 'Too many attempts. Try again in an hour.', form: 'hidden' }), 429);
     const body = await readBody(request);
     const ok = body && (await safeEqual(String(body.password || ''), env.DESK_PASSWORD));
-    if (!ok) { await sleep(600); return html(page(LOGIN_HTML, { error: 'Wrong password.', form: '' }), 401); }
+    const next = safeNext(body && body.next);
+    const site = next && !(next === base || next.startsWith(base + '/') || next.startsWith(base + '?'));
+    if (!ok) { await sleep(600); return html(page(LOGIN_HTML, site ? { error: 'Wrong password.', heading: 'Private preview', sub: 'This website is not public yet.', button: 'Enter', next } : { error: 'Wrong password.' }), 401); }
     const exp = Math.floor(Date.now() / 1000) + SESSION_DAYS * 86400;
     const token = exp + '.' + (await hmac(env, 'session:' + exp));
-    return redirect(base, `${COOKIE}=${token}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`);
+    return redirect(next || base, `${COOKIE}=${token}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`);
   }
   if (path === base + '/logout') return redirect(base, `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict`);
 
@@ -276,7 +300,7 @@ async function stripe(env, path, params) {
   const body = new URLSearchParams();
   const add = (k, v) => { if (v === undefined || v === null) return; if (typeof v === 'object') Object.entries(v).forEach(([kk, vv]) => add(k + '[' + kk + ']', vv)); else body.append(k, String(v)); };
   Object.entries(params || {}).forEach(([k, v]) => add(k, v));
-  const r = await fetch('https://api.stripe.com/v1/' + path, { method: 'POST', headers: { authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'content-type': 'application/x-www-form-urlencoded', 'stripe-version': '2024-06-20' }   // pinned so Stripe's future API changes can't break the desk, body });
+  const r = await fetch('https://api.stripe.com/v1/' + path, { method: 'POST', headers: { authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'content-type': 'application/x-www-form-urlencoded', 'stripe-version': '2024-06-20' }, body });   // API version pinned so Stripe's future changes can't break the desk
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error((j.error && j.error.message) || ('Stripe error ' + r.status));
   return j;

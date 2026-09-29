@@ -93,7 +93,7 @@ const MARK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="
 
 export const LOGIN_HTML = `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>Order desk · Limitless Innovations</title>
+<title>{{heading}} · Limitless Innovations</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600&family=Inter:wght@400;500;600&display=swap">
 <style>${STYLE}
   .login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
@@ -108,14 +108,15 @@ export const LOGIN_HTML = `<!doctype html>
   .hidden { display: none; }
 </style></head>
 <body><div class="login"><form class="box" method="post" action="{{base}}/login">
-  <div class="brand">${MARK}<h1>Order desk</h1></div>
-  <p>Messages and trade orders from limitlessinnovations.co.uk.</p>
+  <div class="brand">${MARK}<h1>{{heading}}</h1></div>
+  <p>{{sub}}</p>
+  <input type="hidden" name="next" value="{{next}}">
   <p class="err">{{error}}</p>
   <div class="{{form}}">
     <label for="pw" style="font-size:13px;color:var(--muted)">Password</label>
     <input id="pw" name="password" type="password" autocomplete="current-password" autofocus required>
   </div>
-  <button class="btn acc {{form}}" type="submit">Open the desk</button>
+  <button class="btn acc {{form}}" type="submit">{{button}}</button>
 </form></div></body></html>`;
 
 export const DESK_HTML = `<!doctype html>

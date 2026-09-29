@@ -4,6 +4,7 @@ Kept in the repo so any future session can pick up where the last one stopped.
 Owner-side = things only the owner can do (accounts, keys, decisions).
 
 ## Owner-side
+- [ ] Site is in PRIVATE MODE (SITE_LOCKED "on" in wrangler.jsonc, since 29 Sep 2026). Switch to "off" when ready to go public, then do Search Console.
 - [ ] Resend: add Secret `RESEND_API_KEY` and Text `ALERT_FROM` = `Limitless website <website@limitlessinnovations.co.uk>` in the Worker's Variables and Secrets; send a test message.
 - [ ] Stripe (paused by owner): restricted key → `STRIPE_SECRET_KEY`; webhook `https://limitlessinnovations.co.uk/api/stripe/webhook` (event `invoice.paid`) → `STRIPE_WEBHOOK_SECRET`; one live test order + refund. See DESK-SETUP.txt step 3.
 - [ ] Optional `BANK_DETAILS` Text variable for printed invoices.

@@ -41,6 +41,16 @@ STEP 1 - SET THE DESK PASSWORD (2 minutes, required)
    Changing the password later logs every device out.
 
 ------------------------------------------------------------------------
+PRIVATE MODE (the whole website behind the desk password)
+------------------------------------------------------------------------
+While "SITE_LOCKED" is "on" in wrangler.jsonc, every page of the website
+asks for the desk password first (search engines are told to keep out).
+Log in once, on the site or at the desk, and both stay open on that device
+for 30 days. To make the site public again, set it to "off" (ask Claude,
+or edit wrangler.jsonc on GitHub). The contact form, basket and chat only
+work for you while it's locked.
+
+------------------------------------------------------------------------
 STEP 1b - HIDE THE DESK AT A PRIVATE ADDRESS (1 minute, recommended)
 ------------------------------------------------------------------------
 By default the login page is at /desk, which anyone could guess (it is

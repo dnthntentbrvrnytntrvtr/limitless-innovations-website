@@ -20,7 +20,9 @@
   "keep_vars": true,
   "vars": {
     "ALERT_TO": "info@limitlessinnovations.co.uk",
-    "SITE_URL": "https://limitlessinnovations.co.uk"
+    "SITE_URL": "https://limitlessinnovations.co.uk",
+    // "on" = the whole website asks for the desk password (private preview). "off" = public.
+    "SITE_LOCKED": "on"
   },
   "observability": { "enabled": true }
 }
