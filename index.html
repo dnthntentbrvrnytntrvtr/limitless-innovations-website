@@ -225,6 +225,53 @@
   .contact-form .msg-form { padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); }
   .contact-actions { margin-top: 18px; }
 
+  /* ---------- Shop: category tiles in the section; each category opens as a page within the page ---------- */
+  .shop-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
+  .shop-tile {
+    position: relative; display: grid; gap: 10px; align-content: start; min-height: 190px; padding: 22px 22px 20px; text-align: left; cursor: pointer;
+    border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); color: var(--ink); transition: border-color 0.25s ease, transform 0.35s var(--ease-out);
+  }
+  .shop-tile:hover { border-color: var(--steel); transform: translateY(-2px); }
+  .shop-tile .st-tag { font-size: 11.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--stone); }
+  .shop-tile h3 { font-size: clamp(22px, 1.9vw, 28px); }
+  .shop-tile p { color: var(--muted); font-size: 14px; max-width: 34ch; }
+  .shop-tile .st-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; font-size: 13px; color: var(--ink-2); }
+  .shop-tile .st-foot .n { color: var(--muted); }
+  .shop-tile .st-foot .go { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+  .shop-tile .st-foot .go::after { content: "→"; transition: transform 0.3s var(--ease-out); }
+  .shop-tile:hover .st-foot .go::after { transform: translateX(3px); }
+  .shop-tile .st-icon { position: absolute; right: 18px; top: 18px; width: 34px; height: 34px; color: var(--steel); opacity: 0.8; }
+  @media (max-width: 900px) { .shop-tiles { grid-template-columns: 1fr; } .shop-tile { min-height: 0; padding: 18px; } .shop-tile .st-icon { width: 28px; height: 28px; } }
+
+  .shop-page {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    color: var(--ink); background: var(--ground); overflow: hidden;
+  }
+  .shop-page[open] { display: flex; flex-direction: column; animation: shopIn 0.4s var(--ease-out); }
+  @keyframes shopIn { from { opacity: 0; transform: translateY(16px); } }
+  .shop-page::backdrop { background: rgba(0, 0, 0, 0.6); }
+  .shop-head {
+    flex: none; display: flex; align-items: center; gap: 14px; height: 64px; box-sizing: content-box;
+    padding: env(safe-area-inset-top, 0px) var(--gutter) 0; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(5, 7, 10, 0.92), rgba(5, 7, 10, 0.8)); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .shop-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 12px 0 6px; border: 1px solid var(--line-strong); border-radius: 4px; background: transparent; color: var(--ink); font-size: 14px; font-weight: 500; cursor: pointer; }
+  .shop-back svg { width: 18px; height: 18px; }
+  .shop-back:hover { border-color: var(--steel); }
+  .shop-head .sh-title { min-width: 0; display: grid; gap: 2px; }
+  .shop-head h2 { font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .shop-head .sh-sub { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .shop-head .trade-basket-open { margin-left: auto; }
+  .shop-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 32px) 0 calc(40px + env(safe-area-inset-bottom, 0px)); }
+  .shop-body .wrap { display: grid; gap: 18px; }
+  .shop-body .head-row { margin-bottom: 0; }
+  .shop-body .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 1000px) { .shop-body .products { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .shop-head { gap: 10px; } .shop-head .sh-sub { display: none; } .shop-back span { display: none; } .shop-back { padding: 0 10px; } }
+  .product-media.ph { display: grid; place-items: center; color: var(--tile-muted); }
+  .product-media.ph svg { width: 44%; height: 44%; }
+  .product .brand.generic { color: var(--muted); }
+
   /* ---------- Hero: centred mark, name, one line, the services and one button; the
      certification logos sit in a quiet strip along the bottom edge ---------- */
   .hero { position: relative; height: clamp(600px, 92vh, 1000px); height: clamp(600px, 92svh, 1000px); }   /* vh line: fallback for browsers without svh (iOS < 15.4) */
@@ -872,7 +919,6 @@
     .info-more { display: none; }
     .info.open .info-more { display: grid; gap: 14px; }
     .products-more { display: inline-flex; margin-top: 14px; min-height: 46px; }
-    .products:not(.all) .product:nth-child(n + 7) { display: none; }
     .products .product { padding: 10px; }
     .sites { grid-template-columns: 1fr 1fr; gap: 20px 12px; }
     .site-ph { overflow: visible; }
@@ -1338,21 +1384,37 @@
       <div class="head-row">
         <div class="head veil">
           <p class="eyebrow"><span class="no">06</span> Products</p>
-          <h2>Materials for trade</h2>
-          <p>Source firestopping materials from the Nullifire and FSi Promat ranges. Add products to your trade basket and send us your company order enquiry.</p>
+          <h2>Trade supplies</h2>
+          <p>Firestopping materials, the tools we use on site, and workwear. Open a range, add what you need to your trade basket, and send us the order enquiry.</p>
         </div>
-        <div class="tabs veil" id="productFilters" role="group" aria-label="Show products by manufacturer"></div>
       </div>
+      <div class="shop-tiles" id="shopTiles"></div>
       <div class="products-bar veil">
         <p>Trade prices, availability and delivery are confirmed with your order.</p>
         <button class="trade-basket-open" type="button" id="openTradeCart" data-open-basket aria-haspopup="dialog">Trade basket <span class="basket-count" id="tradeCartCount" data-basket-count>0</span></button>
       </div>
       <span class="sr-only" id="productCartAnnounce" aria-live="polite"></span>
-      <div class="products veil" id="productList"></div>
-      <button type="button" class="btn-ghost products-more" id="productsMore" hidden>Show all products</button>
-      <p class="fine veil">Product images are supplied by the respective manufacturers. Fire ratings shown are product-level examples: the tested system, substrate, service, installation and project requirements determine the applicable rating. Confirm the system and product size before ordering.</p>
     </div>
   </section>
+
+  <!-- A category of the shop, opened as a page within the page (no reload; the address shows #shop/…) -->
+  <dialog class="shop-page" id="shopPage" aria-labelledby="shopTitle">
+    <div class="shop-head">
+      <button class="shop-back" type="button" id="shopBack"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4L6.5 10l6 6"/></svg><span>Products</span></button>
+      <div class="sh-title"><h2 id="shopTitle">Materials</h2><p class="sh-sub" id="shopSub"></p></div>
+      <button class="trade-basket-open" type="button" data-open-basket aria-haspopup="dialog">Trade basket <span class="basket-count" data-basket-count>0</span></button>
+    </div>
+    <div class="shop-body">
+      <div class="wrap">
+        <div class="head-row">
+          <p class="cart-note" id="shopNote">Trade prices, availability and delivery are confirmed with your order.</p>
+          <div class="tabs" id="productFilters" role="group" aria-label="Show a part of this range"></div>
+        </div>
+        <div class="products all" id="productList"></div>
+        <p class="fine">Product images are supplied by the respective manufacturers. Fire ratings shown are product-level examples: the tested system, substrate, service, installation and project requirements determine the applicable rating. Confirm the system and product size before ordering.</p>
+      </div>
+    </div>
+  </dialog>
 
   <dialog class="trade-cart" id="tradeCart" aria-labelledby="tradeCartTitle">
     <div class="trade-cart-inner">
@@ -1925,6 +1987,19 @@ const SITE = {
   ],
 
   /* Trade products. Images are official manufacturer product visuals; prices and stock are confirmed per enquiry. */
+  /* The shop's ranges. Each product below belongs to one ("category"; materials if left out).
+     groups: "brand" splits the range by manufacturer, "group" by the product's own group field. */
+  shop: [
+    { id: "materials", name: "Materials", tag: "Firestopping and coatings", groups: "brand",
+      blurb: "Batts, sealants, collars, wraps, compounds and intumescent paint from the ranges we install." },
+    { id: "tools", name: "Tools", tag: "What we use on site", groups: "group",
+      blurb: "Sealant guns, batt saws, mixing kit and the small tools that make a clean, recordable seal.",
+      note: "Starter range: tell us what you use and we'll add it. Trade prices are confirmed with your order." },
+    { id: "workwear", name: "Workwear and PPE", tag: "Kit for the trade", groups: "group",
+      blurb: "Respiratory protection, gloves, eyewear and workwear for firestopping and coating work.",
+      note: "Sizes and quantities are confirmed with your order." }
+  ],
+
   products: [
     { id: "fb750-intubatt", image: "images/products/fb750-intubatt.jpg", brand: "Nullifire", name: "FB750 Intubatt", icon: "batt", what: "Coated stone wool batt that closes large openings with services running through.",
       uses: "Walls and floors: cables, trays, trunking and plastic pipes", fire: "Up to 240 minutes", size: "1200 × 600 × 50 mm",
@@ -1970,7 +2045,95 @@ const SITE = {
       link: "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpcpcollar/" },
     { id: "pipebloc-pwp-wrap", image: "images/products/pipebloc-pwp-wrap.jpg", brand: "FSi Promat", name: "PipeBloc PWP Wrap", icon: "wrap", what: "Pre-formed intumescent pipe wrap in a polyethylene sleeve.",
       uses: "Plastic pipes through batt, mortar or sealant seals", fire: "Up to 240 minutes", size: "40 mm wide, sized to the pipe",
-      link: "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/" }
+      link: "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/" },
+
+    /* ---- Tools: a starter range of what firestoppers actually use (photos to follow) ---- */
+    { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "Cox", name: "PowerFlow Combi 310 ml gun", image: "",
+      what: "Skeleton gun with a high-thrust ratio for stiff intumescent sealants and mastics.",
+      specs: [["Takes", "310 ml cartridges"], ["Thrust", "12:1 and 25:1 versions"], ["Why", "Doesn't stall on cold graphite sealant"]] },
+    { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "Cox", name: "Ultraflow 600 ml sausage gun", image: "",
+      what: "Barrel gun for 600 ml foil sausages: fewer changes on long linear seals.",
+      specs: [["Takes", "600 ml sausages and 310 ml cartridges"], ["Body", "Aluminium barrel with cutter"], ["Why", "Half the cartridge changes on big runs"]] },
+    { id: "tool-gun-battery", category: "tools", group: "Sealant guns", brand: "Milwaukee", name: "M12 cordless sealant gun", image: "",
+      what: "Battery gun with a steady, adjustable flow for long days on sealant.",
+      specs: [["Takes", "310 ml or 400 ml (barrel version 600 ml)"], ["Battery", "12 V, supplied with one battery and charger"], ["Why", "Even bead, no hand fatigue"]] },
+    { id: "tool-finishing", category: "tools", group: "Sealant guns", brand: "Cramer", name: "Fugi sealant finishing kit", image: "",
+      what: "Profiling spatulas that leave a smooth, even sealant fillet on batt edges and joints.",
+      specs: [["Set", "Five profiles"], ["Use", "Tooling sealant around pipes, cables and batt joints"], ["Why", "Tidy seals photograph well for the record"]] },
+    { id: "tool-batt-saw", category: "tools", group: "Cutting", brand: "Bahco", name: "Insulation saw, 22 inch", image: "",
+      what: "Long, coarse-toothed saw that cuts coated batt cleanly without tearing the stone wool.",
+      specs: [["Blade", "560 mm, 7 TPI"], ["Use", "Coated batt, mineral wool, foil-faced insulation"], ["Why", "Square, clean batt edges for a tight fit"]] },
+    { id: "tool-knife", category: "tools", group: "Cutting", brand: "Stanley", name: "FatMax retractable knife with blades", image: "",
+      what: "Heavy-duty knife for trimming batt, wrap and backer rod, with a pack of blades.",
+      specs: [["Blades", "Pack of 50 heavy-duty"], ["Use", "Trimming batt and intumescent wrap to size"], ["Why", "Quick blade change, solid body"]] },
+    { id: "tool-hole-saw", category: "tools", group: "Cutting", brand: "Various", name: "Hole saw set for batt and board", image: "",
+      what: "Bi-metal hole saws in the pipe sizes seen on site, for neat openings in batt and board.",
+      specs: [["Sizes", "32 to 152 mm"], ["Use", "Pipe and cable penetrations through batt"], ["Why", "A round hole seals better than a cut-out"]] },
+    { id: "tool-paddle", category: "tools", group: "Mixing and application", brand: "Various", name: "Compound mixing paddle, M14", image: "",
+      what: "Helical paddle for mixing fire compound and mortar in the bucket without air pockets.",
+      specs: [["Fitting", "M14, for a paddle mixer or SDS drill with adaptor"], ["Size", "120 mm head"], ["Use", "Nullifire FR230, FSi Silverseal and similar"]] },
+    { id: "tool-tub", category: "tools", group: "Mixing and application", brand: "Gorilla Tub", name: "Flexible mixing tub, 26 L", image: "",
+      what: "Flexible rubber tub that mixes compound cleanly and knocks out when it's set.",
+      specs: [["Capacity", "26 litres"], ["Use", "Mixing and carrying compound"], ["Why", "Set compound pops out; the tub lasts years"]] },
+    { id: "tool-trowel", category: "tools", group: "Mixing and application", brand: "Marshalltown", name: "Margin trowel, 150 mm", image: "",
+      what: "Narrow trowel for placing and finishing compound in tight openings.",
+      specs: [["Blade", "150 × 50 mm"], ["Use", "Compound seals in walls and floors"], ["Why", "Reaches into small openings"]] },
+    { id: "tool-backer-rod", category: "tools", group: "Mixing and application", brand: "Various", name: "Closed-cell backer rod", image: "",
+      what: "Foam rod that sets the depth of a sealant joint so the sealant works as tested.",
+      specs: [["Sizes", "10, 15, 20 and 25 mm"], ["Length", "Coils of 50 to 100 m"], ["Use", "Linear joints before intumescent or acoustic sealant"]] },
+    { id: "tool-wet-film", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Wet film comb, 25 to 2000 µm", image: "",
+      what: "Stainless comb for checking wet film thickness as intumescent paint goes on.",
+      specs: [["Range", "25 to 2000 microns"], ["Use", "Every coat of intumescent paint"], ["Why", "The reading goes straight into the record"]] },
+    { id: "tool-dft-gauge", category: "tools", group: "Marking and inspection", brand: "Elcometer", name: "Dry film thickness gauge", image: "",
+      what: "Digital gauge that measures cured coating thickness on steel, for the handover record.",
+      specs: [["Reads", "Ferrous and non-ferrous, 0 to 1500 µm"], ["Use", "Signing off intumescent coating thickness"], ["Why", "Stores readings by member"]] },
+    { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Various", name: "Firestop identification labels", image: "",
+      what: "Self-adhesive labels that record the system, rating, installer and date next to each seal.",
+      specs: [["Pack", "Roll of 100"], ["Use", "Every penetration seal, so the inspection can find it"], ["Why", "Survives dust and damp"]] },
+    { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Various", name: "Rechargeable LED head torch", image: "",
+      what: "Bright, hands-free light for risers and ceiling voids where seals get photographed.",
+      specs: [["Output", "Around 600 lumens"], ["Power", "USB rechargeable"], ["Use", "Surveys and photo records in dark voids"]] },
+    { id: "tool-tape", category: "tools", group: "Marking and inspection", brand: "Stanley", name: "Tape measure, 8 m", image: "",
+      what: "Wide-blade tape for sizing openings and checking batt depths.",
+      specs: [["Length", "8 m, 32 mm blade"], ["Use", "Measuring openings and annular gaps"]] },
+
+    /* ---- Workwear and PPE ---- */
+    { id: "ppe-ffp3", category: "workwear", group: "Respiratory", brand: "3M", name: "Aura FFP3 respirators, box of 10", image: "",
+      what: "Disposable FFP3 masks for cutting batt and mixing compound: stone wool and cement dust.",
+      specs: [["Standard", "EN 149 FFP3"], ["Pack", "Box of 10"], ["Use", "Cutting batt, mixing compound, sanding"]] },
+    { id: "ppe-half-mask", category: "workwear", group: "Respiratory", brand: "3M", name: "Half-mask respirator with P3 filters", image: "",
+      what: "Reusable half mask with particulate filters for long days on dusty work and coating.",
+      specs: [["Filters", "P3 R particulate; A2P3 for solvent-based coatings"], ["Sizes", "S, M, L"], ["Use", "Daily dust and spray work"]] },
+    { id: "ppe-nitrile", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Nitrile gloves, box of 100", image: "",
+      what: "Powder-free nitrile gloves for sealant, compound and coating work.",
+      specs: [["Pack", "Box of 100"], ["Sizes", "S to XL"], ["Use", "Keeping sealant and paint off skin"]] },
+    { id: "ppe-cut-gloves", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Cut-resistant work gloves", image: "",
+      what: "Level D cut-resistant gloves with a nitrile palm for handling batt, mesh and cut steel.",
+      specs: [["Standard", "EN 388, cut level D"], ["Sizes", "8 to 11"], ["Use", "Batt handling, sharp edges on trays and mesh"]] },
+    { id: "ppe-glasses", category: "workwear", group: "Hands and eyes", brand: "Bollé", name: "Safety glasses, clear anti-fog", image: "",
+      what: "Wraparound safety glasses that stay clear while cutting overhead.",
+      specs: [["Standard", "EN 166"], ["Lens", "Clear, anti-fog and anti-scratch"], ["Use", "Overhead cutting and sealing"]] },
+    { id: "ppe-earplugs", category: "workwear", group: "Hands and eyes", brand: "Various", name: "Disposable earplugs, box of 200 pairs", image: "",
+      what: "Foam earplugs for drilling and mixing.",
+      specs: [["Attenuation", "SNR 37 dB"], ["Pack", "200 pairs"], ["Use", "Drilling, mixing, busy sites"]] },
+    { id: "ppe-hard-hat", category: "workwear", group: "Clothing", brand: "JSP", name: "Vented safety helmet", image: "",
+      what: "Lightweight vented helmet with a wheel ratchet, in site colours.",
+      specs: [["Standard", "EN 397"], ["Colours", "White, yellow, blue"], ["Use", "Every site"]] },
+    { id: "ppe-hi-vis", category: "workwear", group: "Clothing", brand: "Various", name: "Hi-vis vest, class 2", image: "",
+      what: "Yellow hi-vis vest to the site standard, with a chest pocket for the phone that takes the record photos.",
+      specs: [["Standard", "EN ISO 20471 class 2"], ["Sizes", "S to 3XL"], ["Use", "Every site"]] },
+    { id: "ppe-trousers", category: "workwear", group: "Clothing", brand: "Snickers", name: "Stretch work trousers with knee pad pockets", image: "",
+      what: "Hard-wearing work trousers with holster pockets and knee pad pockets for floor seals.",
+      specs: [["Sizes", "Waist 30 to 44, three leg lengths"], ["Pairs with", "Knee pads below"], ["Use", "Floor seals and riser work"]] },
+    { id: "ppe-knee-pads", category: "workwear", group: "Clothing", brand: "Snickers", name: "Knee pads for pocket trousers", image: "",
+      what: "Certified knee pads that slot into the trouser pockets.",
+      specs: [["Standard", "EN 14404 type 2"], ["Use", "Floor penetrations and low-level seals"]] },
+    { id: "ppe-boots", category: "workwear", group: "Clothing", brand: "Various", name: "S3 safety boots", image: "",
+      what: "Composite-toe, midsole-protected boots that stay comfortable on concrete all day.",
+      specs: [["Standard", "EN ISO 20345 S3"], ["Sizes", "UK 6 to 13"], ["Use", "Every site"]] },
+    { id: "ppe-coverall", category: "workwear", group: "Clothing", brand: "DuPont", name: "Tyvek disposable coveralls", image: "",
+      what: "Type 5/6 disposable coveralls for spraying intumescent paint.",
+      specs: [["Standard", "Type 5 and 6"], ["Pack", "Box of 25"], ["Use", "Spraying and dusty cutting"]] }
   ],
 
   // Steel coating: the five stages shown in the Steel coatings section.
@@ -3004,26 +3167,97 @@ const SITE = {
   /* ---------- Trade catalogue and basket ---------- */
   (() => {
     const P = SITE.products || [];
-    const listEl = $('#productList'), filterEl = $('#productFilters');
+    const CATS = SITE.shop || [];
+    const listEl = $('#productList'), filterEl = $('#productFilters'), tilesEl = $('#shopTiles'), page = $('#shopPage');
     if (!P.length) { $('#products').hidden = true; return; }
-    // Card: small photo (fixed size, so nothing jumps while it loads) | brand, name, what | price + specs | basket buttons
-    listEl.innerHTML = P.map(p => `<article class="product" data-brand="${esc(p.brand)}" data-product-id="${esc(p.id)}">
-      <div class="product-media"><img src="${esc(p.image)}" alt="${esc(p.name)} product image" width="96" height="96" loading="lazy" decoding="async"></div>
-      <div class="p-head"><span class="brand">${esc(p.brand)}</span><h3>${esc(p.name)}</h3><p class="what">${esc(p.what)}</p></div>
+    const catOf = p => p.category || 'materials';
+    const ICON = {
+      materials: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 14l14-7 14 7v12l-14 7-14-7z"/><path d="M6 14l14 7 14-7M20 21v12"/></svg>',
+      tools: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 32l12-12M20 20l3-3 4 4-3 3zM27 9l4 4-8 8-4-4z"/><path d="M8 32a2.5 2.5 0 1 0 0-.1"/></svg>',
+      workwear: '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 24a12 12 0 0 1 24 0"/><path d="M5 24h30v4H5z"/><path d="M20 12v-3"/></svg>'
+    };
+    const ph = cat => `<div class="product-media ph" aria-hidden="true">${ICON[cat] || ICON.materials}</div>`;
+    const specsOf = p => p.specs || [['Fire rating', p.fire], ['Used for', p.uses], ['Sizes', p.size]];
+    const card = p => `<article class="product" data-brand="${esc(p.brand)}" data-group="${esc(p.group || '')}" data-cat="${esc(catOf(p))}" data-product-id="${esc(p.id)}">
+      ${p.image ? `<div class="product-media"><img src="${esc(p.image)}" alt="${esc(p.name)} product image" width="96" height="96" loading="lazy" decoding="async"></div>` : ph(catOf(p))}
+      <div class="p-head"><span class="brand${p.brand === 'Various' ? ' generic' : ''}">${esc(p.brand)}</span><h3>${esc(p.name)}</h3><p class="what">${esc(p.what)}</p></div>
       <div class="p-spec"><p class="trade-price">Trade price on request</p>
-        <dl><dt>Fire rating</dt><dd>${esc(p.fire)}</dd><dt>Used for</dt><dd>${esc(p.uses)}</dd><dt>Sizes</dt><dd>${esc(p.size)}</dd></dl></div>
+        <dl>${specsOf(p).filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>
       <div class="acts"><button class="add-basket" type="button">Add to basket</button><input class="product-qty" type="number" min="1" max="999" step="1" value="1" inputmode="numeric" aria-label="Quantity for ${esc(p.name)}">${p.link ? `<a class="maker" href="${esc(p.link)}" target="_blank" rel="noopener">Manufacturer details ↗</a>` : ''}</div>
-    </article>`).join('');
-    const brands = [...new Set(P.map(p => p.brand))];
-    if (brands.length > 1) {
-      filterEl.innerHTML = [['all', 'All products', P.length], ...brands.map(b => [b, b, P.filter(p => p.brand === b).length])]
-        .map(([f, label, n]) => `<button type="button" class="tab" data-f="${esc(f)}" aria-pressed="${f === 'all'}">${esc(label)} <span class="count">${n}</span></button>`).join('');
-      $$('button', filterEl).forEach(b => b.addEventListener('click', () => {
-        $$('button', filterEl).forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-        $$('.product', listEl).forEach(el => { el.hidden = !(b.dataset.f === 'all' || el.dataset.brand === b.dataset.f); });
-        if (b.dataset.f !== 'all') { listEl.classList.add('all'); const m = $('#productsMore'); if (m) m.hidden = true; }
-      }));
-    } else filterEl.hidden = true;
+    </article>`;
+
+    // Category tiles in the section
+    tilesEl.innerHTML = CATS.map(c => {
+      const n = P.filter(p => catOf(p) === c.id).length;
+      return `<button type="button" class="shop-tile" data-cat="${esc(c.id)}"><span class="st-icon">${ICON[c.id] || ''}</span><span class="st-tag">${esc(c.tag)}</span><h3>${esc(c.name)}</h3><p>${esc(c.blurb)}</p><span class="st-foot"><span class="n">${n} ${n === 1 ? 'product' : 'products'}</span><span class="go">Open</span></span></button>`;
+    }).join('');
+
+    // The category page
+    let current = null;
+    const slug = t => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    function render(cat, sub) {
+      const c = CATS.find(x => x.id === cat) || CATS[0];
+      current = c.id;
+      const items = P.filter(p => catOf(p) === c.id);
+      $('#shopTitle').textContent = c.name;
+      $('#shopSub').textContent = c.blurb;
+      $('#shopNote').textContent = c.note || 'Trade prices, availability and delivery are confirmed with your order.';
+      listEl.innerHTML = items.map(card).join('');
+      const key = c.groups === 'brand' ? 'brand' : 'group';
+      const parts = [...new Set(items.map(p => p[key]).filter(Boolean))];
+      if (parts.length > 1) {
+        filterEl.hidden = false;
+        filterEl.innerHTML = [['all', 'All', items.length], ...parts.map(b => [slug(b), b, items.filter(p => p[key] === b).length])]
+          .map(([f, label, n]) => `<button type="button" class="tab" data-f="${esc(f)}" aria-pressed="false">${esc(label)} <span class="count">${n}</span></button>`).join('');
+        applyFilter(sub && parts.some(b => slug(b) === sub) ? sub : 'all', key);
+      } else { filterEl.hidden = true; filterEl.innerHTML = ''; }
+    }
+    function applyFilter(f, key) {
+      $$('button', filterEl).forEach(x => x.setAttribute('aria-pressed', String(x.dataset.f === f)));
+      $$('.product', listEl).forEach(el => { el.hidden = !(f === 'all' || slug(el.dataset[key === 'brand' ? 'brand' : 'group']) === f); });
+      setHash(f);
+    }
+    function setHash(f) {
+      if (!current) return;
+      const h = '#shop/' + current + (f && f !== 'all' ? '/' + f : '');
+      if (location.hash !== h) history.replaceState(null, '', h);
+    }
+    filterEl.addEventListener('click', e => {
+      const b = e.target.closest('button.tab'); if (!b) return;
+      const c = CATS.find(x => x.id === current);
+      applyFilter(b.dataset.f, c && c.groups === 'brand' ? 'brand' : 'group');
+    });
+    const isOpen = () => page.hasAttribute('open');
+    function openShop(cat, sub) {
+      render(cat, sub);
+      if (!isOpen()) {
+        if (Menu.isOpen()) Menu.close();
+        if (typeof page.showModal === 'function') page.showModal(); else page.setAttribute('open', '');
+        lockPage('shop', true);
+      }
+      $('.shop-body', page).scrollTop = 0;
+      setTimeout(() => $('#shopBack').focus({ preventScroll: true }), 50);
+    }
+    function closeShop() {
+      if (!isOpen()) return;
+      if (typeof page.close === 'function') page.close(); else page.removeAttribute('open');
+    }
+    page.addEventListener('close', () => {
+      lockPage('shop', false); current = null;
+      if (/^#shop\b/.test(location.hash)) history.replaceState(null, '', '#products');
+      const tile = $(`.shop-tile[data-cat]`); if (tile) tile.focus({ preventScroll: true });
+    });
+    page.addEventListener('cancel', e => { e.preventDefault(); closeShop(); });
+    $('#shopBack').addEventListener('click', closeShop);
+    tilesEl.addEventListener('click', e => { const t = e.target.closest('.shop-tile'); if (t) openShop(t.dataset.cat); });
+    // #shop/materials/nullifire opens straight into that range (a shared link, or the back button)
+    function fromHash() {
+      const m = location.hash.match(/^#shop\/([a-z]+)(?:\/([a-z0-9-]+))?/);
+      if (m && CATS.some(c => c.id === m[1])) openShop(m[1], m[2]); else if (isOpen()) closeShop();
+    }
+    addEventListener('hashchange', fromHash);
+    if (/^#shop\b/.test(location.hash)) setTimeout(fromHash, 0);
+    window.LimitlessShop = { open: openShop, close: closeShop };
 
     const basketKey = 'limitless-trade-basket-v1';
     const cartItemsEl = $('#tradeCartItems');
@@ -3423,15 +3657,6 @@ const SITE = {
 
   // Phones: the materials and parts lists start folded; a tap opens them
   $$('.info-toggle').forEach(b => b.addEventListener('click', () => { const on = b.getAttribute('aria-expanded') !== 'true'; b.setAttribute('aria-expanded', String(on)); b.closest('.info').classList.toggle('open', on); }));
-  // Phones: the shop starts with six products; a tap shows the rest
-  (() => {
-    const list = $('#productList'), more = $('#productsMore');
-    if (!list || !more) return;
-    const n = $$('.product', list).length;
-    if (n <= 6) { more.hidden = true; return; }
-    more.textContent = `Show all ${n} products`;
-    more.addEventListener('click', () => { list.classList.add('all'); more.hidden = true; });
-  })();
   Menu.sync();
 
   // The page height changes once everything is built; re-fit the backdrop.
