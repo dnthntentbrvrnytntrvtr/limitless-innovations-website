@@ -20,6 +20,7 @@ const products = SITE.products.map(p => ({
   group: p.group || p.brand,
   brand: p.brand,
   name: p.name,
+  image: p.image || '',
   size: p.size || (Array.isArray(p.specs) && p.specs[0] ? p.specs[0].join(': ') : ''),
   link: p.link || ''
 }));

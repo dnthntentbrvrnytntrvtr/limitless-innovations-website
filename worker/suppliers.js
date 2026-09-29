@@ -191,21 +191,9 @@ export default {
   ],
   "tool-gun-310": [
     {
-      "supplier": "Screwfix (search)",
-      "url": "https://www.screwfix.com/search?search=Cox+PowerFlow+Combi+310+ml+gun",
-      "price": "see results",
-      "checked": "29 Sep 2026"
-    },
-    {
-      "supplier": "Toolstation (search)",
-      "url": "https://www.toolstation.com/search?q=Cox+PowerFlow+Combi+310+ml+gun",
-      "price": "see results",
-      "checked": "29 Sep 2026"
-    },
-    {
-      "supplier": "Amazon Business (search)",
-      "url": "https://www.amazon.co.uk/s?k=Cox+PowerFlow+Combi+310+ml+gun",
-      "price": "see results",
+      "supplier": "Screwfix",
+      "url": "https://www.screwfix.com/p/no-nonsense-premium-sealant-gun/539cu",
+      "price": "£16.99 inc VAT (was £19.99)",
       "checked": "29 Sep 2026"
     }
   ],

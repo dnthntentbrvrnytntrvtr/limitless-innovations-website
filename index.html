@@ -265,8 +265,14 @@
   .shop-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 32px) 0 calc(40px + env(safe-area-inset-bottom, 0px)); }
   .shop-body .wrap { display: grid; gap: 18px; }
   .shop-body .head-row { margin-bottom: 0; }
-  .shop-body .products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 1000px) { .shop-body .products { grid-template-columns: 1fr; } }
+  /* Three cards across on a wide screen, two on a laptop or tablet, one on a phone. Each card keeps the photo
+     beside the title and runs the specs and buttons full width beneath, so more items fit on a page. */
+  .shop-body .products { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .shop-body .product { --ph: 104px; grid-template-rows: auto auto 1fr; grid-template-areas: "media head" "spec spec" "acts acts"; gap: 10px 14px; padding: 12px 12px 12px; }
+  .shop-body .product .what { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .shop-body .product dl { grid-template-columns: 68px minmax(0, 1fr); }
+  @media (max-width: 1180px) { .shop-body .products { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 700px) { .shop-body .products { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .shop-head { gap: 10px; } .shop-head .sh-sub { display: none; } .shop-back span { display: none; } .shop-back { padding: 0 10px; } }
   .product-media.ph { display: grid; place-items: center; color: var(--tile-muted); }
   .product-media.ph svg { width: 44%; height: 44%; }
@@ -629,9 +635,27 @@
     grid-template-areas: "media head" "media spec" "media acts"; gap: 8px 18px;
     min-width: 0; padding: 14px; border: 1px solid var(--line); background: rgba(13, 16, 20, 0.82);
   }
-  .product-media { grid-area: media; align-self: start; width: var(--ph); height: var(--ph); overflow: hidden; border-radius: 2px; background: var(--tile); border: 1px solid rgba(238, 241, 244, 0.12); }
-  .product-media img { width: 100%; height: 100%; object-fit: contain; padding: 8px; transition: transform 0.45s var(--ease-out); }
-  @media (hover: hover) { .product:hover .product-media img { transform: scale(1.06); } }
+  .product-media { grid-area: media; align-self: start; position: relative; width: var(--ph); height: var(--ph); overflow: hidden; border-radius: 2px; background: var(--tile); border: 1px solid rgba(238, 241, 244, 0.12); }
+  .product-media img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 8px; transition: transform 0.45s var(--ease-out); }
+  /* The photo is a button: hover lifts it a little and shows a magnifier; a click opens it large (see #picZoom). */
+  button.product-media { appearance: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: zoom-in; }
+  button.product-media:focus-visible { outline: 2px solid var(--steel); outline-offset: 2px; }
+  .product-media .zoom-hint { position: absolute; right: 4px; bottom: 4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 3px; background: rgba(11, 13, 16, 0.72); color: #fff; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+  .product-media .zoom-hint svg { width: 13px; height: 13px; }
+  @media (hover: hover) { button.product-media:hover img { transform: scale(1.1); } button.product-media:hover .zoom-hint { opacity: 1; } }
+  @media (hover: none) { .product-media .zoom-hint { opacity: 0.85; } }
+  /* Large photo viewer */
+  .pic-zoom { border: 0; padding: 0; background: transparent; width: min(92vw, 620px); max-width: none; }
+  .pic-zoom::backdrop { background: rgba(5, 6, 8, 0.82); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+  .pic-zoom figure { margin: 0; border-radius: 4px; overflow: hidden; background: var(--tile); box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9); animation: pz-in 0.28s var(--ease-out); }
+  .pic-zoom img { display: block; width: 100%; max-height: 68vh; object-fit: contain; padding: clamp(16px, 4vw, 32px); box-sizing: border-box; }
+  .pic-zoom figcaption { display: grid; gap: 2px; padding: 12px 16px 14px; background: var(--panel); color: var(--ink); }
+  .pic-zoom figcaption .brand { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  .pic-zoom figcaption b { font: 600 16px/1.2 var(--display); }
+  .pic-zoom .pz-close { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border: 0; border-radius: 3px; background: rgba(11, 13, 16, 0.72); color: #fff; font-size: 22px; line-height: 1; cursor: pointer; }
+  .pic-zoom .pz-close:hover { background: var(--accent); }
+  @keyframes pz-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .pic-zoom figure { animation: none; } button.product-media:hover img { transform: none; } }
   .p-head { grid-area: head; display: grid; gap: 2px; align-content: start; min-width: 0; }
   .product .brand { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
   .product h3 { font-size: clamp(17px, 1.3vw, 19px); }
@@ -1400,6 +1424,10 @@
   </section>
 
   <!-- A category of the shop, opened as a page within the page (no reload; the address shows #shop/…) -->
+  <dialog class="pic-zoom" id="picZoom" aria-labelledby="picZoomName">
+    <figure><img id="picZoomImg" alt="" decoding="async"><figcaption><span class="brand" id="picZoomBrand"></span><b id="picZoomName"></b></figcaption></figure>
+    <button class="pz-close" type="button" aria-label="Close">×</button>
+  </dialog>
   <dialog class="shop-page" id="shopPage" aria-labelledby="shopTitle">
     <div class="shop-head">
       <button class="shop-back" type="button" id="shopBack"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4L6.5 10l6 6"/></svg><span>Products</span></button>
@@ -2048,9 +2076,9 @@ const SITE = {
       link: "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/" },
 
     /* ---- Tools: a starter range of what firestoppers actually use (photos to follow) ---- */
-    { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "Cox", name: "PowerFlow Combi 310 ml gun", image: "images/products/tool-gun-310.svg",
-      what: "Skeleton gun with a high-thrust ratio for stiff intumescent sealants and mastics.",
-      specs: [["Takes", "310 ml cartridges"], ["Thrust", "12:1 and 25:1 versions"], ["Why", "Doesn't stall on cold graphite sealant"]] },
+    { id: "tool-gun-310", category: "tools", group: "Sealant guns", brand: "No Nonsense", name: "Premium sealant gun", image: "images/products/tool-gun-premium.jpg",
+      what: "Aluminium-barrel gun with anti-drip switch and a choice of thrust ratio for stiff intumescent sealants.",
+      specs: [["Takes", "Standard 310 ml cartridges"], ["Thrust", "10:1 and 20:1, switchable"], ["Also", "Anti-drip, rotating barrel, built-in nozzle cutter and seal punch"]] },
     { id: "tool-gun-600", category: "tools", group: "Sealant guns", brand: "Cox", name: "Ultraflow 600 ml sausage gun", image: "images/products/tool-gun-600.svg",
       what: "Barrel gun for 600 ml foil sausages: fewer changes on long linear seals.",
       specs: [["Takes", "600 ml sausages and 310 ml cartridges"], ["Body", "Aluminium barrel with cutter"], ["Why", "Half the cartridge changes on big runs"]] },
@@ -3132,7 +3160,7 @@ const SITE = {
     const ph = cat => `<div class="product-media ph" aria-hidden="true">${ICON[cat] || ICON.materials}</div>`;
     const specsOf = p => p.specs || [['Fire rating', p.fire], ['Used for', p.uses], ['Sizes', p.size]];
     const card = p => `<article class="product" data-brand="${esc(p.brand)}" data-group="${esc(p.group || '')}" data-cat="${esc(catOf(p))}" data-product-id="${esc(p.id)}">
-      ${p.image ? `<div class="product-media"><img src="${esc(p.image)}" alt="${esc(p.name)} product image" width="96" height="96" loading="lazy" decoding="async"></div>` : ph(catOf(p))}
+      ${p.image ? `<button class="product-media" type="button" data-zoom="${esc(p.image)}" aria-label="See a larger photo of ${esc(p.name)}"><img src="${esc(p.image)}" alt="${esc(p.name)} product image" width="96" height="96" loading="lazy" decoding="async"><span class="zoom-hint" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.8 12.8L17 17M8.5 6v5M6 8.5h5"/></svg></span></button>` : ph(catOf(p))}
       <div class="p-head"><span class="brand${p.brand === 'Various' ? ' generic' : ''}">${esc(p.brand)}</span><h3>${esc(p.name)}</h3><p class="what">${esc(p.what)}</p></div>
       <div class="p-spec"><p class="trade-price">Trade price on request</p>
         <dl>${specsOf(p).filter(([, v]) => v).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div>
@@ -3211,6 +3239,17 @@ const SITE = {
     addEventListener('hashchange', fromHash);
     if (/^#shop\b/.test(location.hash)) setTimeout(fromHash, 0);
     window.LimitlessShop = { open: openShop, close: closeShop };
+
+    // Large photo viewer: click a product photo to see it big
+    const zoom = $('#picZoom');
+    listEl.addEventListener('click', e => {
+      const b = e.target.closest('button.product-media[data-zoom]'); if (!b) return;
+      const p = P.find(x => x.id === b.closest('.product').dataset.productId); if (!p) return;
+      $('#picZoomImg').src = p.image; $('#picZoomImg').alt = p.name + ' product image';
+      $('#picZoomBrand').textContent = p.brand; $('#picZoomName').textContent = p.name;
+      if (typeof zoom.showModal === 'function') zoom.showModal(); else zoom.setAttribute('open', '');
+    });
+    zoom.addEventListener('click', e => { if (e.target === zoom || e.target.closest('.pz-close')) zoom.close(); });
 
     const basketKey = 'limitless-trade-basket-v1';
     const cartItemsEl = $('#tradeCartItems');

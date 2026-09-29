@@ -14,6 +14,12 @@ import { RANGES, PRODUCTS } from './catalogue.js';   // generated from index.htm
 const MAX = { name: 80, email: 120, phone: 40, message: 4000, company: 120, notes: 2000, items: 60 };
 const COOKIE = 'li_desk';
 const SESSION_DAYS = 30;
+const LIMITS = { messages: 5, orders: 5, logins: 5 };   // per visitor, per hour
+
+function deskBase(env) {
+  const p = String(env.DESK_PATH || 'desk').replace(/^\/+|\/+$/g, '').replace(/[^A-Za-z0-9_\-\/]/g, '');
+  return '/' + (p || 'desk');
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -21,7 +27,10 @@ export default {
     const path = url.pathname;
     try {
       if (path.startsWith('/api/')) return await api(request, env, ctx, url);
-      if (path === '/desk' || path.startsWith('/desk/')) return await desk(request, env, url);
+      // The desk lives at /desk, or at a private address of your own if the DESK_PATH secret is set
+      // (then /desk is just another missing page). See DESK-SETUP.txt.
+      const base = deskBase(env);
+      if (path === base || path.startsWith(base + '/')) return await desk(request, env, url, base);
     } catch (err) {
       console.error('worker error', err && err.stack || err);
       return json({ ok: false, error: 'server' }, 500);
@@ -63,7 +72,7 @@ async function newMessage(b, ip, env, ctx) {
   if (message.length < 5) errors.message = 'Please tell us a little about the job.';
   if (Object.keys(errors).length) return json({ ok: false, error: 'invalid', fields: errors }, 422);
 
-  if (!(await rateLimit(env, 'msg:' + ip, 6, 3600))) return json({ ok: false, error: 'rate' }, 429);
+  if (!(await rateLimit(env, 'msg:' + ip, LIMITS.messages, 3600))) return json({ ok: false, error: 'rate' }, 429);
 
   const page = clean(b.page, 120), source = clean(b.source, 40);
   const r = await env.DB.prepare(
@@ -92,7 +101,7 @@ async function newOrder(b, ip, env, ctx) {
   if (!items.length) errors.items = 'The basket is empty.';
   if (Object.keys(errors).length) return json({ ok: false, error: 'invalid', fields: errors }, 422);
 
-  if (!(await rateLimit(env, 'ord:' + ip, 4, 3600))) return json({ ok: false, error: 'rate' }, 429);
+  if (!(await rateLimit(env, 'ord:' + ip, LIMITS.orders, 3600))) return json({ ok: false, error: 'rate' }, 429);
 
   const ref = makeRef();
   const r = await env.DB.prepare(
@@ -114,24 +123,25 @@ async function newOrder(b, ip, env, ctx) {
 /* ==========================================================================
    The desk: login page, session cookie, the desk page itself
    ========================================================================== */
-async function desk(request, env, url) {
+async function desk(request, env, url, base) {
   const path = url.pathname;
-  if (!env.DESK_PASSWORD) return html(LOGIN_HTML.replace('{{error}}', 'The desk is not switched on yet: add the DESK_PASSWORD secret in Cloudflare (see DESK-SETUP.txt).').replace('{{form}}', 'hidden'), 503);
+  const page = (tpl, vars) => Object.entries({ base, ...vars }).reduce((t, [k, v]) => t.split('{{' + k + '}}').join(v), tpl);
+  if (!env.DESK_PASSWORD) return html(page(LOGIN_HTML, { error: 'The desk is not switched on yet: add the DESK_PASSWORD secret in Cloudflare (see DESK-SETUP.txt).', form: 'hidden' }), 503);
 
-  if (path === '/desk/login' && request.method === 'POST') {
+  if (path === base + '/login' && request.method === 'POST') {
     const ip = request.headers.get('cf-connecting-ip') || '0.0.0.0';
-    if (!(await rateLimit(env, 'login:' + ip, 8, 900))) return html(LOGIN_HTML.replace('{{error}}', 'Too many attempts. Try again in 15 minutes.').replace('{{form}}', ''), 429);
+    if (!(await rateLimit(env, 'login:' + ip, LIMITS.logins, 3600))) return html(page(LOGIN_HTML, { error: 'Too many attempts. Try again in an hour.', form: 'hidden' }), 429);
     const body = await readBody(request);
     const ok = body && (await safeEqual(String(body.password || ''), env.DESK_PASSWORD));
-    if (!ok) { await sleep(600); return html(LOGIN_HTML.replace('{{error}}', 'Wrong password.').replace('{{form}}', ''), 401); }
+    if (!ok) { await sleep(600); return html(page(LOGIN_HTML, { error: 'Wrong password.', form: '' }), 401); }
     const exp = Math.floor(Date.now() / 1000) + SESSION_DAYS * 86400;
     const token = exp + '.' + (await hmac(env, 'session:' + exp));
-    return redirect('/desk', `${COOKIE}=${token}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`);
+    return redirect(base, `${COOKIE}=${token}; Path=/; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`);
   }
-  if (path === '/desk/logout') return redirect('/desk', `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict`);
+  if (path === base + '/logout') return redirect(base, `${COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict`);
 
-  if (!(await authed(request, env))) return html(LOGIN_HTML.replace('{{error}}', '').replace('{{form}}', ''), 401);
-  if (path === '/desk' || path === '/desk/') return html(DESK_HTML);
+  if (!(await authed(request, env))) return html(page(LOGIN_HTML, { error: '', form: '' }), 401);
+  if (path === base || path === base + '/') return html(page(DESK_HTML, {}));
   return json({ ok: false, error: 'not-found' }, 404);
 }
 

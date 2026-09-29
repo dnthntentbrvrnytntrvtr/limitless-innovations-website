@@ -23,6 +23,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FB750 Intubatt",
+    "image": "images/products/fb750-intubatt.jpg",
     "size": "1200 × 600 × 50 mm",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fb750-intubatt/"
   },
@@ -32,6 +33,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FS702 Intumastic",
+    "image": "images/products/fs702-intumastic.jpg",
     "size": "310 ml and 600 ml, white or grey",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fs702-intumastic-fire-resistant-acrylic-sealant/"
   },
@@ -41,6 +43,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FS709 HP Intumescent Sealant",
+    "image": "images/products/fs709-sealant.jpg",
     "size": "310 ml, anthracite",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fs709-hp-intumescent-sealant/"
   },
@@ -50,6 +53,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FP302 Intustrap",
+    "image": "images/products/fp302-intustrap.jpg",
     "size": "60 mm × 4 mm × 25 m roll",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fp302-intustrap-intumescent-strap/"
   },
@@ -59,6 +63,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FP170 Intucollar",
+    "image": "images/products/fp170-intucollar.jpg",
     "size": "Sized to the pipe",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fp170-intucollar-intumescent-pipe-collar/"
   },
@@ -68,6 +73,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FR230 Intucompound",
+    "image": "images/products/fr230-intucompound.jpg",
     "size": "20 kg bag",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fr230-intucompound-fire-mortar/"
   },
@@ -77,6 +83,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "FI025 Intuflex",
+    "image": "images/products/fi025-intuflex.jpg",
     "size": "Supplied in rolls",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/fi025-intuflex-insulation-wrap/"
   },
@@ -86,6 +93,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "SC902 steel coating",
+    "image": "images/products/sc902-steel-coating.jpg",
     "size": "25 kg two-pack",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/sc902-intumescent-steel-coating-fast-track-on-site-and-offsite/"
   },
@@ -95,6 +103,7 @@ export const PRODUCTS = [
     "group": "Nullifire",
     "brand": "Nullifire",
     "name": "SC802 steel coating",
+    "image": "images/products/sc802-steel-coating.jpg",
     "size": "5 L and 25 kg",
     "link": "https://www.nullifire.com/en-gb/products-systems/product-finder/sc802-intumescent-steel-coating-on-site-water-based/"
   },
@@ -104,6 +113,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "Stopseal Batt",
+    "image": "images/products/stopseal-batt.jpg",
     "size": "1200 × 600 × 50 mm",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/coatingcoated-batts/stopsealbatt/"
   },
@@ -113,6 +123,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "Pyrocoustic Sealant",
+    "image": "images/products/pyrocoustic-sealant.jpg",
     "size": "310 ml and 600 ml, white",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/sealant/pyrocousticsealant/"
   },
@@ -122,6 +133,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "PyroPro HPE Sealant",
+    "image": "images/products/pyropro-hpe-sealant.jpg",
     "size": "310 ml and 600 ml, anthracite",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/sealant/pyroprohpesealant/"
   },
@@ -131,6 +143,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "Silverseal Compound",
+    "image": "images/products/silverseal-compound.jpg",
     "size": "20 kg bag",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/mortar/silversealcompound/"
   },
@@ -140,6 +153,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "PipeBloc PCP Collar",
+    "image": "images/products/pipebloc-pcp-collar.jpg",
     "size": "Sized to the pipe",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpcpcollar/"
   },
@@ -149,6 +163,7 @@ export const PRODUCTS = [
     "group": "FSi Promat",
     "brand": "FSi Promat",
     "name": "PipeBloc PWP Wrap",
+    "image": "images/products/pipebloc-pwp-wrap.jpg",
     "size": "40 mm wide, sized to the pipe",
     "link": "https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/"
   },
@@ -156,9 +171,10 @@ export const PRODUCTS = [
     "id": "tool-gun-310",
     "category": "tools",
     "group": "Sealant guns",
-    "brand": "Cox",
-    "name": "PowerFlow Combi 310 ml gun",
-    "size": "Takes: 310 ml cartridges",
+    "brand": "No Nonsense",
+    "name": "Premium sealant gun",
+    "image": "images/products/tool-gun-premium.jpg",
+    "size": "Takes: Standard 310 ml cartridges",
     "link": ""
   },
   {
@@ -167,6 +183,7 @@ export const PRODUCTS = [
     "group": "Sealant guns",
     "brand": "Cox",
     "name": "Ultraflow 600 ml sausage gun",
+    "image": "images/products/tool-gun-600.svg",
     "size": "Takes: 600 ml sausages and 310 ml cartridges",
     "link": ""
   },
@@ -176,6 +193,7 @@ export const PRODUCTS = [
     "group": "Sealant guns",
     "brand": "Milwaukee",
     "name": "M12 cordless sealant gun",
+    "image": "images/products/tool-gun-battery.svg",
     "size": "Takes: 310 ml or 400 ml (barrel version 600 ml)",
     "link": ""
   },
@@ -185,6 +203,7 @@ export const PRODUCTS = [
     "group": "Sealant guns",
     "brand": "Cramer",
     "name": "Fugi sealant finishing kit",
+    "image": "images/products/tool-finishing.svg",
     "size": "Set: Five profiles",
     "link": ""
   },
@@ -194,6 +213,7 @@ export const PRODUCTS = [
     "group": "Cutting",
     "brand": "Bahco",
     "name": "Insulation saw, 22 inch",
+    "image": "images/products/tool-batt-saw.svg",
     "size": "Blade: 560 mm, 7 TPI",
     "link": ""
   },
@@ -203,6 +223,7 @@ export const PRODUCTS = [
     "group": "Cutting",
     "brand": "Stanley",
     "name": "FatMax retractable knife with blades",
+    "image": "images/products/tool-knife.svg",
     "size": "Blades: Pack of 50 heavy-duty",
     "link": ""
   },
@@ -212,6 +233,7 @@ export const PRODUCTS = [
     "group": "Cutting",
     "brand": "Various",
     "name": "Hole saw set for batt and board",
+    "image": "images/products/tool-hole-saw.svg",
     "size": "Sizes: 32 to 152 mm",
     "link": ""
   },
@@ -221,6 +243,7 @@ export const PRODUCTS = [
     "group": "Mixing and application",
     "brand": "Various",
     "name": "Compound mixing paddle, M14",
+    "image": "images/products/tool-paddle.svg",
     "size": "Fitting: M14, for a paddle mixer or SDS drill with adaptor",
     "link": ""
   },
@@ -230,6 +253,7 @@ export const PRODUCTS = [
     "group": "Mixing and application",
     "brand": "Gorilla Tub",
     "name": "Flexible mixing tub, 26 L",
+    "image": "images/products/tool-tub.svg",
     "size": "Capacity: 26 litres",
     "link": ""
   },
@@ -239,6 +263,7 @@ export const PRODUCTS = [
     "group": "Mixing and application",
     "brand": "Marshalltown",
     "name": "Margin trowel, 150 mm",
+    "image": "images/products/tool-trowel.svg",
     "size": "Blade: 150 × 50 mm",
     "link": ""
   },
@@ -248,6 +273,7 @@ export const PRODUCTS = [
     "group": "Mixing and application",
     "brand": "Various",
     "name": "Closed-cell backer rod",
+    "image": "images/products/tool-backer-rod.svg",
     "size": "Sizes: 10, 15, 20 and 25 mm",
     "link": ""
   },
@@ -257,6 +283,7 @@ export const PRODUCTS = [
     "group": "Marking and inspection",
     "brand": "Elcometer",
     "name": "Wet film comb, 25 to 2000 µm",
+    "image": "images/products/tool-wet-film.svg",
     "size": "Range: 25 to 2000 microns",
     "link": ""
   },
@@ -266,6 +293,7 @@ export const PRODUCTS = [
     "group": "Marking and inspection",
     "brand": "Elcometer",
     "name": "Dry film thickness gauge",
+    "image": "images/products/tool-dft-gauge.svg",
     "size": "Reads: Ferrous and non-ferrous, 0 to 1500 µm",
     "link": ""
   },
@@ -275,6 +303,7 @@ export const PRODUCTS = [
     "group": "Marking and inspection",
     "brand": "Various",
     "name": "Firestop identification labels",
+    "image": "images/products/tool-labels.svg",
     "size": "Pack: Roll of 100",
     "link": ""
   },
@@ -284,6 +313,7 @@ export const PRODUCTS = [
     "group": "Marking and inspection",
     "brand": "Various",
     "name": "Rechargeable LED head torch",
+    "image": "images/products/tool-torch.svg",
     "size": "Output: Around 600 lumens",
     "link": ""
   },
@@ -293,6 +323,7 @@ export const PRODUCTS = [
     "group": "Marking and inspection",
     "brand": "Stanley",
     "name": "Tape measure, 8 m",
+    "image": "images/products/tool-tape.svg",
     "size": "Length: 8 m, 32 mm blade",
     "link": ""
   },
@@ -302,6 +333,7 @@ export const PRODUCTS = [
     "group": "Respiratory",
     "brand": "3M",
     "name": "Aura FFP3 respirators, box of 10",
+    "image": "images/products/ppe-ffp3.svg",
     "size": "Standard: EN 149 FFP3",
     "link": ""
   },
@@ -311,6 +343,7 @@ export const PRODUCTS = [
     "group": "Respiratory",
     "brand": "3M",
     "name": "Half-mask respirator with P3 filters",
+    "image": "images/products/ppe-half-mask.svg",
     "size": "Filters: P3 R particulate; A2P3 for solvent-based coatings",
     "link": ""
   },
@@ -320,6 +353,7 @@ export const PRODUCTS = [
     "group": "Hands and eyes",
     "brand": "Various",
     "name": "Nitrile gloves, box of 100",
+    "image": "images/products/ppe-nitrile.svg",
     "size": "Pack: Box of 100",
     "link": ""
   },
@@ -329,6 +363,7 @@ export const PRODUCTS = [
     "group": "Hands and eyes",
     "brand": "Various",
     "name": "Cut-resistant work gloves",
+    "image": "images/products/ppe-cut-gloves.svg",
     "size": "Standard: EN 388, cut level D",
     "link": ""
   },
@@ -338,6 +373,7 @@ export const PRODUCTS = [
     "group": "Hands and eyes",
     "brand": "Bollé",
     "name": "Safety glasses, clear anti-fog",
+    "image": "images/products/ppe-glasses.svg",
     "size": "Standard: EN 166",
     "link": ""
   },
@@ -347,6 +383,7 @@ export const PRODUCTS = [
     "group": "Hands and eyes",
     "brand": "Various",
     "name": "Disposable earplugs, box of 200 pairs",
+    "image": "images/products/ppe-earplugs.svg",
     "size": "Attenuation: SNR 37 dB",
     "link": ""
   },
@@ -356,6 +393,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "JSP",
     "name": "Vented safety helmet",
+    "image": "images/products/ppe-hard-hat.svg",
     "size": "Standard: EN 397",
     "link": ""
   },
@@ -365,6 +403,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "Various",
     "name": "Hi-vis vest, class 2",
+    "image": "images/products/ppe-hi-vis.svg",
     "size": "Standard: EN ISO 20471 class 2",
     "link": ""
   },
@@ -374,6 +413,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "Snickers",
     "name": "Stretch work trousers with knee pad pockets",
+    "image": "images/products/ppe-trousers.svg",
     "size": "Sizes: Waist 30 to 44, three leg lengths",
     "link": ""
   },
@@ -383,6 +423,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "Snickers",
     "name": "Knee pads for pocket trousers",
+    "image": "images/products/ppe-knee-pads.svg",
     "size": "Standard: EN 14404 type 2",
     "link": ""
   },
@@ -392,6 +433,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "Various",
     "name": "S3 safety boots",
+    "image": "images/products/ppe-boots.svg",
     "size": "Standard: EN ISO 20345 S3",
     "link": ""
   },
@@ -401,6 +443,7 @@ export const PRODUCTS = [
     "group": "Clothing",
     "brand": "DuPont",
     "name": "Tyvek disposable coveralls",
+    "image": "images/products/ppe-coverall.svg",
     "size": "Standard: Type 5 and 6",
     "link": ""
   }

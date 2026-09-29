@@ -36,6 +36,20 @@ const STYLE = `
   .chip[aria-pressed="true"] { background: var(--panel); color: var(--ink); border-color: var(--steel); }
   .card h4.grp { margin: 6px 0 0; font: 500 11px/1 inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
   table.items td .size { font-size: 12.5px; color: var(--muted); }
+  table.items td.pic { width: 56px; padding-right: 0; }
+  .thumb { display: block; width: 48px; height: 48px; object-fit: contain; padding: 3px; border-radius: 3px; background: #f3f4f6; border: 1px solid var(--line); cursor: zoom-in; }
+  .thumb:hover { outline: 2px solid var(--steel); }
+  .cost { display: grid; gap: 2px; margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
+  .cost b { color: var(--ink); font-weight: 600; } .cost .sell { color: var(--ok); font-weight: 600; } .cost .from { color: var(--faint); }
+  .markup { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .markup input { width: 58px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font: 500 14px/1 inherit; text-align: center; }
+  .totals { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 8px 10px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+  .totals b { color: var(--ink); } .totals .sell { color: var(--ok); font-weight: 600; }
+  .zoom { border: 0; padding: 0; background: transparent; max-width: min(92vw, 560px); }
+  .zoom::backdrop { background: rgba(5,6,8,.8); }
+  .zoom figure { margin: 0; border-radius: 6px; overflow: hidden; background: #f3f4f6; }
+  .zoom img { display: block; width: 100%; max-height: 70vh; object-fit: contain; padding: 20px; }
+  .zoom figcaption { padding: 12px 16px; background: var(--panel); color: var(--ink); font-weight: 600; }
   table.items td a.mf { display: inline-block; margin-top: 3px; font-size: 12px; color: var(--steel); }
   .card .actions .del { margin-left: auto; }
   .list { display: grid; gap: 12px; }
@@ -93,7 +107,7 @@ export const LOGIN_HTML = `<!doctype html>
   .box .btn { justify-content: center; padding: 12px; font-size: 14px; }
   .hidden { display: none; }
 </style></head>
-<body><div class="login"><form class="box" method="post" action="/desk/login">
+<body><div class="login"><form class="box" method="post" action="{{base}}/login">
   <div class="brand">${MARK}<h1>Order desk</h1></div>
   <p>Messages and trade orders from limitlessinnovations.co.uk.</p>
   <p class="err">{{error}}</p>
@@ -113,7 +127,7 @@ export const DESK_HTML = `<!doctype html>
 <header class="top">
   ${MARK}
   <div><h1>Order desk</h1><div class="sub">Messages and trade orders from the website</div></div>
-  <div class="right"><span id="alerts"></span><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="/desk/logout">Log out</a></div>
+  <div class="right"><label class="markup" title="Your mark-up on the price you pay (inc VAT); used for the sell-at prices on orders and suppliers">Mark-up <input type="number" id="markup" min="0" max="100" step="1" value="15">%</label><span id="alerts"></span><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="{{base}}/logout">Log out</a></div>
 </header>
 <main class="wrap">
   <div class="tabs" role="tablist">
@@ -123,6 +137,7 @@ export const DESK_HTML = `<!doctype html>
   </div>
   <div class="filters" id="filtersInbox"><label><input type="checkbox" id="showAll"> Show archived and closed too</label><button class="btn sm danger" id="purge" type="button">Clear archived messages</button><span class="spacer"></span><span id="updated"></span></div>
   <div class="filters" id="filtersSup" hidden><div class="chips" id="rangeChips"></div><input type="search" id="supSearch" placeholder="Find a product, brand or group" autocomplete="off"></div>
+  <dialog class="zoom" id="zoom"><figure><img id="zoomImg" alt=""><figcaption id="zoomCap"></figcaption></figure></dialog>
   <div class="list" id="list"></div>
   <div class="note" id="note" hidden></div>
 </main>
@@ -130,6 +145,25 @@ export const DESK_HTML = `<!doctype html>
 (() => {
   const $ = s => document.querySelector(s);
   let tab = 'messages', suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 };
+  const VAT = 0.2;
+  let markup = 15; try { markup = Math.min(100, Math.max(0, Number(localStorage.getItem('li-markup')) || 15)); } catch (e) {}
+  const gbp = n => '£' + n.toFixed(2);
+  /* Cheapest priced supplier for a product, as what you pay (inc VAT: not VAT registered, so it's the full price) and what to sell at. */
+  function cost(pid) {
+    let best = null;
+    (suppliers[pid] || []).forEach(x => {
+      const m = /£\s*([0-9]+(?:\.[0-9]+)?)/.exec(x.price || ''); if (!m) return;
+      const n = parseFloat(m[1]); const inc = /inc\.? ?VAT/i.test(x.price) ? n : (/ex\.? ?VAT/i.test(x.price) ? n * (1 + VAT) : n * (1 + VAT));
+      if (!best || inc < best.inc) best = { inc, supplier: x.supplier, note: (x.price || '').replace(/^£[^ ]+\s*/, '') };
+    });
+    if (!best) return null;
+    best.sell = best.inc * (1 + markup / 100);
+    return best;
+  }
+  const costHTML = (pid, qty) => { const c = cost(pid); if (!c) return ''; const q = qty || 1;
+    return '<div class="cost"><span>You pay <b>' + gbp(c.inc * q) + '</b> inc VAT' + (q > 1 ? ' (' + gbp(c.inc) + ' each)' : '') + ' <span class="from">· ' + esc(c.supplier) + (c.note ? ', ' + esc(c.note) : '') + '</span></span><span>Sell at <span class="sell">' + gbp(c.sell * q) + '</span> (+' + markup + '%)</span></div>'; };
+  const thumb = p => p && p.image ? '<img class="thumb" src="/' + esc(p.image) + '" alt="" data-zoom="' + esc(p.image) + '" data-cap="' + esc((p.brand ? p.brand + ' ' : '') + p.name) + '">' : '';
+  const productOf = pid => cat.products.find(p => p.id === pid);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const when = iso => { const d = new Date(iso + (iso.endsWith('Z') ? '' : 'Z')); const m = (Date.now() - d) / 60000;
     if (m < 1) return 'just now'; if (m < 60) return Math.round(m) + ' min ago'; if (m < 36 * 60) return Math.round(m / 60) + ' h ago';
@@ -162,14 +196,16 @@ export const DESK_HTML = `<!doctype html>
   }
   function orderCard(o) {
     const opts = ['new', 'confirmed', 'ordered', 'dispatched', 'closed', 'cancelled'].map(s => '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + ({ new: 'New', confirmed: 'Confirmed with customer', ordered: 'Ordered from supplier', dispatched: 'Dispatched', closed: 'Closed', cancelled: 'Cancelled' })[s] + '</option>').join('');
-    const rows = (o.items || []).map(i => '<tr><td class="qty">' + i.qty + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + '</td><td><div class="sup">' + supplierLinks(i.product_id) + '</div></td></tr>').join('');
+    const rows = (o.items || []).map(i => '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + i.qty + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + '</td><td><div class="sup">' + supplierLinks(i.product_id) + '</div>' + costHTML(i.product_id, i.qty) + '</td></tr>').join('');
+    let pay = 0, sell = 0, priced = 0; (o.items || []).forEach(i => { const c = cost(i.product_id); if (c) { pay += c.inc * i.qty; sell += c.sell * i.qty; priced++; } });
+    const totals = priced ? '<div class="totals"><span>Cost to you <b>' + gbp(pay) + '</b> inc VAT</span><span>Charge the customer <span class="sell">' + gbp(sell) + '</span> at +' + markup + '%</span><span>Margin <b>' + gbp(sell - pay) + '</b></span>' + (priced < (o.items || []).length ? '<span style="color:var(--faint)">' + ((o.items || []).length - priced) + ' line(s) without a price yet</span>' : '') + '</div>' : '';
     const lines = (o.items || []).map(i => i.qty + ' x ' + (i.brand ? i.brand + ' ' : '') + i.name).join('\\n');
     const subject = encodeURIComponent('Your trade order ' + o.ref + ' - Limitless Innovations');
     const body = encodeURIComponent('Hello ' + o.contact + ',\\n\\nThank you for your order enquiry ' + o.ref + '.\\n\\n' + lines + '\\n\\n');
     return '<article class="card ' + (o.status === 'new' ? 'new' : '') + '" data-id="' + o.id + '">' +
       '<div class="head"><h3>' + esc(o.company) + '</h3><span class="when">' + esc(o.ref) + ' · ' + when(o.created_at) + '</span><span class="status">' + esc(o.status) + '</span></div>' +
       '<div class="meta"><span><b>Contact</b>' + esc(o.contact) + '</span><span><b>Email</b><a href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a></span>' + (o.phone ? '<span><b>Phone</b><a href="tel:' + esc(o.phone.replace(/\\s+/g, '')) + '">' + esc(o.phone) + '</a></span>' : '') + (o.vat ? '<span><b>VAT</b>' + esc(o.vat) + '</span>' : '') + (o.postcode ? '<span><b>Deliver to</b>' + esc(o.postcode) + '</span>' : '') + '</div>' +
-      '<table class="items"><thead><tr><th>Qty</th><th>Item</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<table class="items"><thead><tr><th></th><th>Qty</th><th>Item</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table>' + totals +
       (o.notes ? '<div class="body">' + esc(o.notes) + '</div>' : '') +
       '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select>' +
       '<button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="order ' + esc(o.ref) + ' from ' + esc(o.company) + '">Delete</button></div></article>';
@@ -187,10 +223,10 @@ export const DESK_HTML = `<!doctype html>
       if (!inRange.length) return;
       out.push('<section class="card"><div class="head"><h3>' + esc(r.name) + '</h3><span class="when">' + inRange.length + (inRange.length === 1 ? ' product' : ' products') + '</span></div>');
       [...new Set(inRange.map(p => p.group))].forEach(g => {
-        out.push('<h4 class="grp">' + esc(g) + '</h4><table class="items"><thead><tr><th>Product</th><th>Buy from</th></tr></thead><tbody>');
+        out.push('<h4 class="grp">' + esc(g) + '</h4><table class="items"><thead><tr><th></th><th>Product</th><th>Buy from</th></tr></thead><tbody>');
         inRange.filter(p => p.group === g).forEach(p => {
-          out.push('<tr><td><span style="color:var(--muted)">' + esc(p.brand) + '</span> <b>' + esc(p.name) + '</b>' + (p.size ? '<div class="size">' + esc(p.size) + '</div>' : '') +
-            (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener">Manufacturer page</a>' : '') + '</td><td><div class="sup">' + supplierLinks(p.id) + '</div></td></tr>');
+          out.push('<tr><td class="pic">' + thumb(p) + '</td><td><span style="color:var(--muted)">' + esc(p.brand) + '</span> <b>' + esc(p.name) + '</b>' + (p.size ? '<div class="size">' + esc(p.size) + '</div>' : '') +
+            (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener">Manufacturer page</a>' : '') + '</td><td><div class="sup">' + supplierLinks(p.id) + '</div>' + costHTML(p.id) + '</td></tr>');
         });
         out.push('</tbody></table>');
       });
@@ -211,7 +247,7 @@ export const DESK_HTML = `<!doctype html>
     const note = $('#note');
     if (!inbox) {
       renderSuppliers();
-      note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets; "search" links open that supplier\\'s results for the product. Links live in worker/suppliers.js.';
+      note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets; "search" links open that supplier\\'s results for the product. "You pay" adds 20% VAT to ex-VAT prices (you are not VAT registered, so that is your real cost); "Sell at" adds your mark-up, set at the top. Links live in worker/suppliers.js.';
       return;
     }
     const rows = tab === 'messages' ? data.messages : data.orders;
@@ -248,6 +284,13 @@ export const DESK_HTML = `<!doctype html>
     range = c.dataset.range; document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', String(x === c))); renderSuppliers();
   });
   $('#supSearch').addEventListener('input', renderSuppliers);
+  $('#markup').value = markup;
+  $('#markup').addEventListener('input', () => { markup = Math.min(100, Math.max(0, Number($('#markup').value) || 0)); try { localStorage.setItem('li-markup', String(markup)); } catch (e) {} load(); });
+  document.addEventListener('click', e => {
+    const t = e.target.closest('img[data-zoom]'); const z = $('#zoom');
+    if (t) { $('#zoomImg').src = '/' + t.dataset.zoom; $('#zoomCap').textContent = t.dataset.cap; z.showModal(); return; }
+    if (e.target === z) z.close();
+  });
   load();
   setInterval(load, 60000);
 })();
