@@ -1,0 +1,67 @@
+LIMITLESS INNOVATIONS WEBSITE - MESSAGES, ORDERS AND THE ORDER DESK
+
+WHAT IT DOES
+- The "Message us" form on the website sends the visitor's name, email, phone
+  and message to your own database (Cloudflare D1, in your Cloudflare account).
+  Nothing goes through the visitor's email program.
+- The trade basket sends orders the same way.
+- You read and manage both at   https://limitlessinnovations.co.uk/desk
+  (password protected). Each message has "Reply by email" and "Call" buttons;
+  each order has a status (new, confirmed, ordered from supplier, dispatched,
+  closed) and, per item, links to suppliers.
+- Optionally, every new message and order also emails you.
+
+------------------------------------------------------------------------
+STEP 1 - SET THE DESK PASSWORD (2 minutes, required)
+------------------------------------------------------------------------
+1. Cloudflare dashboard > Workers & Pages > limitless-innovations-website
+   > Settings > Variables and Secrets > Add.
+2. Type: Secret.  Name: DESK_PASSWORD.  Value: a long password of your choice
+   (12+ characters). Save.
+3. Open https://limitlessinnovations.co.uk/desk and log in with it.
+   Changing the password later logs every device out.
+
+------------------------------------------------------------------------
+STEP 2 - EMAIL ALERTS (5 minutes, optional but recommended)
+------------------------------------------------------------------------
+Without this step the desk still records everything; you just have to open
+it to see new items. With it, each message and order also arrives at
+info@limitlessinnovations.co.uk.
+
+1. Create a free account at https://resend.com using info@limitlessinnovations.co.uk
+   (the free plan sends 100 emails a day, 3,000 a month; alerts use one each).
+2. In Resend: API Keys > Create > name it "Website alerts" > copy the key.
+3. Cloudflare > the Worker > Settings > Variables and Secrets > Add:
+   Type: Secret.  Name: RESEND_API_KEY.  Value: the key. Save.
+4. Send yourself a test message from the website form. The alert arrives from
+   "Limitless website <onboarding@resend.dev>". On the free plan that sender
+   can only email the address the Resend account was created with, which is
+   why step 1 uses info@limitlessinnovations.co.uk.
+
+   To send from your own domain instead (so alerts come from
+   website@limitlessinnovations.co.uk and can go to any address):
+   Resend > Domains > Add limitlessinnovations.co.uk > it shows DNS records >
+   add them in Cloudflare > DNS (they are TXT/MX records for a subdomain and
+   do not affect your normal email). Then in the Worker's variables add
+   Text  ALERT_FROM = Limitless website <website@limitlessinnovations.co.uk>
+
+To change where alerts go: Worker > Settings > Variables > ALERT_TO.
+
+------------------------------------------------------------------------
+PROTECTION ALREADY BUILT IN
+------------------------------------------------------------------------
+- Only the website itself can post to the form and basket endpoints.
+- A hidden field and a minimum time on the form catch bots.
+- Each visitor is limited to 6 messages and 4 orders an hour; the desk
+  allows 8 login attempts per 15 minutes.
+- The desk pages are never indexed by search engines and the session cookie
+  is HTTP-only, secure and expires after 30 days.
+
+------------------------------------------------------------------------
+IF SOMETHING LOOKS WRONG
+------------------------------------------------------------------------
+- Form says "couldn't send": the Worker may not have finished deploying
+  (wait a minute) or the D1 binding is missing (wrangler.jsonc). The form
+  then offers the visitor a normal email link instead, so nothing is lost.
+- Desk says "not switched on": DESK_PASSWORD is missing (step 1).
+- No alert emails: check RESEND_API_KEY and, in Resend, the Logs page.

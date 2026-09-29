@@ -165,6 +165,66 @@
   .menu-mail { justify-self: start; display: inline-flex; align-items: center; min-height: 40px; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
   @media (max-height: 640px) { .menu-links a { min-height: 44px; font-size: 20px; } }
 
+  /* ---------- Message us: a sheet with the contact form (opened from the bar, the hero, the
+     mid-page strip, the chat assistant and the contact section). Sends to /api/messages. ---------- */
+  .msg-sheet {
+    position: fixed; inset: 0 0 0 auto; width: min(460px, 100vw); height: 100vh; height: 100dvh; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0; border-left: 1px solid var(--line-strong); color: var(--ink); background: #0d1115; overflow: hidden;
+  }
+  .msg-sheet[open] { display: flex; flex-direction: column; animation: menuIn 0.4s var(--ease-out); }
+  .msg-sheet::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  .msg-head {
+    flex: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 64px; box-sizing: content-box;
+    padding: env(safe-area-inset-top, 0px) max(12px, env(safe-area-inset-right, 0px)) 0 22px; border-bottom: 1px solid var(--line);
+  }
+  .msg-head h2 { font-size: 20px; }
+  .msg-sheet .msg-close { display: grid; font-size: 24px; line-height: 1; }
+  .msg-body { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 18px max(22px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) 22px; display: grid; gap: 16px; align-content: start; }
+  .msg-intro { color: var(--muted); font-size: 14.5px; }
+  .msg-form { display: grid; gap: 12px; }
+  .msg-form .f { display: grid; gap: 5px; }
+  .msg-form .f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .msg-form label { font-size: 12.5px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-2); }
+  .msg-form label small { font-weight: 400; color: var(--faint); letter-spacing: 0; }
+  .msg-form input, .msg-form textarea {
+    width: 100%; min-height: 46px; padding: 11px 12px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--ground); color: var(--ink);
+    font: 400 16px/1.4 var(--body); resize: vertical;
+  }
+  .msg-form textarea { min-height: 120px; }
+  .msg-form input:focus, .msg-form textarea:focus { outline: 2px solid var(--steel); outline-offset: -1px; }
+  .msg-form .err { min-height: 1.2em; font-size: 12.5px; color: #f0a08a; }
+  .msg-form .err:empty { display: none; }
+  .msg-form .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .msg-form .row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .msg-form .btn { min-height: 48px; padding-inline: 22px; }
+  .msg-form .btn[disabled] { opacity: 0.6; cursor: wait; }
+  .msg-form .fine { font-size: 12.5px; color: var(--faint); }
+  .msg-form .fine a { color: var(--steel); }
+  .msg-done { display: grid; gap: 10px; padding: 18px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); }
+  .msg-done h3 { font-size: 20px; }
+  .msg-done p { color: var(--ink-2); font-size: 15px; }
+  .msg-done .tick { width: 36px; height: 36px; color: var(--accent); }
+  .msg-fail { padding: 14px 16px; border: 1px solid rgba(240, 160, 138, 0.4); border-radius: 6px; background: rgba(240, 160, 138, 0.06); font-size: 14.5px; color: var(--ink-2); }
+  .msg-fail a { color: var(--ink); }
+  .msg-alt { font-size: 13.5px; color: var(--muted); }
+  .msg-alt a { color: var(--steel); }
+  @media (max-width: 640px) { .msg-sheet { width: 100vw; border-left: 0; } .msg-form .f2 { grid-template-columns: 1fr; } }
+
+  /* Mid-page strip: a short invitation to get in touch, between the projects and the gallery */
+  .talk { padding-block: clamp(40px, 6vh, 64px); }
+  .talk .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 40px; padding-block: clamp(24px, 3vw, 36px); border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); }
+  .talk h2 { font-size: clamp(22px, 2.2vw, 30px); max-width: 22ch; }
+  .talk p { margin-top: 6px; color: var(--muted); max-width: 52ch; }
+  .talk .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  .talk .row .alt { font-size: 14px; color: var(--muted); }
+  .talk .row .alt a { color: var(--steel); }
+
+  /* The contact section carries the same form inline */
+  .sec .contact { align-items: flex-start; }
+  .contact-form { flex: 1 1 380px; max-width: 560px; }
+  .contact-form .msg-form { padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line-strong); border-radius: 6px; background: var(--panel); }
+  .contact-actions { margin-top: 18px; }
+
   /* ---------- Hero: centred mark, name, one line, the services and one button; the
      certification logos sit in a quiet strip along the bottom edge ---------- */
   .hero { position: relative; height: clamp(600px, 92vh, 1000px); height: clamp(600px, 92svh, 1000px); }   /* vh line: fallback for browsers without svh (iOS < 15.4) */
@@ -967,11 +1027,14 @@
   .lcw-open .lcw-launch { transform: scale(0.001); pointer-events: none; }
   /* Little tip beside the button, once, on desktop */
   .lcw-tip {
-    position: absolute; right: 72px; bottom: 14px; padding: 8px 12px; border-radius: 4px; white-space: nowrap; pointer-events: none;
-    background: var(--c-bg); color: var(--c-ink); font-size: 13px; box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--c-line2);
+    position: absolute; right: 72px; bottom: 10px; padding: 10px 14px; border: 0; border-radius: 4px; white-space: nowrap; pointer-events: none; cursor: pointer;
+    background: var(--c-bg); color: var(--c-ink); font: 500 13.5px/1.2 var(--body); box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--c-line2);
     opacity: 0; transform: translateX(8px); transition: opacity 0.3s ease, transform 0.4s var(--ease-out);
   }
-  .lcw-tip.lcw-tip-on { opacity: 1; transform: none; }
+  .lcw-tip::after { content: ""; position: absolute; right: -6px; top: 50%; width: 10px; height: 10px; margin-top: -5px; background: var(--c-bg); box-shadow: 1px -1px 0 0 var(--c-line2); transform: rotate(45deg); }
+  .lcw-tip b { color: var(--c-visor); font-weight: 600; }
+  .lcw-tip.lcw-tip-on { opacity: 1; transform: none; pointer-events: auto; }
+  .lcw-tip:hover { box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--c-accent); }
   /* The panel */
   .lcw-panel {
     position: absolute; right: 0; bottom: 0; width: min(390px, calc(100vw - 36px)); height: min(600px, calc(100vh - 40px)); height: min(600px, calc(100dvh - 40px));
@@ -1023,7 +1086,7 @@
   .lcw-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 0 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: var(--c-bg2); font-size: 11px; color: var(--c-faint); }
   .lcw-clear { padding: 6px 0; border: 0; background: none; color: var(--c-muted); font-size: 11px; text-decoration: underline; cursor: pointer; }
   @media (max-width: 640px) {
-    .lcw-tip { display: none; }
+    .lcw-tip { right: 68px; bottom: 12px; font-size: 13px; }
     .lcw-panel {
       position: fixed; inset: auto 0 0 0; top: var(--lcw-top, 0px); width: 100vw; height: var(--lcw-h, 100vh); height: var(--lcw-h, 100dvh); max-height: none; border-radius: 0; animation: lcwUp 0.4s var(--ease-out);
     }
@@ -1088,7 +1151,7 @@
       <a class="opt" href="#clients">Clients</a>
       <a href="#certification">Certification</a>
     </div>
-    <a class="btn nav-quote" href="#contact">Get a quote</a>
+    <a class="btn nav-quote" href="#contact" data-open-msg>Get a quote</a>
     <!-- Shown on phones and tablets only (see .nav-icon) -->
     <button class="nav-icon nav-basket" type="button" data-open-basket aria-haspopup="dialog" aria-label="Open trade basket, 0 items">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.5 1.5 0 0 0 1.5 1.2h8.4a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
@@ -1122,10 +1185,24 @@
       </ol>
     </nav>
     <div class="menu-foot">
-      <a class="btn" href="#contact">Get a quote</a>
+      <a class="btn" href="#contact" data-open-msg>Get a quote</a>
       <button class="btn-ghost" type="button" data-open-basket aria-haspopup="dialog">Trade basket <span class="basket-count" data-basket-count>0</span></button>
       <a class="menu-mail" id="menuMail" href="#contact"></a>
     </div>
+  </div>
+</dialog>
+
+<!-- Message us: the contact form in a sheet. The form fields are built by script from a template
+     shared with the contact section (see "Message us" in the page script). -->
+<dialog class="msg-sheet" id="msgSheet" aria-labelledby="msgTitle">
+  <div class="msg-head">
+    <h2 id="msgTitle">Message us</h2>
+    <button class="nav-icon msg-close" type="button" aria-label="Close">&times;</button>
+  </div>
+  <div class="msg-body">
+    <p class="msg-intro">Tell us what needs protecting: a site address, the kind of work, drawings if you have them. We reply by email, usually the same working day.</p>
+    <div class="msg-slot" data-source="panel"></div>
+    <p class="msg-alt">Prefer email? <a class="mail-link" href="#contact">write to us directly</a>.</p>
   </div>
 </dialog>
 
@@ -1136,7 +1213,7 @@
       <p class="hero-name">Limitless Innovations</p>
       <h1>Certified passive fire protection for London's buildings.</h1>
       <p class="hero-svc">Firestopping <i>/</i> Fire-rated walls <i>/</i> Cavity barriers <i>/</i> Intumescent coatings</p>
-      <a class="btn hero-btn" href="#contact">Get a quote</a>
+      <a class="btn hero-btn" href="#contact" data-open-msg>Get a quote</a>
     </div>
   </div>
   <div class="hero-certs" aria-label="Third-party certification">
@@ -1187,6 +1264,19 @@
         <div class="side-list" id="pvList" aria-label="Projects"></div>
         <div id="pvStage"></div>
         <aside class="info" id="pvInfo" aria-live="polite"></aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tone-dark talk" id="talk" aria-labelledby="talkTitle">
+    <div class="wrap">
+      <div>
+        <h2 id="talkTitle">Have a job coming up?</h2>
+        <p>Tell us what needs protecting and we'll come back with a survey date and a quote.</p>
+      </div>
+      <div class="row">
+        <button class="btn" type="button" data-open-msg>Message us</button>
+        <span class="alt">or email <a class="mail-link" href="#contact"></a></span>
       </div>
     </div>
   </section>
@@ -1321,7 +1411,7 @@
           <h2>Certified work</h2>
           <p>Our installers and our work are independently audited and certified. Copies of our certificates are available on request.</p>
         </div>
-        <a class="btn-ghost" href="#contact">Ask for our certificates</a>
+        <a class="btn-ghost" href="#contact" data-open-msg data-msg-text="Please could you send copies of your certificates.">Ask for our certificates</a>
       </div>
       <div class="band-wrap veil" id="bandWrap">
         <div class="band" id="band"><div class="band-track" id="bandTrack"></div></div>
@@ -1343,11 +1433,14 @@
           <h2>Tell us what needs protecting.</h2>
           <p>Send drawings, photos or a site address. We'll arrange a survey and come back with a quote.</p>
         </div>
-        <div class="contact-actions veil">
-          <span class="email" id="emailText"></span>
-          <div class="row">
-            <button class="btn" type="button" id="copyEmail">Copy email</button>
-            <a class="btn-ghost" id="mailLink" target="_blank" rel="noopener">Email us</a>
+        <div class="contact-form veil">
+          <div class="msg-slot" data-source="contact"></div>
+          <div class="contact-actions">
+            <span class="email" id="emailText"></span>
+            <div class="row">
+              <button class="btn-ghost" type="button" id="copyEmail">Copy email</button>
+              <a class="btn-ghost" id="mailLink" target="_blank" rel="noopener">Email us</a>
+            </div>
           </div>
         </div>
       </div>
@@ -1414,6 +1507,7 @@ const FB750 = ["Intumescent coated batt", "Nullifire FB750, seen on this job"];
 
 const SITE = {
   email: "info@limitlessinnovations.co.uk",
+  api: "",   // where the message form and basket send to: "" means this same website (see worker/index.js)
   // UK company websites must show the registered name, number, where registered and registered office.
   address: "Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE",
   companyNumber: "14380770",
@@ -3170,6 +3264,112 @@ const SITE = {
     logoBand($('#clientBandWrap'), C);
   })();
 
+
+  /* ---------- Message us: the contact form, in the sheet and in the contact section.
+     Sends to the site's own /api/messages (see worker/index.js). If that can't be reached
+     (offline copy, or the server is being updated) it offers a normal email instead. ---------- */
+  const Msg = (() => {
+    const sheet = $('#msgSheet');
+    const API = (SITE.api || '') + '/api/messages';
+    const EMAIL = SITE.email || '';
+    $$('.mail-link').forEach(a => { a.href = EMAIL ? 'mailto:' + EMAIL : '#contact'; if (!a.textContent.trim()) a.textContent = EMAIL; });
+    const formHTML = src => {
+      const id = k => `msg-${src}-${k}`;
+      return `
+      <form class="msg-form" novalidate data-source="${src}">
+        <div class="f2">
+          <div class="f"><label for="${id('name')}">Your name</label><input id="${id('name')}" name="name" type="text" autocomplete="name" required maxlength="80"><span class="err" data-for="name"></span></div>
+          <div class="f"><label for="${id('phone')}">Phone <small>(optional)</small></label><input id="${id('phone')}" name="phone" type="tel" autocomplete="tel" maxlength="40"><span class="err" data-for="phone"></span></div>
+        </div>
+        <div class="f"><label for="${id('email')}">Email</label><input id="${id('email')}" name="email" type="email" autocomplete="email" required maxlength="120" inputmode="email"><span class="err" data-for="email"></span></div>
+        <div class="f"><label for="${id('message')}">What needs protecting?</label><textarea id="${id('message')}" name="message" required maxlength="4000" placeholder="Site address, type of building, the work you need and when."></textarea><span class="err" data-for="message"></span></div>
+        <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="t" value="${Date.now()}">
+        <div class="row"><button class="btn" type="submit">Send message</button><span class="fine">Goes straight to our team. No mailing lists.</span></div>
+        <div class="err" data-for="form" role="alert"></div>
+      </form>`;
+    };
+    $$('.msg-slot').forEach(slot => { slot.innerHTML = formHTML(slot.dataset.source); });
+
+    const showErrors = (form, errs) => {
+      $$('.err', form).forEach(e => { e.textContent = errs[e.dataset.for] || ''; });
+      $$('input, textarea', form).forEach(i => i.setAttribute('aria-invalid', errs[i.name] ? 'true' : 'false'));
+      const first = Object.keys(errs).find(k => k !== 'form');
+      if (first) { const f = $(`[name="${first}"]`, form); if (f) f.focus({ preventScroll: false }); }
+    };
+    const mailto = d => `mailto:${EMAIL}?subject=${encodeURIComponent('Enquiry from ' + (d.name || 'the website'))}&body=${encodeURIComponent((d.message || '') + '\n\n' + (d.name || '') + (d.phone ? '\n' + d.phone : ''))}`;
+    const done = (form, d) => {
+      const slot = form.parentElement;
+      slot.innerHTML = `<div class="msg-done" tabindex="-1">
+        <svg class="tick" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 18.5l5 5 9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h3>Thanks, ${esc(d.name.trim().split(/\s+/)[0])}. We've got it.</h3>
+        <p>We'll reply to <strong>${esc(d.email.trim())}</strong>, usually the same working day. If it's urgent, call or email us and mention your message.</p>
+        <div><button class="btn-ghost" type="button" data-msg-again>Send another message</button></div>
+      </div>`;
+      $('.msg-done', slot).focus();
+    };
+    const fail = (form, d) => {
+      let box = $('.msg-fail', form.parentElement);
+      if (!box) { box = document.createElement('div'); box.className = 'msg-fail'; form.parentElement.append(box); }
+      box.innerHTML = `We couldn't send that just now. <a href="${mailto(d)}">Send it as an email instead</a> (your message is copied into it), or try again in a minute.`;
+    };
+    async function submit(form) {
+      const btn = $('button[type="submit"]', form);
+      const d = Object.fromEntries(new FormData(form).entries());
+      d.page = document.title.split('|')[0].trim() + ' ' + (location.hash || '#top'); d.source = form.dataset.source;
+      const errs = {};
+      if ((d.name || '').trim().length < 2) errs.name = 'Please add your name.';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((d.email || '').trim())) errs.email = 'Please check the email address.';
+      if ((d.message || '').trim().length < 5) errs.message = 'Please tell us a little about the job.';
+      showErrors(form, errs);
+      if (Object.keys(errs).length) return;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        const r = await fetch(API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(d) });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok) { done(form, d); return; }
+        if (r.status === 422 && j.fields) showErrors(form, j.fields);
+        else if (r.status === 429) showErrors(form, { form: 'Too many messages from this connection for now. Please email us instead.' });
+        else if (r.status === 400 && j.error === 'too-fast') showErrors(form, { form: 'That was quick. Please check the message and send again.' });
+        else fail(form, d);
+      } catch (_) { fail(form, d); }
+      finally { btn.disabled = false; btn.textContent = 'Send message'; }
+    }
+    document.addEventListener('submit', e => { const f = e.target.closest('.msg-form'); if (f) { e.preventDefault(); submit(f); } });
+    document.addEventListener('click', e => {
+      const again = e.target.closest('[data-msg-again]');
+      if (again) { const slot = again.closest('.msg-slot'); slot.innerHTML = formHTML(slot.dataset.source); $('input', slot).focus(); return; }
+      const t = e.target.closest('[data-open-msg]');
+      if (!t || !sheet || typeof sheet.showModal !== 'function') return;   // very old browsers: the link just scrolls to Contact
+      e.preventDefault();
+      open(t.dataset.msgText);
+    });
+
+    const isOpen = () => sheet && sheet.hasAttribute('open');
+    function open(prefill) {
+      if (!sheet || isOpen()) return;
+      if (Menu.isOpen()) Menu.close(false);
+      if (window.LimitlessChat) window.LimitlessChat.close(false);
+      lockPage('msg', true);
+      sheet.showModal();
+      const slot = $('.msg-slot', sheet);
+      if (!$('.msg-form', slot)) slot.innerHTML = formHTML('panel');
+      const ta = $('textarea', slot);
+      if (prefill && ta && !ta.value) ta.value = prefill;
+      const first = $('input[name="name"]', slot);
+      if (first) setTimeout(() => first.focus({ preventScroll: true }), 60);
+    }
+    function close() { if (isOpen()) sheet.close(); }
+    if (sheet) {
+      sheet.addEventListener('close', () => lockPage('msg', false));
+      sheet.addEventListener('cancel', e => { e.preventDefault(); close(); });
+      sheet.addEventListener('click', e => { if (e.target === sheet) close(); });
+      $('.msg-close', sheet).addEventListener('click', close);
+    }
+    return { open, close, isOpen };
+  })();
+  window.LimitlessMsg = Msg;
+
   /* ---------- Contact ---------- */
   $('#emailText').textContent = SITE.email;
   $('#footEmail').textContent = SITE.email;
@@ -3924,7 +4124,7 @@ const SITE = {
     <button class="lcw-launch" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="lcw-panel" aria-label="Open chat with ${escAttr(NAME)}, the site assistant">
       ${badge('lcw-badge-launch')}
     </button>
-    <span class="lcw-tip" aria-hidden="true">Questions? Ask ${escAttr(NAME)}</span>
+    <button class="lcw-tip" type="button" tabindex="-1" aria-hidden="true">Need a quote? <b>Message us</b></button>
     <section class="lcw-panel" id="lcw-panel" role="dialog" aria-labelledby="lcw-title" aria-describedby="lcw-sub" hidden tabindex="-1">
       <header class="lcw-head">
         ${badge('lcw-badge-head')}
@@ -4177,7 +4377,12 @@ const SITE = {
 
   launch.addEventListener('click', () => (isOpen ? close() : open()));
   $('.lcw-close').addEventListener('click', () => close());
-  $('.lcw-quote').addEventListener('click', e => { const h = e.currentTarget.getAttribute('href'); if (h.startsWith('#')) { e.preventDefault(); goTo(h); } });
+  $('.lcw-quote').addEventListener('click', e => {
+    e.preventDefault();
+    if (window.LimitlessMsg) { close(false); window.LimitlessMsg.open(); return; }
+    const h = e.currentTarget.getAttribute('href'); if (h.startsWith('#')) goTo(h);
+  });
+  tip.addEventListener('click', () => { tip.classList.remove('lcw-tip-on'); if (window.LimitlessMsg) window.LimitlessMsg.open(); else open(); });
   $('.lcw-clear').addEventListener('click', () => { if (busy) return; msgs = []; save(); renderAll(); input.focus({ preventScroll: true }); });
   log.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]');
@@ -4201,25 +4406,28 @@ const SITE = {
     }
   });
 
-  /* ---------- Attention nudge: once per visit, after 8 seconds ---------- */
+  /* ---------- Attention nudge: once per visit, after 10 seconds or once the visitor has
+     scrolled a screen down, whichever comes first. The tip opens the message form. ---------- */
+  let nudged = false;
   function nudge() {
+    if (nudged) return;
+    nudged = true;
     let seen = false;
     try { seen = sessionStorage.getItem(STORE + '-seen') === '1'; } catch (_) {}
-    if (seen || isOpen || reduceMQ.matches || msgs.length) return;
+    if (seen || isOpen || msgs.length || (window.LimitlessMsg && window.LimitlessMsg.isOpen())) return;
     try { sessionStorage.setItem(STORE + '-seen', '1'); } catch (_) {}
-    launch.classList.add('lcw-nudge');
-    setTimeout(() => launch.classList.remove('lcw-nudge'), 1800);
-    if (fineMQ.matches && !sheetMQ.matches) {
-      tip.classList.add('lcw-tip-on');
-      setTimeout(() => tip.classList.remove('lcw-tip-on'), 4200);
-    }
+    if (!reduceMQ.matches) { launch.classList.add('lcw-nudge'); setTimeout(() => launch.classList.remove('lcw-nudge'), 1800); }
+    tip.classList.add('lcw-tip-on');
+    setTimeout(() => tip.classList.remove('lcw-tip-on'), 10000);
   }
+  const onScroll = () => { if (window.scrollY > Math.min(innerHeight, 600)) { removeEventListener('scroll', onScroll); nudge(); } };
 
   /* ---------- Start ---------- */
   function start() {
     document.body.append(root);
     load();
-    setTimeout(nudge, 8000);
+    setTimeout(nudge, 10000);
+    addEventListener('scroll', onScroll, { passive: true });
   }
   if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
 

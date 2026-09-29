@@ -1,12 +1,14 @@
-# Files in this folder that must NOT be published on the website.
+# Files in this folder that must NOT be published as part of the website.
 .git
 .gitignore
 .wrangler
 .assetsignore
 wrangler.jsonc
 node_modules
+worker
 CNAME
 .nojekyll
 HOW-TO-PUT-ONLINE.txt
 SHOP-SETUP-NOTES.txt
+DESK-SETUP.txt
 chat-assistant

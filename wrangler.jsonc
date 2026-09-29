@@ -1,12 +1,23 @@
 {
-  // Cloudflare Workers settings for the website. The site is plain files ("static assets"):
-  // there is no build step and no server code. See .assetsignore for what is NOT published.
+  // Cloudflare Workers settings for the website.
+  // The site is plain files ("static assets"); worker/index.js runs only for /api/* and /desk.
+  // Secrets (DESK_PASSWORD, RESEND_API_KEY) are set in the Cloudflare dashboard: see DESK-SETUP.txt.
   "name": "limitless-innovations-website",
+  "main": "worker/index.js",
   "compatibility_date": "2026-09-26",
   "assets": {
     "directory": ".",
+    "binding": "ASSETS",
     "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash"
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/api/*", "/desk", "/desk/*"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "limitless-site", "database_id": "effbb949-93b8-4aec-a370-620796ec302c" }
+  ],
+  "vars": {
+    "ALERT_TO": "info@limitlessinnovations.co.uk",
+    "SITE_URL": "https://limitlessinnovations.co.uk"
   },
   "observability": { "enabled": true }
 }
