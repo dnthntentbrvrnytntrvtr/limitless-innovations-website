@@ -157,6 +157,7 @@ export const DESK_HTML = `<!doctype html>
   @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
   table.items td.num { text-align: right; white-space: nowrap; } table.items th.num { text-align: right; }
   table.items td .quote { color: var(--ok); font-weight: 600; }
+  input.price-in { width: 84px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel-2); color: var(--ink); font: 500 13px/1.2 inherit; text-align: right; }
   .sum { display: grid; gap: 6px; font-size: 13.5px; } .sum div { display: flex; justify-content: space-between; gap: 12px; } .sum b { font-weight: 600; } .sum .big b { font-size: 18px; color: var(--ok); } .sum .dim { color: var(--muted); }
   .empty-mini { font-size: 13px; color: var(--faint); }
 </style></head>
@@ -182,7 +183,7 @@ export const DESK_HTML = `<!doctype html>
 (() => {
   const $ = s => document.querySelector(s);
   const BASE = '{{base}}';
-  let tab = 'messages', open = null, suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 };
+  let tab = 'messages', open = null, suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 }, stripeOn = false;
   const VAT = 0.2;
   let markup = 20; try { const v = localStorage.getItem('li-markup'); if (v !== null) markup = Math.min(100, Math.max(0, Number(v) || 0)); } catch (e) {}
   const gbp = n => '£' + n.toFixed(2);
@@ -246,7 +247,7 @@ export const DESK_HTML = `<!doctype html>
     const opts = Object.keys(ORD_STATUS).map(s => '<option value="' + s + '"' + (o.status === s ? ' selected' : '') + '>' + ORD_STATUS[s] + '</option>').join('');
     const $m = orderMoney(o);
     const rows = (o.items || []).map(i => '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + i.qty + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + (i.size ? '<div class="size">' + esc(i.size) + '</div>' : '') + '</td>' +
-      '<td class="num">' + (i.price ? '<span class="quote">' + gbp(i.price * i.qty) + '</span><div class="size">' + gbp(i.price) + ' each</div>' : '<span class="empty-mini">on request</span>') + '</td>' +
+      '<td class="num">' + (i.price ? '<span class="quote">' + gbp(i.price * i.qty) + '</span>' : '<span class="empty-mini">on request</span>') + '<div class="size"><label>£<input class="price-in" type="number" min="0" step="0.01" value="' + (i.price ? i.price.toFixed(2) : '') + '" data-item="' + i.id + '" placeholder="each" title="Price each; change it and press Enter or click away"></label></div></td>' +
       '<td><div class="sup">' + supplierLinks(i.product_id) + '</div>' + costHTML(i.product_id, i.qty) + '</td></tr>').join('');
     const lines = (o.items || []).map(i => i.qty + ' x ' + (i.brand ? i.brand + ' ' : '') + i.name + (i.price ? ' @ £' + i.price.toFixed(2) : '')).join('\\n');
     const subject = encodeURIComponent('Your order ' + o.ref + ' - Limitless Innovations');
@@ -255,7 +256,9 @@ export const DESK_HTML = `<!doctype html>
       '<div class="two"><div class="panel"><h4>Customer</h4><div class="kv"><span><b>Contact</b>' + esc(o.contact) + '</span><span><b>Email</b><a href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a></span>' + (o.phone ? '<span><b>Phone</b><a href="' + tel(o.phone) + '">' + esc(o.phone) + '</a></span>' : '') + (o.vat ? '<span><b>VAT number</b>' + esc(o.vat) + '</span>' : '') + (o.postcode ? '<span><b>Deliver to</b>' + esc(o.postcode) + '</span>' : '') + '</div>' + (o.notes ? '<h4>Customer notes</h4><div class="body">' + esc(o.notes) + '</div>' : '') + '</div>' +
       '<div class="panel"><h4>Money</h4><div class="sum"><div class="big"><span>Quoted to customer</span><b>' + gbp($m.quoted) + '</b></div>' + ($m.unq ? '<div class="dim"><span>' + $m.unq + ' item' + ($m.unq === 1 ? '' : 's') + ' priced on request</span><span>add when confirmed</span></div>' : '') +
       '<div><span>Cost to you (inc VAT)</span><b>' + gbp($m.pay) + '</b></div><div><span>At today\\'s mark-up (+' + markup + '%)</span><b>' + gbp($m.sell) + '</b></div><div><span>Margin on quoted</span><b>' + gbp($m.quoted - $m.pay) + '</b></div>' + ($m.unp ? '<div class="dim"><span>' + $m.unp + ' line' + ($m.unp === 1 ? '' : 's') + ' without a supplier price</span></div>' : '') + '</div>' +
-      '<div class="actions"><a class="btn acc sm" href="' + BASE + '/invoice/' + o.id + '" target="_blank" rel="noopener">Invoice</a><a class="btn sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a></div></div></div>' +
+      (o.invoice_url ? '<div class="size">Stripe invoice sent · <a href="' + esc(o.invoice_url) + '" target="_blank" rel="noopener">open the pay page</a>' + (o.paid_at ? ' · paid ' + when(o.paid_at) : ' · not paid yet') + '</div>' : '') +
+      '<div class="actions"><button class="btn acc sm" type="button" data-stripe="' + o.id + '"' + (stripeOn ? '' : ' disabled title="Connect Stripe first (STRIPE_SECRET_KEY, see DESK-SETUP.txt)"') + '>' + (o.invoice_url ? 'Resend Stripe invoice' : 'Send Stripe invoice') + '</button><a class="btn sm" href="' + BASE + '/invoice/' + o.id + '" target="_blank" rel="noopener">Print invoice</a><a class="btn sm" href="mailto:' + esc(o.email) + '?subject=' + subject + '&body=' + body + '">Email the customer</a></div>' +
+      (stripeOn ? '' : '<div class="size">Stripe not connected: print the invoice and email it, then set the order to Paid yourself when the money arrives.</div>') + '</div></div>' +
       '<div class="panel"><h4>Items</h4><table class="items"><thead><tr><th></th><th>Qty</th><th>Item</th><th class="num">Quoted</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<div class="panel"><div class="actions"><label style="font-size:13px;color:var(--muted)">Status</label><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select><button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="order ' + esc(o.ref) + ' from ' + esc(o.company) + '">Delete</button></div></div></div>';
   }
@@ -293,7 +296,7 @@ export const DESK_HTML = `<!doctype html>
     $('#nMsg').textContent = sum.newMessages; $('#nMsg').classList.toggle('zero', !sum.newMessages);
     $('#nOrd').textContent = sum.newOrders; $('#nOrd').classList.toggle('zero', !sum.newOrders);
     document.title = ((sum.newMessages + sum.newOrders) ? '(' + (sum.newMessages + sum.newOrders) + ') ' : '') + 'Order desk · Limitless Innovations';
-    $('#alerts').textContent = sum.alerts ? 'Email alerts on' : 'Email alerts off';
+    $('#alerts').textContent = (sum.alerts ? 'Email alerts on' : 'Email alerts off') + (sum.stripe ? ' · Stripe on' : ''); stripeOn = !!sum.stripe;
     counts = { archived: sum.archived || 0, closed: sum.closed || 0 };
     const note = $('#note');
     if (!inbox) { renderSuppliers(); note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets. "You pay" adds 20% VAT to ex-VAT prices (not VAT registered, so that is your real cost); "Sell at" adds your mark-up from the top bar. The shop shows these sell prices at +20%.'; return; }
@@ -329,7 +332,17 @@ export const DESK_HTML = `<!doctype html>
     if (!confirm('Delete ' + b.dataset.label + '? This cannot be undone.')) return;
     b.disabled = true; await postJSON(b.dataset.del + '/' + b.dataset.id + '/delete'); go('#' + b.dataset.del);
   });
-  $('#list').addEventListener('change', async e => { const s = e.target.closest('select[data-kind]'); if (!s) return; await postJSON(s.dataset.kind + '/' + s.dataset.id, { status: s.value }); load(); });
+  $('#list').addEventListener('change', async e => {
+    const pi = e.target.closest('input.price-in'); if (pi) { await postJSON('items/' + pi.dataset.item + '/price', { price: pi.value === '' ? null : Number(pi.value) }); load(); return; }
+    const s = e.target.closest('select[data-kind]'); if (!s) return; await postJSON(s.dataset.kind + '/' + s.dataset.id, { status: s.value }); load(); });
+  $('#list').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-stripe]'); if (!b) return;
+    if (!confirm('Send this order to the customer as a Stripe invoice with a pay-online link?')) return;
+    b.disabled = true; b.textContent = 'Sending…';
+    const r = await postJSON('orders/' + b.dataset.stripe + '/stripe');
+    if (!r.ok) alert(r.error || 'Stripe could not send the invoice.');
+    load();
+  });
   $('#purge').addEventListener('click', async () => {
     const what = tab === 'messages' ? 'all archived messages' : 'all closed and cancelled orders';
     if (!confirm('Delete ' + what + '? This cannot be undone.')) return;

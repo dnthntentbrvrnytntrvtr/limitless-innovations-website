@@ -47,6 +47,7 @@ async function api(request, env, ctx, url) {
   if (path.startsWith('/api/desk/')) return deskApi(request, env, url);
 
   if (request.method !== 'POST') return json({ ok: false, error: 'method' }, 405);
+  if (path === '/api/stripe/webhook') return stripeWebhook(request, env, ctx);   // Stripe calls this, so no same-site check
   if (!sameSite(request)) return json({ ok: false, error: 'origin' }, 403);
   if (!env.DB) return json({ ok: false, error: 'not-set-up' }, 503);
 
@@ -180,14 +181,14 @@ async function deskApi(request, env, url) {
       const o = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status = 'new'").first('n');
       const archived = await DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE status = 'archived'").first('n');
       const closed = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status IN ('closed','cancelled')").first('n');
-      return json({ ok: true, newMessages: m, newOrders: o, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO) });
+      return json({ ok: true, newMessages: m, newOrders: o, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO), stripe: !!env.STRIPE_SECRET_KEY });
     }
     if (p[0] === 'messages' && p[1]) {
       const message = await DB.prepare('SELECT id, created_at, name, email, phone, message, page, source, status FROM messages WHERE id = ?').bind(parseInt(p[1], 10) || 0).first();
       return json({ ok: true, message: message || null });
     }
     if (p[0] === 'orders' && p[1]) {
-      const order = await DB.prepare('SELECT id, ref, created_at, company, contact, email, phone, vat, postcode, notes, status FROM orders WHERE id = ?').bind(parseInt(p[1], 10) || 0).first();
+      const order = await DB.prepare('SELECT id, ref, created_at, company, contact, email, phone, vat, postcode, notes, status, stripe_invoice_id, invoice_url, paid_at FROM orders WHERE id = ?').bind(parseInt(p[1], 10) || 0).first();
       if (order) order.items = (await DB.prepare('SELECT id, order_id, product_id, brand, name, size, qty, price, status FROM order_items WHERE order_id = ? ORDER BY id').bind(order.id).all()).results;
       return json({ ok: true, order: order || null });
     }
@@ -232,6 +233,16 @@ async function deskApi(request, env, url) {
     const id = parseInt(p[1], 10);
     if (!id || !['messages', 'orders', 'items'].includes(p[0])) return json({ ok: false, error: 'invalid' }, 400);
 
+    // Change a quoted price on an order line: POST /api/desk/items/<id>/price {price} (null clears it)
+    if (p[0] === 'items' && p[2] === 'price') {
+      const price = body.price === null || body.price === '' ? null : Math.round(Number(body.price) * 100) / 100;
+      if (price !== null && !(price >= 0 && price < 100000)) return json({ ok: false, error: 'invalid' }, 400);
+      await DB.prepare('UPDATE order_items SET price = ? WHERE id = ?').bind(price, id).run();
+      return json({ ok: true });
+    }
+    // Send the order as a Stripe invoice: POST /api/desk/orders/<id>/stripe
+    if (p[0] === 'orders' && p[2] === 'stripe') return stripeInvoice(id, env);
+
     // Delete one message or one order: POST /api/desk/<messages|orders>/<id>/delete
     if (p[2] === 'delete') {
       if (p[0] === 'messages') await DB.prepare('DELETE FROM messages WHERE id = ?').bind(id).run();
@@ -253,6 +264,70 @@ async function deskApi(request, env, url) {
     return json({ ok: true });
   }
   return json({ ok: false, error: 'method' }, 405);
+}
+
+/* ==========================================================================
+   Stripe: the customer pays first. "Send Stripe invoice" on the desk creates an invoice in
+   Stripe from the quoted prices and emails it to the customer with a pay-online link.
+   When they pay, Stripe calls /api/stripe/webhook and the order becomes "paid".
+   Needs the STRIPE_SECRET_KEY secret (a restricted key) and STRIPE_WEBHOOK_SECRET. See DESK-SETUP.txt.
+   ========================================================================== */
+async function stripe(env, path, params) {
+  const body = new URLSearchParams();
+  const add = (k, v) => { if (v === undefined || v === null) return; if (typeof v === 'object') Object.entries(v).forEach(([kk, vv]) => add(k + '[' + kk + ']', vv)); else body.append(k, String(v)); };
+  Object.entries(params || {}).forEach(([k, v]) => add(k, v));
+  const r = await fetch('https://api.stripe.com/v1/' + path, { method: 'POST', headers: { authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'content-type': 'application/x-www-form-urlencoded' }, body });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((j.error && j.error.message) || ('Stripe error ' + r.status));
+  return j;
+}
+
+async function stripeInvoice(orderId, env) {
+  if (!env.STRIPE_SECRET_KEY) return json({ ok: false, error: 'Stripe is not connected yet: add the STRIPE_SECRET_KEY secret (see DESK-SETUP.txt).' }, 503);
+  const o = await env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(orderId).first();
+  if (!o) return json({ ok: false, error: 'not-found' }, 404);
+  const items = (await env.DB.prepare('SELECT * FROM order_items WHERE order_id = ? ORDER BY id').bind(orderId).all()).results;
+  if (!items.length) return json({ ok: false, error: 'The order has no lines.' }, 400);
+  const missing = items.filter(i => !(i.price > 0));
+  if (missing.length) return json({ ok: false, error: 'Every line needs a price first: ' + missing.map(i => i.name).join(', ') }, 400);
+  if (o.stripe_invoice_id && o.invoice_url) return json({ ok: true, url: o.invoice_url, already: true });
+  try {
+    const found = await stripe(env, 'customers/search', { query: "email:'" + o.email.replace(/'/g, '') + "'" }).catch(() => null);
+    const customer = (found && found.data && found.data[0]) || await stripe(env, 'customers', { email: o.email, name: o.company, description: o.contact, phone: o.phone || undefined, metadata: { contact: o.contact, vat: o.vat || '', postcode: o.postcode || '' } });
+    const inv = await stripe(env, 'invoices', { customer: customer.id, collection_method: 'send_invoice', days_until_due: 7, currency: 'gbp', description: 'Order ' + o.ref + '. Goods are ordered once payment is received. Not VAT registered: no VAT is charged.', metadata: { order_id: String(o.id), ref: o.ref }, footer: 'Limitless Innovations Ltd, company no. ' + (env.COMPANY_NUMBER || '14380770') + '. Payment before goods are ordered.' });
+    for (const i of items) {
+      await stripe(env, 'invoiceitems', { customer: customer.id, invoice: inv.id, currency: 'gbp', quantity: i.qty, unit_amount: Math.round(i.price * 100), description: (i.brand ? i.brand + ' ' : '') + i.name + (i.size ? ' (' + i.size + ')' : '') });
+    }
+    await stripe(env, 'invoices/' + inv.id + '/finalize', {});
+    const sent = await stripe(env, 'invoices/' + inv.id + '/send', {});
+    await env.DB.prepare("UPDATE orders SET stripe_invoice_id = ?, invoice_url = ?, status = CASE WHEN status IN ('new','confirmed') THEN 'invoiced' ELSE status END WHERE id = ?").bind(inv.id, sent.hosted_invoice_url || null, o.id).run();
+    return json({ ok: true, url: sent.hosted_invoice_url || null });
+  } catch (err) {
+    return json({ ok: false, error: String(err.message || err) }, 502);
+  }
+}
+
+async function stripeWebhook(request, env, ctx) {
+  if (!env.STRIPE_WEBHOOK_SECRET) return json({ ok: false, error: 'no-secret' }, 503);
+  const raw = await request.text();
+  const sig = request.headers.get('stripe-signature') || '';
+  const parts = Object.fromEntries(sig.split(',').map(x => x.split('=')));
+  if (!parts.t || !parts.v1) return json({ ok: false, error: 'signature' }, 400);
+  if (Math.abs(Date.now() / 1000 - Number(parts.t)) > 600) return json({ ok: false, error: 'stale' }, 400);
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.STRIPE_WEBHOOK_SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(parts.t + '.' + raw)));
+  const expected = [...mac].map(b => b.toString(16).padStart(2, '0')).join('');
+  if (!(await safeEqual(expected, parts.v1))) return json({ ok: false, error: 'signature' }, 400);
+  let ev; try { ev = JSON.parse(raw); } catch (e) { return json({ ok: false, error: 'json' }, 400); }
+  if (ev.type === 'invoice.paid' || ev.type === 'invoice.payment_succeeded') {
+    const inv = ev.data && ev.data.object; const id = inv && inv.metadata && inv.metadata.order_id;
+    if (id) {
+      await env.DB.prepare("UPDATE orders SET status = 'paid', paid_at = strftime('%Y-%m-%dT%H:%M:%SZ','now') WHERE id = ? AND status IN ('new','confirmed','invoiced')").bind(Number(id)).run();
+      const o = await env.DB.prepare('SELECT ref, company, email FROM orders WHERE id = ?').bind(Number(id)).first();
+      if (o) ctx.waitUntil(alert(env, `Paid: order ${o.ref} from ${o.company}`, `${o.company} has paid invoice ${o.ref} (£${((inv.amount_paid || 0) / 100).toFixed(2)}). You can order from the supplier now.\n\nOpen the desk: ${env.SITE_URL || ''}${deskBase(env)}#orders/${id}`));
+    }
+  }
+  return json({ ok: true });
 }
 
 /* ==========================================================================

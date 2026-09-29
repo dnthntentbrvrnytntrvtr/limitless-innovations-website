@@ -92,6 +92,37 @@ info@limitlessinnovations.co.uk.
 To change where alerts go: Worker > Settings > Variables > ALERT_TO.
 
 ------------------------------------------------------------------------
+STEP 3 - GET PAID FIRST WITH STRIPE (10 minutes, once your Stripe account is approved)
+------------------------------------------------------------------------
+How it works once connected: open an order on the desk, check every line
+has a price (you can type a price on any line), press "Send Stripe invoice".
+Stripe emails the customer a proper invoice with a pay-online link (card,
+Apple/Google Pay or bank transfer). When they pay, the order turns to
+"Paid" on the desk by itself and you get an alert email; then you order
+from the supplier. Stripe pays the money into your bank account, minus its
+fee (about 1.5% + 20p per UK card payment; nothing monthly).
+Your bank details are never on the website: only on invoices you send.
+
+1. In Stripe: Developers > API keys > "Create restricted key".
+   Name: Website desk.  Give it these permissions, "Write":
+     Customers, Invoices, Products, Prices, Webhook Endpoints.
+   (Everything else: None.)  Create, then copy the key (starts rk_live_).
+2. Cloudflare > the Worker > Settings > Variables and Secrets > Add >
+   Type: Secret.  Name: STRIPE_SECRET_KEY.  Value: that key. Save.
+3. Tell Stripe where to report payments:
+   Stripe > Developers > Webhooks > Add endpoint.
+   URL:  https://limitlessinnovations.co.uk/api/stripe/webhook
+   Events: invoice.paid   (that one is enough).  Add endpoint, then copy
+   the "Signing secret" (starts whsec_).
+4. Cloudflare > the Worker > Variables and Secrets > Add >
+   Type: Secret.  Name: STRIPE_WEBHOOK_SECRET.  Value: that secret. Save.
+5. The desk header shows "Stripe on". Send yourself a test order from the
+   website and press "Send Stripe invoice" to see the customer's email.
+
+While Stripe is not connected, the "Print invoice" button gives you a PDF
+to email, and you set the order to Paid yourself when the money arrives.
+
+------------------------------------------------------------------------
 PROTECTION ALREADY BUILT IN
 ------------------------------------------------------------------------
 - The form and the basket only accept submissions that come from
