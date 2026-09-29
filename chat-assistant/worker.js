@@ -63,7 +63,7 @@ const PER_IP_PER_MINUTE = 10;    // simple guard against one visitor spamming
 const KNOWLEDGE = `## Company
 Limitless Innovations Ltd, a passive fire protection contractor working across London.
 Website summary: Limitless Innovations Ltd installs and repairs firestopping, fire-rated walls, cavity barriers and intumescent coatings across London. Third-party certified passive fire protection.
-Email: limitlessinnovationsltd@info.co.uk (the contact route shown on the website).
+Email: info@limitlessinnovations.co.uk (the contact route shown on the website).
 Phone: no phone number is published on the website. Ask people to email.
 Registered in England and Wales.
 Registered office: Unit A, 82 James Carter Road, Mildenhall, Suffolk, IP28 7DE
@@ -88,7 +88,7 @@ You get a photo record of every seal, referenced to the drawings, ready for hand
 Contact
 Tell us what needs protecting.
 Send drawings, photos or a site address. We'll arrange a survey and come back with a quote.
-Quotes: send drawings, photos or a site address by email to limitlessinnovationsltd@info.co.uk; the team arranges a survey and replies with a quote.
+Quotes: send drawings, photos or a site address by email to info@limitlessinnovations.co.uk; the team arranges a survey and replies with a quote.
 
 ## Certifications (#certification)
 Certification
@@ -176,7 +176,7 @@ Fire ratings below are product-level examples from the manufacturers; the tested
 - FSi Promat PipeBloc PWP Wrap: Pre-formed intumescent pipe wrap in a polyethylene sleeve. Uses: Plastic pipes through batt, mortar or sealant seals. Fire: Up to 240 minutes. Size: 40 mm wide, sized to the pipe. Manufacturer page: https://www.promat.com/en-gb/construction/products-systems/products/fire-stopping/collarwrap/pipeblocpwpwrap/
 
 ## How to order trade products
-Open Products, choose a product and quantity, press "Add to basket", then open the "Trade basket", enter company name, contact name, work email (and optionally phone, VAT number, delivery postcode and notes) and press "Prepare trade order email". This opens an email to limitlessinnovationsltd@info.co.uk with the order enquiry.
+Open Products, choose a product and quantity, press "Add to basket", then open the "Trade basket", enter company name, contact name, work email (and optionally phone, VAT number, delivery postcode and notes) and press "Prepare trade order email". This opens an email to info@limitlessinnovations.co.uk with the order enquiry.
 Tell us what your company needs. We’ll confirm pricing, stock and delivery before the order is accepted.
 No payment is taken here. We’ll reply with a trade quotation and delivery details.
 No online payment. Trade prices, stock, availability and delivery are confirmed by the team in reply to each enquiry. The basket is saved in the visitor's own browser only.
