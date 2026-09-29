@@ -936,7 +936,11 @@
   .contact-actions .row { display: flex; flex-wrap: wrap; gap: 10px; }
   .foot { background: rgba(6, 8, 11, 0.92); border-top: 1px solid var(--line); margin-top: clamp(24px, 4vh, 48px); }
   .foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 24px 36px; font-size: 13px; color: var(--muted); }
-  .foot .group { display: flex; flex-wrap: wrap; gap: 6px 24px; }
+  .foot .group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 24px; }
+  /* Everything on one line with the company name, same white as the name */
+  .foot .wrap { align-items: center; color: var(--ink); }
+  .foot .brand { display: inline-flex; align-items: center; }
+  @media (min-width: 700px) { .foot .wrap { padding-right: 96px; } }   /* clear of the round chat button */
   .foot .wrap { padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)); }
 
   /* ---------- Phones: a shorter page. Materials and parts lists fold away, the shop shows six products
@@ -2129,7 +2133,7 @@ const SITE = {
       what: "Digital gauge that measures cured coating thickness on steel, for the handover record.",
       specs: [["Reads", "Ferrous and non-ferrous, 0 to 1500 µm"], ["Use", "Signing off intumescent coating thickness"], ["Why", "Stores readings by member"]] },
     { id: "tool-labels", category: "tools", group: "Marking and inspection", brand: "Limitless Innovations", name: "Firestop identification labels, 100 × 60 mm", image: "images/products/tool-labels.jpg",
-      what: "Our own write-on labels: installer, date, system, fire rating and seal number, with a QR code to our contact page.",
+      what: "Our own write-on labels for fire, acoustic, or fire and acoustic seals: installer, date, system, rating and seal number, with a QR code to our contact page.",
       specs: [["Pack", "Roll of 100"], ["Use", "Every penetration seal, so the inspection can find it"], ["Why", "Survives dust and damp"]] },
     { id: "tool-torch", category: "tools", group: "Marking and inspection", brand: "Nebo", name: "Rechargeable LED head torch", image: "images/products/tool-torch.jpg",
       what: "Bright, hands-free light for risers and ceiling voids where seals get photographed.",
