@@ -1,5 +1,6 @@
 /* Supplier links per product id, shown on the order desk only (this folder is never published as part of the site).
-   Prices are what the supplier page showed on the 'checked' date, ex VAT unless stated. Edit freely. */
+   Materials: checked product pages with the price seen on the 'checked' date, ex VAT unless stated.
+   Tools and workwear: search links at the usual trade suppliers until a preferred brand and page is chosen. Edit freely. */
 export default {
   "_about": "Supplier links shown on the order desk (/desk), per product id. Prices are what the supplier page showed on the date in 'checked', ex VAT unless stated. Edit freely; the desk reads this file as it is.",
   "fb750-intubatt": [
@@ -185,6 +186,566 @@ export default {
       "supplier": "Fire Seals Direct",
       "url": "https://www.firesealsdirect.co.uk/passive-fire-protection/fire-wraps-and-collars/fire-pipe-wraps/fsi-pipebloc-pwp-intumescent-pipe-wrap-110mm/",
       "price": "£5.28 ex VAT (110 mm)",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-gun-310": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Cox+PowerFlow+Combi+310+ml+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Cox+PowerFlow+Combi+310+ml+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Cox+PowerFlow+Combi+310+ml+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-gun-600": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Cox+Ultraflow+600+ml+sausage+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Cox+Ultraflow+600+ml+sausage+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Cox+Ultraflow+600+ml+sausage+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-gun-battery": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Milwaukee+M12+cordless+sealant+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Milwaukee+M12+cordless+sealant+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Milwaukee+M12+cordless+sealant+gun",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-finishing": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Cramer+Fugi+sealant+finishing+kit",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Cramer+Fugi+sealant+finishing+kit",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Cramer+Fugi+sealant+finishing+kit",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-batt-saw": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Bahco+Insulation+saw%2C+22+inch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Bahco+Insulation+saw%2C+22+inch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Bahco+Insulation+saw%2C+22+inch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-knife": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Stanley+FatMax+retractable+knife+with+blades",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Stanley+FatMax+retractable+knife+with+blades",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Stanley+FatMax+retractable+knife+with+blades",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-hole-saw": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Hole+saw+set+for+batt+and+board",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Hole+saw+set+for+batt+and+board",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Hole+saw+set+for+batt+and+board",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-paddle": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Compound+mixing+paddle%2C+M14",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Compound+mixing+paddle%2C+M14",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Compound+mixing+paddle%2C+M14",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-tub": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Gorilla+Tub+Flexible+mixing+tub%2C+26+L",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Gorilla+Tub+Flexible+mixing+tub%2C+26+L",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Gorilla+Tub+Flexible+mixing+tub%2C+26+L",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-trowel": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Marshalltown+Margin+trowel%2C+150+mm",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Marshalltown+Margin+trowel%2C+150+mm",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Marshalltown+Margin+trowel%2C+150+mm",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-backer-rod": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Closed-cell+backer+rod",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Closed-cell+backer+rod",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Closed-cell+backer+rod",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-wet-film": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Elcometer+Wet+film+comb%2C+25+to+2000+%C2%B5m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-dft-gauge": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Elcometer+Dry+film+thickness+gauge",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Elcometer+Dry+film+thickness+gauge",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Elcometer+Dry+film+thickness+gauge",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-labels": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Firestop+identification+labels",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Firestop+identification+labels",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Firestop+identification+labels",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-torch": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Rechargeable+LED+head+torch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Rechargeable+LED+head+torch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Rechargeable+LED+head+torch",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "tool-tape": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Stanley+Tape+measure%2C+8+m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Stanley+Tape+measure%2C+8+m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Stanley+Tape+measure%2C+8+m",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-ffp3": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=3M+Aura+FFP3+respirators%2C+box+of+10",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=3M+Aura+FFP3+respirators%2C+box+of+10",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=3M+Aura+FFP3+respirators%2C+box+of+10",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-half-mask": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=3M+Half-mask+respirator+with+P3+filters",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=3M+Half-mask+respirator+with+P3+filters",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=3M+Half-mask+respirator+with+P3+filters",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-nitrile": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Nitrile+gloves%2C+box+of+100",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Nitrile+gloves%2C+box+of+100",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Nitrile+gloves%2C+box+of+100",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-cut-gloves": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Cut-resistant+work+gloves",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Cut-resistant+work+gloves",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Cut-resistant+work+gloves",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-glasses": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Boll%C3%A9+Safety+glasses%2C+clear+anti-fog",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Boll%C3%A9+Safety+glasses%2C+clear+anti-fog",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Boll%C3%A9+Safety+glasses%2C+clear+anti-fog",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-earplugs": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Disposable+earplugs%2C+box+of+200+pairs",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Disposable+earplugs%2C+box+of+200+pairs",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Disposable+earplugs%2C+box+of+200+pairs",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-hard-hat": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=JSP+Vented+safety+helmet",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=JSP+Vented+safety+helmet",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=JSP+Vented+safety+helmet",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-hi-vis": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Hi-vis+vest%2C+class+2",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Hi-vis+vest%2C+class+2",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Hi-vis+vest%2C+class+2",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-trousers": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Snickers+Stretch+work+trousers+with+knee+pad+pockets",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Snickers+Stretch+work+trousers+with+knee+pad+pockets",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Snickers+Stretch+work+trousers+with+knee+pad+pockets",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-knee-pads": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=Snickers+Knee+pads+for+pocket+trousers",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=Snickers+Knee+pads+for+pocket+trousers",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=Snickers+Knee+pads+for+pocket+trousers",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-boots": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=S3+safety+boots",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=S3+safety+boots",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=S3+safety+boots",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    }
+  ],
+  "ppe-coverall": [
+    {
+      "supplier": "Screwfix (search)",
+      "url": "https://www.screwfix.com/search?search=DuPont+Tyvek+disposable+coveralls",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Toolstation (search)",
+      "url": "https://www.toolstation.com/search?q=DuPont+Tyvek+disposable+coveralls",
+      "price": "see results",
+      "checked": "29 Sep 2026"
+    },
+    {
+      "supplier": "Amazon Business (search)",
+      "url": "https://www.amazon.co.uk/s?k=DuPont+Tyvek+disposable+coveralls",
+      "price": "see results",
       "checked": "29 Sep 2026"
     }
   ]
