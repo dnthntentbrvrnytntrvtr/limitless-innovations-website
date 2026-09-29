@@ -16,6 +16,8 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "limitless-site", "database_id": "effbb949-93b8-4aec-a370-620796ec302c" }
   ],
+  // keep_vars: settings you add in the Cloudflare dashboard (BANK_DETAILS, ALERT_FROM...) survive each deploy
+  "keep_vars": true,
   "vars": {
     "ALERT_TO": "info@limitlessinnovations.co.uk",
     "SITE_URL": "https://limitlessinnovations.co.uk"

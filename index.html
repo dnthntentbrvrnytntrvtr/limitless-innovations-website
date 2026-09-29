@@ -2,9 +2,11 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<title>Limitless Innovations | Passive Fire Protection</title>
+<title>Passive Fire Protection London: Firestopping and Intumescent Coatings | Limitless Innovations</title>
+<link rel="canonical" href="https://limitlessinnovations.co.uk/">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Limitless Innovations Ltd installs and repairs firestopping, fire-rated walls, cavity barriers and intumescent coatings across London. Third-party certified passive fire protection.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Limitless Innovations Ltd", "alternateName": "Limitless Innovations", "url": "https://limitlessinnovations.co.uk/", "image": "https://limitlessinnovations.co.uk/images/hero.jpg", "logo": "https://limitlessinnovations.co.uk/favicon.svg", "email": "info@limitlessinnovations.co.uk", "description": "Third-party certified passive fire protection contractor: firestopping, fire-rated walls, cavity barriers and intumescent coatings to structural steel, installed and repaired across London.", "areaServed": [{"@type": "City", "name": "London"}, {"@type": "AdministrativeArea", "name": "Greater London"}, {"@type": "AdministrativeArea", "name": "South East England"}], "knowsAbout": ["Firestopping", "Passive fire protection", "Fire-rated walls", "Cavity barriers", "Intumescent coatings", "Fire stopping surveys", "Penetration seals"], "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Passive fire protection services", "itemListElement": [{"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Firestopping installation and repair"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Fire-rated walls and partitions"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Cavity barriers"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Intumescent coatings to structural steel"}}, {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Passive fire protection surveys"}}]}, "identifier": {"@type": "PropertyValue", "name": "Companies House number", "value": "14380770"}, "foundingDate": "2022-09-27"}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
@@ -1205,7 +1207,10 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Limitless Innovations | Passive Fire Protection">
 <meta property="og:description" content="Firestopping, fire-rated walls, cavity barriers and intumescent coatings across London.">
-<meta property="og:image" content="images/hero.jpg">
+<meta property="og:image" content="https://limitlessinnovations.co.uk/images/hero.jpg">
+<meta property="og:url" content="https://limitlessinnovations.co.uk/">
+<meta property="og:site_name" content="Limitless Innovations">
+<meta property="og:locale" content="en_GB">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 </head>
 <body>
@@ -3648,6 +3653,8 @@ const SITE = {
     return { open, close, isOpen };
   })();
   window.LimitlessMsg = Msg;
+  // A link straight to the form (QR codes on labels use limitlessinnovations.co.uk/#message)
+  if (location.hash === '#message' || location.hash === '#contact-form') setTimeout(() => open(), 500);
 
   /* ---------- Contact ---------- */
   $('#emailText').textContent = SITE.email;
