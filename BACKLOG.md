@@ -53,7 +53,7 @@ Last updated 29 Sep 2026 (late). "Owner" = only the owner can do it (accounts, k
 9. [ ] Certifications plan: quotes from two third-party schemes for one module (penetration seals); one SSIP at CAS level; drop SafeContractor at renewal; ISO 9001 / ASFP later.
 10. [ ] Distributor trade / reseller account with blind dispatch (Nullifire, Fire Seals Direct); send the discount so desk costs update.
 11. [ ] Pick the label to print; set a shop price for labels. Decide whether to stock the DFT gauge (cost about £864 inc VAT) or sell it to order.
-12. [ ] Competitor app screenshots into `Firestopping\New folder\App research`, then start the app project in a new session.
+12. [ ] Site app: connect `limitless-site-app` in Cloudflare Workers Builds, custom domain `app.limitlessinnovations.co.uk`, secrets `PIN_PEPPER` and `SETUP_CODE`, Deploy, first sign-in (steps in that repo's `docs/setup.md`). Competitor screenshots into `Firestopping\New folder\App research` are still welcome.
 13. [ ] When ready to go public: unlock the site, then Google Search Console (verify via Cloudflare, submit sitemap) and Google Business Profile (service area London) plus 3 to 5 client reviews.
 14. [ ] Optional: Cloudflare Access (email code) in front of the desk; `DESK_PATH`.
 
@@ -89,3 +89,4 @@ Last updated 29 Sep 2026 (late). "Owner" = only the owner can do it (accounts, k
 - Our edge: no per-drawing or time-based hosting charges; gallery + camera photos; role-based pin editing for workers, not only admins; same features on phone and PC; speed; ties to our own QR labels.
 - Hosting plan: Cloudflare (Workers + D1 for records, R2 for photos/drawings; free tier about 10 GB photos). App stores later: Apple about £80/yr, Google about £20 once.
 - Start in its **own GitHub repo and a new session**.
+- Status (30 Sep 2026): repo `limitless-site-app`, D1 `limitless-app`. Stage 1 part 1 (foundation: setup, PIN sign-in, projects, offline shell) done and on main; waiting for the owner's Cloudflare connection. Next: part 2, drawings (PDF pins with zoom kept, Project › Floor › Fire / Acoustic › drawing, pin numbers 0001:01).
