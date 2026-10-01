@@ -16,6 +16,11 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "limitless-site", "database_id": "effbb949-93b8-4aec-a370-620796ec302c" }
   ],
+  // Desk 2.0: private storage for the desk's header photos (a separate bucket from the audit app's). Served only through
+  // the Worker, after the desk login. See DESK-SETUP.txt.
+  "r2_buckets": [
+    { "binding": "DESK_FILES", "bucket_name": "limitless-site-files" }
+  ],
   // keep_vars: settings you add in the Cloudflare dashboard (BANK_DETAILS, ALERT_FROM...) survive each deploy
   "keep_vars": true,
   "vars": {
