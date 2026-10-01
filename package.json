@@ -1,0 +1,8 @@
+{
+  "name": "limitless-innovations-website",
+  "private": true,
+  "description": "Website, shop and private desk Worker. No dependencies: the tests use Node's built-in test runner.",
+  "scripts": {
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test tests/*.test.mjs"
+  }
+}

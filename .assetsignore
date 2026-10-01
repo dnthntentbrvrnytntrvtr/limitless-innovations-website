@@ -13,3 +13,7 @@ SHOP-SETUP-NOTES.txt
 DESK-SETUP.txt
 chat-assistant
 BACKLOG.md
+migrations
+package.json
+package-lock.json
+tests
