@@ -1,261 +1,92 @@
-/* The private order desk: one page, served only after login (see index.js).
-   It reads and updates messages and orders through /api/desk/*. */
+/* The private desk: the pages served only after login (see index.js).
+   The desk page reads and updates messages, orders, tasks and header photos through /api/desk/*.
+   Desk 2.0 phase 1: sidebar, photo band, priority pills, time bars, tasks. Styles are in desk-style.js,
+   the shared pill and time-bar code in desk-ui.js, the new screens' script in desk-client.js. */
 
-// The site's own fonts (served from /fonts, no outside font service).
+import { STYLE } from './desk-style.js';
+import { DESK_UI_CLIENT } from './desk-ui.js';
+import { NAV, DESK_CLIENT } from './desk-client.js';
+
+// The public website's fonts (served from /fonts), used only by the printable invoice. The desk itself uses
+// Source Serif 4 and IBM Plex Mono (see desk-style.js).
 const FONTS = `
   @font-face { font-family: "Archivo"; src: url("/fonts/archivo.woff2") format("woff2"); font-weight: 500 700; font-style: normal; font-display: swap; }
   @font-face { font-family: "Inter"; src: url("/fonts/inter.woff2") format("woff2"); font-weight: 400 600; font-style: normal; font-display: swap; }
 `;
 
-const STYLE = FONTS + `
-  :root { color-scheme: dark; --bg: #0b0d10; --panel: #15191d; --panel-2: #1c2126; --ink: #eef1f4; --ink-2: #c9d0d7; --muted: #9aa4ae; --faint: #6f7983;
-    --line: rgba(238,241,244,.12); --accent: #b9623f; --stone: #d3c9b8; --steel: #b3bcc4; --ok: #6fb98a; }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
-  a { color: var(--steel); }
-  h1, h2, h3 { margin: 0; font-family: Archivo, Inter, system-ui, sans-serif; font-weight: 600; letter-spacing: -0.01em; }
-  .top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 16px; padding: 12px 20px; background: rgba(11,13,16,.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(10px); }
-  .top .mark { width: 30px; height: 30px; }
-  .top h1 { font-size: 17px; }
-  .top .sub { font-size: 12px; color: var(--muted); }
-  .top .right { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font: 600 13px/1 inherit; cursor: pointer; text-decoration: none; }
-  .btn:hover { border-color: var(--steel); }
-  .btn.acc { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn.sm { padding: 6px 9px; font-size: 12px; }
-  .btn.danger { color: #f0a08a; }
-  .btn.danger:hover { border-color: #f0a08a; }
-  .btn[disabled] { opacity: .45; cursor: default; }
-  .btn[hidden] { display: none; }
-  .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
-  .tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-  .tab { padding: 9px 14px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--ink-2); font: 600 14px/1 inherit; cursor: pointer; }
-  .tab[aria-selected="true"] { background: var(--panel); color: var(--ink); border-color: var(--steel); }
-  .tab .n { display: inline-block; min-width: 20px; padding: 2px 6px; margin-left: 6px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 11px; text-align: center; }
-  .tab .n.zero { background: var(--panel-2); color: var(--muted); }
-  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
-  .filters[hidden] { display: none; }
-  .filters label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-  .filters .spacer { flex: 1; }
-  .filters input[type="search"] { flex: 1 1 220px; min-width: 160px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font: 400 14px/1.3 inherit; }
-  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chip { padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink-2); font: 500 13px/1 inherit; cursor: pointer; }
-  .chip[aria-pressed="true"] { background: var(--panel); color: var(--ink); border-color: var(--steel); }
-  .card h4.grp { margin: 6px 0 0; font: 500 11px/1 inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
-  table.items td .size { font-size: 12.5px; color: var(--muted); }
-  table.items td.pic { width: 56px; padding-right: 0; }
-  .thumb { display: block; width: 48px; height: 48px; object-fit: contain; padding: 3px; border-radius: 3px; background: #f3f4f6; border: 1px solid var(--line); cursor: zoom-in; }
-  .thumb:hover { outline: 2px solid var(--steel); }
-  .cost { display: grid; gap: 2px; margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
-  .cost b { color: var(--ink); font-weight: 600; } .cost .sell { color: var(--ok); font-weight: 600; } .cost .from { color: var(--faint); }
-  .markup { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); white-space: nowrap; }
-  .markup input { width: 58px; padding: 7px 8px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font: 500 14px/1 inherit; text-align: center; }
-  .totals { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 8px 10px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
-  .totals b { color: var(--ink); } .totals .sell { color: var(--ok); font-weight: 600; }
-  .zoom { border: 0; padding: 0; background: transparent; max-width: min(92vw, 560px); }
-  .zoom::backdrop { background: rgba(5,6,8,.8); }
-  .zoom figure { margin: 0; border-radius: 6px; overflow: hidden; background: #f3f4f6; }
-  .zoom img { display: block; width: 100%; max-height: 70vh; object-fit: contain; padding: 20px; }
-  .zoom figcaption { padding: 12px 16px; background: var(--panel); color: var(--ink); font-weight: 600; }
-  table.items td a.mf { display: inline-block; margin-top: 3px; font-size: 12px; color: var(--steel); }
-  .card .actions .del { margin-left: auto; }
-  .list { display: grid; gap: 12px; }
-  .card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); display: grid; gap: 10px; }
-  .card.new { border-left: 3px solid var(--accent); }
-  .card .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
-  .card .head h3 { font-size: 17px; }
-  .card .when { font-size: 12.5px; color: var(--muted); }
-  .card .status { margin-left: auto; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
-  .card .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; color: var(--ink-2); }
-  .card .meta span b { color: var(--muted); font-weight: 500; margin-right: 4px; }
-  .card .body { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); padding: 10px 12px; border-radius: 4px; background: var(--bg); border: 1px solid var(--line); }
-  .card .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .card select { padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel-2); color: var(--ink); font: 500 13px/1 inherit; }
-  table.items { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  table.items th, table.items td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  table.items th { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-  table.items td.qty { font-weight: 600; white-space: nowrap; }
-  .sup { display: flex; flex-wrap: wrap; gap: 6px; }
-  .sup a { display: inline-flex; gap: 6px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 3px; font-size: 12px; text-decoration: none; color: var(--ink-2); }
-  .sup a b { color: var(--stone); font-weight: 600; }
-  .sup a:hover { border-color: var(--steel); color: var(--ink); }
-  .sup .none { font-size: 12px; color: var(--faint); }
-  /* A kit: each part on its own row with its own supplier links */
-  .sup .kp { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding-top: 4px; }
-  .sup .kp + .kp { border-top: 1px dashed var(--line); padding-top: 6px; }
-  .sup .kp-n { flex-basis: 100%; font-size: 12.5px; color: var(--ink-2); }
-  .empty { padding: 40px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 6px; }
-  .note { margin-top: 20px; padding: 12px 14px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
-  .note b { color: var(--stone); font-weight: 600; }
-  .note.warn { margin: 0 0 14px; border-color: rgba(240,160,138,.55); color: var(--ink-2); }
-  .note.warn b { color: #f0a08a; }
-  .note[hidden] { display: none; }
-  @media (max-width: 640px) {
-    .wrap { padding: 14px; } .card { padding: 14px; } .top { padding: 10px 14px; gap: 10px; } .top .sub { display: none; } .top h1 { white-space: nowrap; } .top .right { font-size: 12px; gap: 6px; }
-    .tab { padding: 8px 11px; font-size: 13px; }
-    /* Tables stack: product on one line, where to buy it underneath. */
-    table.items thead { display: none; }
-    table.items, table.items tbody, table.items tr, table.items td { display: block; }
-    table.items tr { padding: 8px 0; border-bottom: 1px solid var(--line); }
-    table.items td { border: 0; padding: 3px 0; }
-    table.items td.qty { display: inline-block; padding-right: 6px; } table.items td.qty + td { display: inline; }
-    .sup a { flex-wrap: wrap; }
-  }
-`;
-
 const MARK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 14l16-8 16 8-16 8z" fill="#e6dfd1"/><path d="M4 14l16 8v14L4 28z" fill="#b9b0a0"/><path d="M20 22l16-8v14l-16 8z" fill="#6f7882"/></svg>`;
+// Neutral grey version for the dark desk and login (no colour tint)
+const MARK_DESK = `<svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 14l16-8 16 8-16 8z" fill="#ECECEA"/><path d="M4 14l16 8v14L4 28z" fill="#B4B4B2"/><path d="M20 22l16-8v14l-16 8z" fill="#707074"/></svg>`;
 
 export const LOGIN_HTML = `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>{{heading}} · Limitless Innovations</title>
 <style>${STYLE}
   .login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
-  .box { width: min(380px, 100%); padding: 28px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); display: grid; gap: 14px; }
+  .box { width: min(380px, 100%); padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--bg-panel); display: grid; gap: 14px; }
   .box .brand { display: flex; align-items: center; gap: 10px; }
   .box .brand .mark { width: 34px; height: 34px; }
   .box h1 { font-size: 20px; }
-  .box p { margin: 0; font-size: 13.5px; color: var(--muted); }
-  .box input { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--ink); font: 400 16px/1.3 inherit; }
-  .box .err { color: #f0a08a; font-size: 13.5px; }
+  .box p { margin: 0; font-size: 13.5px; color: var(--text-3); }
+  .box input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-ctl); background: var(--bg-page); color: var(--text); font: 400 16px/1.3 var(--font-ui); }
+  .box .err { color: var(--urgent); font-size: 13.5px; }
   .box .btn { justify-content: center; padding: 12px; font-size: 14px; }
   .hidden { display: none; }
   /* Private preview: a big building photo behind the login, a different one each visit */
-  .lock-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: #0b0d10; }
+  .lock-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--bg-page); }
   .lock-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06);
     animation: lock-in 1.2s ease-out .05s forwards, lock-drift 26s ease-out forwards; }
   .lock-bg::after { content: ""; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(11,13,16,.62) 0%, rgba(11,13,16,.18) 30%, rgba(11,13,16,.28) 62%, rgba(11,13,16,.94) 100%),
-                radial-gradient(ellipse 60% 55% at 50% 50%, rgba(11,13,16,.45), rgba(11,13,16,0) 70%); }
+    background: linear-gradient(180deg, rgba(15,15,16,.62) 0%, rgba(15,15,16,.18) 30%, rgba(15,15,16,.28) 62%, rgba(15,15,16,.94) 100%),
+                radial-gradient(ellipse 60% 55% at 50% 50%, rgba(15,15,16,.45), rgba(15,15,16,0) 70%); }
   @keyframes lock-in { to { opacity: 1; } }
   @keyframes lock-drift { from { transform: scale(1.06); } to { transform: scale(1); } }
   .lock-bg ~ .login { position: relative; z-index: 1; padding-bottom: 84px; }
-  .lock-bg ~ .login .box { background: rgba(13,16,20,.7); border-color: rgba(238,241,244,.16); box-shadow: 0 30px 70px -24px rgba(0,0,0,.85);
+  .lock-bg ~ .login .box { background: rgba(15,15,16,.72); border-color: rgba(245,245,243,.16); box-shadow: 0 30px 70px -24px rgba(0,0,0,.85);
     backdrop-filter: blur(16px) saturate(1.1); -webkit-backdrop-filter: blur(16px) saturate(1.1); }
-  .lock-bg ~ .login .box p { color: var(--ink-2); }
-  .lock-credit { position: fixed; z-index: 1; left: 22px; right: 22px; bottom: 18px; font-size: 11.5px; line-height: 1.45; color: rgba(238,241,244,.62); }
-  .lock-credit b { display: block; margin-bottom: 2px; font: 600 14px/1.25 Archivo, Inter, system-ui, sans-serif; color: #fff; letter-spacing: .01em; }
+  .lock-bg ~ .login .box p { color: var(--text-2); }
+  .lock-credit { position: fixed; z-index: 1; left: 22px; right: 22px; bottom: 18px; font-size: 11.5px; line-height: 1.45; color: rgba(245,245,243,.66); }
+  .lock-credit b { display: block; margin-bottom: 2px; font: 600 14px/1.25 var(--font-ui); color: #fff; letter-spacing: .01em; }
   .lock-credit a { color: inherit; }
   @media (prefers-reduced-motion: reduce) { .lock-bg img { animation: lock-in .01s forwards; transform: none; } }
 </style></head>
 <body>{{bg}}<div class="login"><form class="box" method="post" action="{{base}}/login">
-  <div class="brand">${MARK}<h1>{{heading}}</h1></div>
+  <div class="brand">${MARK_DESK}<h1>{{heading}}</h1></div>
   <p>{{sub}}</p>
   <input type="hidden" name="next" value="{{next}}">
   <p class="err">{{error}}</p>
   <div class="{{form}}">
-    <label for="pw" style="font-size:13px;color:var(--muted)">Password</label>
+    <label for="pw" style="font-size:13px;color:var(--text-3)">Password</label>
     <input id="pw" name="password" type="password" autocomplete="current-password" autofocus required>
   </div>
   <button class="btn acc {{form}}" type="submit">{{button}}</button>
 </form></div></body></html>`;
 
+const NAV_HTML = NAV.map(g => `<div class="grp"><h2>${g.group}</h2>${g.items.map(i => `<a class="nav" href="#${i.id}" data-s="${i.id}">${i.label}<span class="cnt" id="cnt-${i.id}" hidden></span></a>`).join('')}</div>`).join('');
+
 export const DESK_HTML = `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
-<title>Order desk · Limitless Innovations</title>
-<style>${STYLE}
-  /* Gallery: everything is a tile you click to open, so the lists stay short. */
-  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
-  .tile { position: relative; display: grid; gap: 8px; align-content: start; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); cursor: pointer; text-align: left; color: inherit; font: inherit; transition: border-color .15s ease, transform .15s ease; }
-  .tile:hover { border-color: var(--steel); transform: translateY(-1px); }
-  .tile.new { border-left: 3px solid var(--accent); }
-  .tile .t-top { display: flex; align-items: baseline; gap: 8px; }
-  .tile h3 { font-size: 15.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tile .when { margin-left: auto; flex: none; font-size: 12px; color: var(--muted); }
-  .tile .excerpt { font-size: 13.5px; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .tile .t-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: var(--muted); }
-  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; background: var(--panel-2); color: var(--stone); white-space: nowrap; }
-  .pill.new { background: var(--accent); color: #fff; } .pill.paid { background: var(--ok); color: #0b0d10; }
-  .pill.job { background: transparent; border: 1px solid var(--stone); padding: 1px 7px; }
-  .tile .thumbs { display: flex; gap: 4px; } .tile .thumbs img { width: 40px; height: 40px; object-fit: contain; padding: 2px; border-radius: 3px; background: #f3f4f6; border: 1px solid var(--line); }
-  .tile .thumbs .more { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 3px; border: 1px dashed var(--line); font-size: 12px; color: var(--muted); }
-  .tile .site { font-size: 13px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tile .money { font-size: 14px; color: var(--ink); } .tile .money b { color: var(--ok); font-weight: 600; }
-  .tile.product { grid-template-columns: 64px minmax(0, 1fr); gap: 8px 12px; cursor: default; }
-  .tile.product:hover { transform: none; }
-  .tile.product .thumb { width: 64px; height: 64px; grid-row: span 3; }
-  .tile.product h3 { white-space: normal; font-size: 14.5px; }
-  .tile.product .sup { grid-column: 2; }
-  .tile.product .cost { grid-column: 2; margin-top: 0; }
-  /* Detail pages */
-  .detail { display: grid; gap: 14px; }
-  .detail .bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .detail .bar h2 { font-size: 22px; }
-  .detail .bar .pill { margin-left: 4px; }
-  .panel .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .panel .actions .del { margin-left: auto; }
-  .panel select { padding: 7px 9px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel-2); color: var(--ink); font-size: 13px; }
-  .panel { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); display: grid; gap: 10px; }
-  .panel h4 { margin: 0; font: 500 11px/1 inherit; letter-spacing: .12em; text-transform: uppercase; color: var(--stone); }
-  .kv { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px 18px; font-size: 13.5px; }
-  .kv span b { display: block; color: var(--muted); font-weight: 500; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 2px; }
-  .two { display: grid; grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr); gap: 14px; align-items: start; }
-  @media (max-width: 900px) { .two { grid-template-columns: 1fr; } }
-  table.items td.num { text-align: right; white-space: nowrap; } table.items th.num { text-align: right; }
-  table.items td .quote { color: var(--ok); font-weight: 600; }
-  input.price-in { width: 84px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel-2); color: var(--ink); font: 500 13px/1.2 inherit; text-align: right; }
-  label.spec { display: inline-flex; align-items: center; gap: 5px; margin-top: 4px; font-size: 12px; color: var(--muted); cursor: pointer; }
-  label.spec input { margin: 0; accent-color: var(--accent); }
-  label.spec.on { color: var(--stone); }
-  .sum { display: grid; gap: 6px; font-size: 13.5px; } .sum div { display: flex; justify-content: space-between; gap: 12px; } .sum b { font-weight: 600; } .sum .big b { font-size: 18px; color: var(--ok); } .sum .dim { color: var(--muted); }
-  .empty-mini { font-size: 13px; color: var(--faint); }
-  .size { font-size: 12.5px; color: var(--muted); }
-  /* New or edited job invoice */
-  .form .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 16px; }
-  .field { display: grid; gap: 5px; align-content: start; font-size: 12.5px; color: var(--muted); }
-  .field input, .field textarea, table.lines input { width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--ink); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 14.5px; font-weight: 400; line-height: 1.35; }
-  .field textarea { min-height: 80px; resize: vertical; }
-  .field input:focus, .field textarea:focus, table.lines input:focus { outline: none; border-color: var(--steel); }
-  .form .err { color: #f0a08a; font-size: 12.5px; }
-  .form .err:empty { display: none; }
-  .field.bad input, .field.bad textarea { border-color: #f0a08a; }
-  table.lines { width: 100%; border-collapse: collapse; }
-  table.lines th { text-align: left; font-size: 11px; font-weight: 500; line-height: 1.2; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 6px 8px; white-space: nowrap; }
-  table.lines th.num, table.lines td.t { text-align: right; }
-  table.lines td { padding: 4px 6px; vertical-align: middle; }
-  table.lines td.q { width: 96px; } table.lines td.u { width: 130px; } table.lines td.t { width: 110px; font-weight: 600; white-space: nowrap; } table.lines td.x { width: 42px; }
-  table.lines .rm { padding: 6px 10px; }
-  .form .foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 4px; }
-  .form .total { margin-left: auto; font-size: 14px; color: var(--muted); } .form .total b { color: var(--ok); font-size: 19px; margin: 0 6px; }
-  .form > .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  @media (max-width: 640px) {
-    table.lines thead { display: none; }
-    table.lines tr { display: grid; grid-template-columns: 1fr 1fr auto; gap: 6px; padding: 8px 0; border-bottom: 1px solid var(--line); }
-    table.lines td { padding: 0; width: auto !important; }
-    table.lines td.d { grid-column: 1 / -1; } table.lines td.t { grid-column: 1 / 3; text-align: left; }
-  }
-  /* Visitors */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
-  .stat { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
-  .stat b { font: 600 26px/1.1 Archivo, Inter, system-ui, sans-serif; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .stat span { font-size: 11.5px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
-  .stat small { font-size: 12.5px; color: var(--ink-2); }
-  .chart { display: flex; align-items: flex-end; gap: 2px; height: 170px; border-bottom: 1px solid var(--line); }
-  .chart i { flex: 1 1 0; min-width: 1px; background: var(--steel); border-radius: 2px 2px 0 0; }
-  .chart i:hover { background: var(--ink); }
-  .chart i.z { height: 2px; background: var(--panel-2); }
-  .axis { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--faint); }
-  .rank { display: grid; gap: 8px; font-size: 13.5px; }
-  .rank > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; align-items: baseline; }
-  .rank > div > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .rank b { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .rank .bar { grid-column: 1 / -1; height: 4px; border-radius: 2px; background: var(--panel-2); overflow: hidden; }
-  .rank .bar i { display: block; height: 100%; background: var(--stone); border-radius: 2px; }
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
-  .fine { font-size: 12.5px; color: var(--muted); }
-</style></head>
+<title>Desk · Limitless Innovations</title>
+<style>${STYLE}</style></head>
 <body>
+<div class="app">
+<aside class="side" id="side" aria-label="Desk sections">
+  <div class="brand"><span class="logo" aria-hidden="true">LI</span><div><b>Desk</b><small>Limitless Innovations</small></div></div>
+  <nav class="grps" aria-label="Desk sections" style="display:grid;gap:22px">${NAV_HTML}</nav>
+  <div class="foot">Shop ↔ Desk: orders and payments<br>Audit app ↔ Desk: jobs and progress</div>
+</aside>
+<div class="scrim" id="scrim"></div>
+<div class="main">
 <header class="top">
-  ${MARK}
-  <div><h1>Order desk</h1><div class="sub">Messages, trade orders and where to buy</div></div>
-  <div class="right"><label class="markup" title="Your mark-up on the price you pay (inc VAT); used for the sell-at prices on orders and suppliers">Mark-up <input type="number" id="markup" min="0" max="100" step="1" value="20">%</label><span id="alerts"></span><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="{{base}}/logout">Log out</a></div>
+  <button class="btn sm menu-btn" id="menuBtn" type="button" aria-controls="side" aria-expanded="false">☰ Menu</button>
+  <div class="right"><label class="markup" id="markupBox" hidden title="Your mark-up on the price you pay (inc VAT); used for the sell-at prices on orders and suppliers">Mark-up <input type="number" id="markup" min="0" max="100" step="1" value="20">%</label><span id="alerts"></span><a class="btn sm acc" href="#tasks/new">New task</a><button class="btn sm" id="refresh" type="button">Refresh</button><a class="btn sm" href="{{base}}/logout">Log out</a></div>
 </header>
 <main class="wrap">
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tabMsg" aria-selected="true" data-tab="messages">Messages<span class="n zero" id="nMsg">0</span></button>
-    <button class="tab" role="tab" id="tabOrd" aria-selected="false" data-tab="orders">Orders<span class="n zero" id="nOrd">0</span></button>
-    <button class="tab" role="tab" id="tabSup" aria-selected="false" data-tab="suppliers">Suppliers</button>
-    <button class="tab" role="tab" id="tabVis" aria-selected="false" data-tab="visitors">Visitors</button>
-  </div>
+  <section class="band today" id="band" aria-label="Page title">
+    <img id="bandImg" alt="" hidden decoding="async">
+    <div class="shade"></div>
+    <div class="txt"><div class="ttl"><h1 id="pageTitle">Today</h1><span id="pageSub"></span></div><div class="credit" id="bandCredit"></div></div>
+  </section>
   <div class="filters" id="filtersInbox"><button class="btn sm acc" id="newJob" type="button" hidden>New job invoice</button><label><input type="checkbox" id="showAll"> Show archived and closed too</label><button class="btn sm danger" id="purge" type="button">Clear archived messages</button><span class="spacer"></span><span id="updated"></span></div>
   <div class="filters" id="filtersSup" hidden><div class="chips" id="rangeChips"></div><input type="search" id="supSearch" placeholder="Find a product, brand or group" autocomplete="off"></div>
   <div class="filters" id="filtersVis" hidden><div class="chips" id="visRange"><button class="chip" type="button" data-days="7" aria-pressed="false">7 days</button><button class="chip" type="button" data-days="30" aria-pressed="true">30 days</button><button class="chip" type="button" data-days="90" aria-pressed="false">90 days</button><button class="chip" type="button" data-days="365" aria-pressed="false">12 months</button></div></div>
@@ -264,11 +95,15 @@ export const DESK_HTML = `<!doctype html>
   <div class="note" id="note" hidden></div>
   <dialog class="zoom" id="zoom"><figure><img id="zoomImg" alt=""><figcaption id="zoomCap"></figcaption></figure></dialog>
 </main>
+</div>
+</div>
 <script>
+const NAV = ${JSON.stringify(NAV)};
+${DESK_UI_CLIENT}
 (() => {
   const $ = s => document.querySelector(s);
   const BASE = '{{base}}';
-  let tab = 'messages', open = null, sub = null, suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 }, stripeOn = false, visDays = 30;
+  let tab = 'today', open = null, loadToken = 0, sub = null, suppliers = {}, cat = { ranges: [], products: [] }, range = 'all', counts = { archived: 0, closed: 0 }, stripeOn = false, visDays = 30;
   const VAT = 0.2;
   let markup = 20; try { const v = localStorage.getItem('li-markup'); if (v !== null) markup = Math.min(100, Math.max(0, Number(v) || 0)); } catch (e) {}
   const gbp = n => '£' + n.toFixed(2);
@@ -311,7 +146,7 @@ export const DESK_HTML = `<!doctype html>
     return best;
   }
   const linksOf = pid => { const s = suppliers[pid]; if (!s || !s.length) return '<span class="none">No supplier links yet</span>';
-    return s.map(x => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener"><b>' + esc(x.supplier) + '</b>' + (x.price ? esc(x.price) : '') + (x.checked ? ' <span style="color:var(--faint)">(' + esc(x.checked) + ')</span>' : '') + '</a>').join(''); };
+    return s.map(x => '<a href="' + esc(x.url) + '" target="_blank" rel="noopener"><b>' + esc(x.supplier) + '</b>' + (x.price ? esc(x.price) : '') + (x.checked ? ' <span style="color:var(--text-faint)">(' + esc(x.checked) + ')</span>' : '') + '</a>').join(''); };
   const supplierLinks = pid => { const kit = kitOf(pid); if (!kit) return linksOf(pid);
     return kit.map(([id, q]) => { const p = productOf(id); return '<div class="kp"><span class="kp-n">' + qtyTxt(q) + ' × ' + esc(p ? pname(p) : id) + '</span>' + linksOf(id) + '</div>'; }).join(''); };
   const costHTML = (pid, qty) => { const c = cost(pid); if (!c) return ''; const q = qty || 1;
@@ -327,9 +162,9 @@ export const DESK_HTML = `<!doctype html>
     const th = job ? '' : (o.items || []).slice(0, 4).map(i => { const p = productOf(i.product_id); return p && p.image ? '<img src="/' + esc(p.image) + '" alt="">' : ''; }).join('') + (n > 4 ? '<span class="more">+' + (n - 4) + '</span>' : '');
     return '<button class="tile ' + (o.status === 'new' ? 'new' : '') + '" type="button" data-open="orders/' + o.id + '"><div class="t-top"><h3>' + esc(o.company) + '</h3><span class="when">' + when(o.created_at) + '</span></div>' +
       (job ? (o.site ? '<div class="site">' + esc(o.site) + '</div>' : '') : '<div class="thumbs">' + th + '</div>') +
-      '<div class="money">' + n + (job ? ' line' : ' item') + (n === 1 ? '' : 's') + ' · ' + (job ? 'total' : 'quoted') + ' <b>' + gbp($m.quoted) + '</b>' + ($m.unq ? ' <span style="color:var(--faint)">+ ' + $m.unq + (job ? ' to price' : ' on request') + '</span>' : '') + '</div>' +
+      '<div class="money">' + n + (job ? ' line' : ' item') + (n === 1 ? '' : 's') + ' · ' + (job ? 'total' : 'quoted') + ' <b>' + gbp($m.quoted) + '</b>' + ($m.unq ? ' <span style="color:var(--text-faint)">+ ' + $m.unq + (job ? ' to price' : ' on request') + '</span>' : '') + '</div>' +
       '<div class="t-meta">' + (job ? JOB_PILL : '') + pill(o.status, job) + '<span>' + esc(o.ref) + '</span><span>' + esc(o.contact) + '</span></div></button>'; };
-  const productTile = p => '<div class="tile product">' + (thumb(p, 64) || '<span class="thumb"></span>') + '<div><span style="color:var(--muted);font-size:12px">' + esc(p.brand) + '</span><h3>' + esc(p.name) + '</h3>' + (p.size ? '<div class="size" style="font-size:12.5px;color:var(--muted)">' + esc(p.size) + '</div>' : '') + (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener" style="font-size:12px;color:var(--steel)">Manufacturer page</a>' : '') + '</div>' +
+  const productTile = p => '<div class="tile product">' + (thumb(p, 64) || '<span class="thumb"></span>') + '<div><span style="color:var(--text-3);font-size:12px">' + esc(p.brand) + '</span><h3>' + esc(p.name) + '</h3>' + (p.size ? '<div class="size" style="font-size:12.5px;color:var(--text-3)">' + esc(p.size) + '</div>' : '') + (p.link ? '<a class="mf" href="' + esc(p.link) + '" target="_blank" rel="noopener" style="font-size:12px;color:#8DB4F2">Manufacturer page</a>' : '') + '</div>' +
     '<div class="sup">' + supplierLinks(p.id) + '</div>' + costHTML(p.id) + '</div>';
 
   /* ---- detail pages ---- */
@@ -338,7 +173,7 @@ export const DESK_HTML = `<!doctype html>
     const opts = Object.keys(MSG_STATUS).map(s => '<option value="' + s + '"' + (m.status === s ? ' selected' : '') + '>' + MSG_STATUS[s] + '</option>').join('');
     const subject = encodeURIComponent('Re: your message to Limitless Innovations');
     const body = encodeURIComponent('Hello ' + m.name + ',\\n\\nThank you for your message.\\n\\n\\n\\n---\\nYour message:\\n' + m.message);
-    return '<div class="detail">' + back('messages', 'Messages') + '<h2>' + esc(m.name) + '</h2>' + pill(m.status) + '<span class="when">' + when(m.created_at) + (m.source ? ' · via ' + esc(m.source) : '') + '</span></div>' +
+    return '<div class="detail">' + back('messages', 'Enquiries') + '<h2>' + esc(m.name) + '</h2>' + pill(m.status) + '<span class="when">' + when(m.created_at) + (m.source ? ' · via ' + esc(m.source) : '') + '</span></div>' +
       '<div class="panel"><div class="kv"><span><b>Email</b><a href="mailto:' + esc(m.email) + '">' + esc(m.email) + '</a></span>' + (m.phone ? '<span><b>Phone</b><a href="' + tel(m.phone) + '">' + esc(m.phone) + '</a></span>' : '') + (m.page ? '<span><b>Sent from</b>' + esc(m.page) + '</span>' : '') + '</div>' +
       '<div class="body">' + esc(m.message) + '</div>' +
       '<div class="actions"><a class="btn acc sm" href="mailto:' + esc(m.email) + '?subject=' + subject + '&body=' + body + '">Reply by email</a>' + (m.phone ? '<a class="btn sm" href="' + tel(m.phone) + '">Call</a>' : '') +
@@ -354,7 +189,7 @@ export const DESK_HTML = `<!doctype html>
     const priceCell = i => '<td class="num">' + (i.price ? '<span class="quote">' + gbp(i.price * i.qty) + '</span>' : '<span class="empty-mini">' + (job ? 'to price' : 'on request') + '</span>') + '<div class="size"><label>£<input class="price-in" type="number" min="0" step="0.01" value="' + (i.price ? i.price.toFixed(2) : '') + '" data-item="' + i.id + '" placeholder="each" title="Price each; change it and press Enter or click away"></label></div></td>';
     const rows = (o.items || []).map(i => job
       ? '<tr><td class="qty">' + qtyTxt(i.qty) + ' ×</td><td>' + esc(i.name) + '</td>' + priceCell(i) + '</tr>'
-      : '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + qtyTxt(i.qty) + ' ×</td><td>' + (i.brand ? '<span style="color:var(--muted)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + (i.size ? '<div class="size">' + esc(i.size) + '</div>' : '') +
+      : '<tr><td class="pic">' + thumb(productOf(i.product_id)) + '</td><td class="qty">' + qtyTxt(i.qty) + ' ×</td><td>' + (i.brand ? '<span style="color:var(--text-3)">' + esc(i.brand) + '</span> ' : '') + esc(i.name) + (i.size ? '<div class="size">' + esc(i.size) + '</div>' : '') +
         '<div><label class="spec' + (i.special ? ' on' : '') + '" title="Special order (made to order, cut to size, non-stock): not returnable unless faulty, trade terms 9.2. Shown on the invoice."><input type="checkbox" data-special="' + i.id + '"' + (i.special ? ' checked' : '') + '> Special order</label></div></td>' +
         priceCell(i) + '<td><div class="sup">' + supplierLinks(i.product_id) + '</div>' + costHTML(i.product_id, i.qty) + '</td></tr>').join('');
     const lines = (o.items || []).map(i => qtyTxt(i.qty) + ' x ' + (i.brand ? i.brand + ' ' : '') + i.name + (i.price ? ' @ £' + i.price.toFixed(2) : '')).join('\\n');
@@ -375,7 +210,7 @@ export const DESK_HTML = `<!doctype html>
       : '<div class="panel"><h4>Items</h4><table class="items"><thead><tr><th></th><th>Qty</th><th>Item</th><th class="num">Quoted</th><th>Buy from</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
     return '<div class="detail">' + back('orders', 'Orders') + '<h2>' + esc(o.company) + '</h2>' + (job ? JOB_PILL : '') + pill(o.status, job) + '<span class="when">' + esc(o.ref) + ' · ' + when(o.created_at) + '</span></div>' +
       '<div class="two">' + customer + money + '</div>' + table +
-      '<div class="panel"><div class="actions"><label style="font-size:13px;color:var(--muted)">Status</label><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select><button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="' + (job ? 'invoice ' : 'order ') + esc(o.ref) + ' for ' + esc(o.company) + '">Delete</button></div></div></div>';
+      '<div class="panel"><div class="actions"><label style="font-size:13px;color:var(--text-3)">Status</label><select data-kind="orders" data-id="' + o.id + '">' + opts + '</select><button class="btn sm danger del" type="button" data-del="orders" data-id="' + o.id + '" data-label="' + (job ? 'invoice ' : 'order ') + esc(o.ref) + ' for ' + esc(o.company) + '">Delete</button></div></div></div>';
   }
 
   /* ---- new or edited job invoice (installation work) ---- */
@@ -435,7 +270,7 @@ export const DESK_HTML = `<!doctype html>
     const out = [];
     cat.ranges.forEach(r => {
       const inRange = rows.filter(p => p.category === r.id); if (!inRange.length) return;
-      out.push('<h3 style="margin:18px 0 10px;font-size:16px">' + esc(r.name) + ' <span style="font-size:12px;color:var(--muted);font-weight:500">' + inRange.length + '</span></h3><div class="tiles">' + inRange.map(productTile).join('') + '</div>');
+      out.push('<h3 style="margin:18px 0 10px;font-size:16px">' + esc(r.name) + ' <span style="font-size:12px;color:var(--text-3);font-weight:500">' + inRange.length + '</span></h3><div class="tiles">' + inRange.map(productTile).join('') + '</div>');
     });
     $('#list').innerHTML = out.join('');
   }
@@ -476,17 +311,16 @@ export const DESK_HTML = `<!doctype html>
 
   /* ---- routing: #messages, #orders, #orders/12, #orders/new, #orders/12/edit, #messages/5, #suppliers, #visitors ---- */
   function route() {
-    const m = location.hash.match(/^#(messages|orders|suppliers|visitors)(?:\\/(\\d+|new))?(?:\\/(edit))?$/);
-    tab = m ? m[1] : 'messages'; open = m && m[2] ? (m[2] === 'new' ? 'new' : Number(m[2])) : null; sub = m && m[3] ? m[3] : null;
-    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === tab)));
+    const m = location.hash.match(/^#([a-z]+)(?:\\/(\\d+|new))?(?:\\/(edit))?$/);
+    $('#list').innerHTML = '';
+    tab = m && SCREENS[m[1]] ? m[1] : 'today'; open = m && SCREENS[m[1]] && m[2] ? (m[2] === 'new' ? 'new' : Number(m[2])) : null; sub = m && SCREENS[m[1]] && m[3] ? m[3] : null;
     load();
   }
   const go = h => { if (location.hash !== h) location.hash = h; else route(); };
 
   function applySummary(sum) {
-    $('#nMsg').textContent = sum.newMessages; $('#nMsg').classList.toggle('zero', !sum.newMessages);
-    $('#nOrd').textContent = sum.newOrders; $('#nOrd').classList.toggle('zero', !sum.newOrders);
-    document.title = ((sum.newMessages + sum.newOrders) ? '(' + (sum.newMessages + sum.newOrders) + ') ' : '') + 'Order desk · Limitless Innovations';
+    applyBadges(sum);
+    document.title = ((sum.newMessages + sum.newOrders) ? '(' + (sum.newMessages + sum.newOrders) + ') ' : '') + 'Desk · Limitless Innovations';
     $('#alerts').textContent = (sum.alerts ? 'Email alerts on' : 'Email alerts off') + (sum.stripe ? ' · Stripe on' : ''); stripeOn = !!sum.stripe;
     counts = { archived: sum.archived || 0, closed: sum.closed || 0 };
     const bw = $('#buildWarn');   // a website update that failed to publish (see DESK-SETUP.txt step 4)
@@ -495,13 +329,17 @@ export const DESK_HTML = `<!doctype html>
   }
 
   async function load() {
+    const my = ++loadToken;   // a slow answer for a screen you have already left is dropped
+    frame();
     const inbox = tab === 'messages' || tab === 'orders';
     $('#filtersInbox').hidden = !inbox || !!open; $('#filtersSup').hidden = tab !== 'suppliers'; $('#filtersVis').hidden = tab !== 'visitors';
     $('#newJob').hidden = tab !== 'orders';
     const all = $('#showAll').checked ? '?all=1' : '';
     const want = tab === 'visitors' ? 'visits?days=' + visDays : !inbox || open === 'new' ? null : open ? tab + '/' + open : tab + all;
     const [sum, data] = await Promise.all([api('summary'), want ? api(want) : null]);
+    if (my !== loadToken) return;
     applySummary(sum);
+    if (NEW_SCREENS.has(tab)) { await showNewScreen(my); return; }
     const note = $('#note');
     if (tab === 'suppliers') { renderSuppliers(); note.hidden = false; note.innerHTML = '<b>For you, not for customers.</b> Where to buy each product when an order comes in. Prices are what the supplier page showed on the date in brackets. "You pay" adds 20% VAT to ex-VAT prices (not VAT registered, so that is your real cost); "Sell at" adds your mark-up from the top bar. The shop shows these sell prices at +20%. A kit lists each part with its own suppliers.'; return; }
     if (tab === 'visitors') { renderVisits(data); note.hidden = true; return; }
@@ -522,7 +360,7 @@ export const DESK_HTML = `<!doctype html>
       const item = tab === 'messages' ? data.message : data.order;
       if (!item) { $('#list').innerHTML = '<div class="empty">Not found: it may have been deleted.</div>'; return; }
       $('#list').innerHTML = tab === 'messages' ? messageDetail(item) : orderDetail(item);
-      if (tab === 'messages' && item.status === 'new') postJSON('messages/' + item.id, { status: 'read' }).then(() => api('summary')).then(s => { $('#nMsg').textContent = s.newMessages; $('#nMsg').classList.toggle('zero', !s.newMessages); }).catch(() => {});
+      if (tab === 'messages' && item.status === 'new') postJSON('messages/' + item.id, { status: 'read' }).then(() => api('summary')).then(applySummary).catch(() => {});
     } else {
       const rows = tab === 'messages' ? data.messages : data.orders;
       $('#list').innerHTML = rows.length ? '<div class="tiles">' + rows.map(tab === 'messages' ? messageTile : orderTile).join('') + '</div>' : '<div class="empty">' + (tab === 'orders' ? 'No orders yet. Shop orders arrive here; for site work, press New job invoice.' : 'Nothing here yet.') + '</div>';
@@ -536,7 +374,7 @@ export const DESK_HTML = `<!doctype html>
   api('suppliers').then(j => {
     suppliers = (j && j.suppliers) || {}; cat = { ranges: (j && j.ranges) || [], products: (j && j.products) || [] };
     $('#rangeChips').innerHTML = [{ id: 'all', name: 'All' }].concat(cat.ranges).map(r => '<button class="chip" type="button" data-range="' + esc(r.id) + '" aria-pressed="' + (r.id === range) + '">' + esc(r.name) + '</button>').join('');
-    if (!formOpen()) load();
+    if (!formOpen() && !NEW_SCREENS.has(tab)) load();   // prices and thumbnails arrived: redraw the orders and products screens
   }).catch(() => {});
 
   document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => go('#' + b.dataset.tab)));
@@ -603,16 +441,19 @@ export const DESK_HTML = `<!doctype html>
   document.addEventListener('click', e => { const t = e.target.closest('img[data-zoom]'); const z = $('#zoom');
     if (t) { $('#zoomImg').src = '/' + t.dataset.zoom; $('#zoomCap').textContent = t.dataset.cap; z.showModal(); return; }
     if (e.target === z) z.close(); });
+${DESK_CLIENT}
+  loadPhotos();
   route();
   // Refresh every minute, but never while you're filling in the invoice form or typing in a box.
   setInterval(() => {
     const a = document.activeElement, typing = a && a.closest && a.closest('#list') && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
-    if (formOpen() || typing) { api('summary').then(applySummary).catch(() => {}); return; }
+    if (formOpen() || typing || tab === 'settings' || (tab === 'tasks' && open === 'new')) { api('summary').then(applySummary).catch(() => {}); return; }
     load();
   }, 60000);
 })();
 </script>
 </body></html>`;
+
 
 /* ==========================================================================
    Invoice: a printable page for one order or job (Print > Save as PDF in the browser).

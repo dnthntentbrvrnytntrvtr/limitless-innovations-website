@@ -10,6 +10,8 @@
 import { DESK_HTML, LOGIN_HTML, invoiceHTML } from './desk.js';
 import SUPPLIERS from './suppliers.js';   // supplier links per product, shown only on the desk
 import { RANGES, PRODUCTS, LOCK_PHOTOS } from './catalogue.js';   // generated from index.html by build-catalogue.js
+import { validateNewTask, validateTaskUpdate, listTasks, createTask, updateTask, taskCounts } from './tasks.js';   // the desk's task list
+import * as photos from './photos.js';   // header photos in the DESK_FILES R2 bucket
 
 const MAX = { name: 80, email: 120, phone: 40, message: 4000, company: 120, notes: 2000, items: 60 };
 const COOKIE = 'li_desk';
@@ -295,6 +297,11 @@ async function desk(request, env, url, base) {
 
   if (!(await authed(request, env))) return html(page(LOGIN_HTML, { error: '', form: '' }), 401);
   if (path === base || path === base + '/') return html(page(DESK_HTML, {}));
+  if (path.startsWith(base + '/photo/')) {   // a header photo, straight from the private bucket (only after the login check above)
+    let f = null; try { f = photos.parseFile(decodeURIComponent(path.slice(base.length + 7))); } catch (_) {}
+    if (!f || (request.method !== 'GET' && request.method !== 'HEAD')) return json({ ok: false, error: 'not-found' }, 404);
+    return servePhoto(request, env, f);
+  }
   const inv = path.match(new RegExp('^' + base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/invoice/(\\d+)$'));
   if (inv) {
     const o = await env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(Number(inv[1])).first();
@@ -332,7 +339,17 @@ async function deskApi(request, env, url) {
       const archived = await DB.prepare("SELECT COUNT(*) AS n FROM messages WHERE status = 'archived'").first('n');
       const closed = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status IN ('closed','cancelled') AND paid_at IS NULL").first('n');
       const buildFailedAt = await DB.prepare("SELECT value FROM kv WHERE key = 'build_failed_at'").first('value').catch(() => null);
-      return json({ ok: true, newMessages: m, newOrders: o, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO), stripe: !!env.STRIPE_SECRET_KEY, buildFailedAt: buildFailedAt || null });
+      const ordersOverdue = await DB.prepare("SELECT COUNT(*) AS n FROM orders WHERE status = 'new' AND created_at < strftime('%Y-%m-%dT%H:%M:%SZ','now','-24 hours')").first('n');   // waiting for approval more than 24 h: the Orders badge turns red
+      const tasks = await taskCounts(DB).catch(() => ({ open: 0, urgent: 0 }));   // zero until migrations/0001_tasks.sql has been applied
+      return json({ ok: true, newMessages: m, newOrders: o, ordersOverdue, tasksOpen: tasks.open, tasksUrgent: tasks.urgent, archived, closed, alerts: !!(env.RESEND_API_KEY && env.ALERT_TO), stripe: !!env.STRIPE_SECRET_KEY, buildFailedAt: buildFailedAt || null });
+    }
+    if (p[0] === 'tasks') {
+      try { return json({ ok: true, tasks: await listTasks(DB) }); }
+      catch (err) { console.error('tasks list', err && err.message || err); return json({ ok: false, error: 'not-set-up' }, 503); }   // the tasks table is missing until the migration is applied
+    }
+    if (p[0] === 'photos') {
+      if (!env.DESK_FILES) return json({ ok: true, storage: false, photos: [] });
+      return json({ ok: true, storage: true, photos: await photos.listPhotos(env.DESK_FILES) });
     }
     if (p[0] === 'visits') {
       const days = Math.max(7, Math.min(400, parseInt(url.searchParams.get('days'), 10) || 30));
@@ -376,7 +393,11 @@ async function deskApi(request, env, url) {
   }
 
   if (request.method === 'POST') {
+    if (p[0] === 'photos' && p[1] === 'upload') return uploadPhoto(request, env, url);   // the picture itself is the request body, so don't read it as JSON
     const body = (await readBody(request)) || {};
+
+    if (p[0] === 'tasks') return taskPost(p, body, env);
+    if (p[0] === 'photos') return photoPost(p, body, env);
 
     // Clear out finished items in one go: POST /api/desk/purge {kind: 'messages'|'orders'}
     // removes archived messages, or closed and cancelled orders (with their lines).
@@ -443,6 +464,53 @@ async function deskApi(request, env, url) {
     return json({ ok: true });
   }
   return json({ ok: false, error: 'method' }, 405);
+}
+
+/* ==========================================================================
+   Tasks: POST /api/desk/tasks (new) and POST /api/desk/tasks/<id> (status, priority, due, chase date)
+   ========================================================================== */
+async function taskPost(p, body, env) {
+  try {
+    if (!p[1]) {
+      const v = validateNewTask(body);
+      if (!v.ok) return json({ ok: false, error: 'invalid', fields: v.fields }, 422);
+      return json({ ok: true, task: await createTask(env.DB, v.value) });
+    }
+    const id = /^\d{1,12}$/.test(p[1]) ? parseInt(p[1], 10) : 0;
+    if (!id || p[2]) return json({ ok: false, error: 'invalid' }, 400);
+    const v = validateTaskUpdate(body);
+    if (!v.ok) return json({ ok: false, error: 'invalid', fields: v.fields }, 422);
+    const task = await updateTask(env.DB, id, v.value);
+    return task ? json({ ok: true, task }) : json({ ok: false, error: 'not-found' }, 404);
+  } catch (err) {
+    console.error('task save', err && err.message || err);
+    return json({ ok: false, error: 'not-set-up' }, 503);
+  }
+}
+
+/* ==========================================================================
+   Header photos (R2 bucket DESK_FILES): upload, focus point, delete, and the private image route
+   ========================================================================== */
+async function uploadPhoto(request, env, url) {
+  if (!env.DESK_FILES) return json({ ok: false, error: 'Photo storage is not connected yet.' }, 503);
+  if (Number(request.headers.get('content-length')) > photos.MAX_BYTES) return json({ ok: false, error: 'That picture is over 12 MB. Use a smaller file.' }, 413);
+  const r = await photos.savePhoto(env.DESK_FILES, url.searchParams.get('filename') || '', await request.arrayBuffer());
+  return r.ok ? json({ ok: true, photo: r.photo }) : json({ ok: false, error: r.error }, r.status);
+}
+async function photoPost(p, body, env) {
+  if (!env.DESK_FILES) return json({ ok: false, error: 'Photo storage is not connected yet.' }, 503);
+  let name = ''; try { name = decodeURIComponent(p[1] || ''); } catch (_) {}
+  if (p[2] === 'focus') { const r = await photos.setFocus(env.DESK_FILES, name, body.x, body.y); return r.ok ? json({ ok: true, photo: r.photo }) : json({ ok: false, error: r.error }, r.status); }
+  if (p[2] === 'delete') { const r = await photos.deletePhoto(env.DESK_FILES, name); return r.ok ? json({ ok: true }) : json({ ok: false, error: r.error }, r.status); }
+  return json({ ok: false, error: 'invalid' }, 400);
+}
+async function servePhoto(request, env, f) {
+  if (!env.DESK_FILES) return json({ ok: false, error: 'not-found' }, 404);
+  const obj = await env.DESK_FILES.get(photos.keyFor(f.name, f.ext), { onlyIf: request.headers });   // answers 304 when the browser already has it
+  if (!obj) return json({ ok: false, error: 'not-found' }, 404);
+  const headers = { ...SECURITY, 'content-type': (obj.httpMetadata && obj.httpMetadata.contentType) || photos.TYPES[f.ext], 'cache-control': 'private, max-age=86400', etag: obj.httpEtag, 'x-robots-tag': 'noindex', 'referrer-policy': 'no-referrer' };
+  if (obj.body === undefined || obj.body === null) return new Response(null, { status: 304, headers });
+  return new Response(request.method === 'HEAD' ? null : obj.body, { headers });
 }
 
 /* ==========================================================================
