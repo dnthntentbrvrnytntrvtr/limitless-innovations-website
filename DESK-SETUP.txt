@@ -173,6 +173,33 @@ a day; each update uses about 3).
    once the queue exists, otherwise the next update would itself fail).
 
 ------------------------------------------------------------------------
+DESK 2.0, PHASE 1 (sidebar, tasks, header photos)
+------------------------------------------------------------------------
+The desk now has a sidebar instead of tabs. Where the old tabs went:
+  Orders    > Website shop > Orders           (same address: #orders/12)
+  Suppliers > Website shop > Products & prices
+  Messages  > Website shop > Enquiries
+  Visitors  > Website shop > Visitors
+Tasks: Today and Tasks list the same tasks; "New task" adds one, "Mark done"
+and "Undo" move it. Screens that are not built yet say "Coming in phase N".
+
+Two one-off steps before this goes live (Claude does both):
+1. The tasks table: npx wrangler d1 migrations apply limitless-site --remote
+   (migrations/0001_tasks.sql: it only ADDS a table). Until it is applied the
+   desk still works; the Tasks screen says it is not switched on yet.
+2. Header photos live in their own private R2 bucket "limitless-site-files"
+   (binding DESK_FILES in wrangler.jsonc), separate from the audit app's
+   bucket. Add the pictures in Settings > Header photos: jpg, png or webp up
+   to 12 MB, stored exactly as uploaded. Name a file bloomberg-london.jpg,
+   25-moorgate.jpg, one-canada-square.jpg, vantage-data-centre.jpg,
+   vantage-data-centre-aerial.jpg, locke-wood-wharf.jpg, apple-battersea.jpg
+   or silvertown-tunnel.jpg and it gets its title and a sensible crop; click
+   a picture to move where it stays in view. With no pictures the band is a
+   plain dark gradient.
+Fonts (Source Serif 4, IBM Plex Mono) are served from /fonts; licences are
+in the same folder. Tests: npm test (no installs needed).
+
+------------------------------------------------------------------------
 PROTECTION ALREADY BUILT IN
 ------------------------------------------------------------------------
 - The form and the basket only accept submissions that come from
