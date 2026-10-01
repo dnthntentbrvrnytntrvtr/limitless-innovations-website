@@ -136,3 +136,9 @@ test('the browser copy of the code behaves exactly like the Worker copy', () => 
   assert.equal(UI.pill('urgent'), pill('urgent'));
   assert.equal(typeof makeDeskUI().timeBar, 'function');
 });
+
+test('the page copy of the UI helpers defines __name first (Cloudflare bundling with keep_names adds __name calls)', () => {
+  assert.match(DESK_UI_CLIENT, /^var __name = /);
+  const withCalls = DESK_UI_CLIENT.replace('const UI = (', 'const probe = __name(() => 1, "probe"); probe();\nconst UI = (');
+  assert.doesNotThrow(() => new Function(withCalls + '; return UI;')());
+});

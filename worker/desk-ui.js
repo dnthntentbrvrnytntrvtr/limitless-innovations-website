@@ -126,4 +126,6 @@ export function makeDeskUI() {
 export const ui = makeDeskUI();
 
 // The same code, as text for the desk page's script (it becomes `const UI = (function makeDeskUI() {...})();`).
-export const DESK_UI_CLIENT = 'const UI = (' + makeDeskUI.toString() + ')();';
+// Cloudflare's bundler (wrangler, keep_names) wraps inner functions in __name(...) calls, which then appear in
+// makeDeskUI's source text; the page has no __name, so it gets a do-nothing one first.
+export const DESK_UI_CLIENT = 'var __name = function (f) { return f; };\nconst UI = (' + makeDeskUI.toString() + ')();';
