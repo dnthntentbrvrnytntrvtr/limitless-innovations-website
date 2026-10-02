@@ -12,6 +12,8 @@ Stop and ask the owner (multiple choice), and wait for the answer, before:
 - adding a new service, package or anything that costs money
 - any change the owner didn't ask for
 
+Deleting needs a yes twice: name exactly what will be deleted and ask; after the yes, ask again ("To confirm: delete X, and nothing else?") and wait for a second yes. Delete nothing beyond what was confirmed.
+
 ## How to work
 - Before building anything bigger than a small fix, show a short plan: what changes, what could break, how it will be tested. Wait for OK.
 - Work on a branch. Run npm test, npm run test:e2e and npm run check before saying it's done, and show the counts.
